@@ -59,7 +59,7 @@ public class QRCodeServiceImpl implements QRCodeService {
             entity.setCreatedDate(LocalDateTime.now());
 
             // Tạo QR code và upload lên S3
-            String fileName = "qr_" + System.currentTimeMillis() + ".png";
+            String fileName = "qr_" + entity.getCode() + ".png";
             String imageUrl = generateAndUploadQRCode(entity.getCode(), fileName);
 
             entity.setImageUrl(imageUrl);
