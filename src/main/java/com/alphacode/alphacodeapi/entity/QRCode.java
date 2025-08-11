@@ -2,8 +2,11 @@ package com.alphacode.alphacodeapi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "qr_codes")
@@ -21,14 +24,12 @@ public class QRCode {
     @Column(name = "qr_code", nullable = false, unique = true, length = 255)
     private String code;
 
-    @Column(name = "action", nullable = true, length = 255)
-    private String action;
+    @Column(name = "type", nullable = false, length = 255)
+    private String type;
 
-    @Column(name = "expression", nullable = true, length = 255)
-    private String expression;
-
-    @Column(name = "voice", nullable = true, length = 255)
-    private String voice;
+    @Column(name = "data", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private String data;
 
     @Column(name = "status", nullable = false)
     private Integer status;

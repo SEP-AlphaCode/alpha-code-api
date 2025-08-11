@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -17,12 +18,11 @@ public class QRCodeDto {
 
     private String code;
 
-    private String action;
+    private String type;
 
-    private String expression;
+    private Map<String, Object> data;
 
-    private String voice;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

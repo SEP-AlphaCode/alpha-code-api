@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface  QRCodeRepository extends JpaRepository<QRCode, Integer> {
     Page<QRCode> findAllByStatus(Integer status, Pageable pageable);
+    QRCode findQRCodeByCode(String code);
 }

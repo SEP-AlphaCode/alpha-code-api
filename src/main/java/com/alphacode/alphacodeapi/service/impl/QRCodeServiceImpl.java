@@ -7,6 +7,7 @@ import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.QRCodeRepository;
 import com.alphacode.alphacodeapi.service.QRCodeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     private final QRCodeRepository repository;
     private final S3ServiceImpl s3Service;
+    private ObjectMapper objectMapper;
 
     @Override
     public PagedResult<QRCodeDto> getAll(int page, int size, Integer status) {
@@ -54,32 +57,35 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     public QRCodeDto create(QRCodeDto qrCodeDto) {
+        if (qrCodeDto == null || qrCodeDto.getCode() == null || qrCodeDto.getType() == null) {
+            throw new IllegalArgumentException("QRCodeDto và các trường code, type không được null");
+        }
         try {
             QRCode entity = QRCodeMapper.toEntity(qrCodeDto);
             entity.setCreatedDate(LocalDateTime.now());
+            entity.setStatus(1);
 
-            // Tạo QR code và upload lên S3
             String fileName = "qr_" + entity.getCode() + ".png";
             String imageUrl = generateAndUploadQRCode(entity.getCode(), fileName);
-
             entity.setImageUrl(imageUrl);
 
             QRCode savedEntity = repository.save(entity);
             return QRCodeMapper.toDto(savedEntity);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to generate QR code image", e);
+        } catch (WriterException | IOException e) {
+            throw new RuntimeException("Lỗi khi tạo hoặc tải QR code", e);
         }
     }
+
+
+
 
     @Override
     public QRCodeDto update(Integer id, QRCodeDto qrCodeDto) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
         existed.setCode(qrCodeDto.getCode());
-        existed.setAction(qrCodeDto.getAction());
-        existed.setExpression(qrCodeDto.getExpression());
-        existed.setVoice(qrCodeDto.getVoice());
+        existed.setType(qrCodeDto.getType());
+        existed.setData(qrCodeDto.getData().toString());
         existed.setStatus(qrCodeDto.getStatus());
         existed.setLastEdited(LocalDateTime.now());
         existed.setImageUrl(qrCodeDto.getImageUrl());
@@ -93,6 +99,15 @@ public class QRCodeServiceImpl implements QRCodeService {
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 //        repository.deleteById(id);
         existed.setStatus(0);
+    }
+
+    @Override
+    public QRCodeDto getByCode(String code) {
+        var existed = repository.findQRCodeByCode(code).getId();
+        return repository.findById(existed)
+                .map(QRCodeMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+
     }
 
     private String generateAndUploadQRCode(String text, String fileName) throws WriterException, IOException {
@@ -111,5 +126,7 @@ public class QRCodeServiceImpl implements QRCodeService {
             return s3Service.uploadBytes(pngData, "qrcodes/" + fileName, "image/png");
         }
     }
+
+
 
 }

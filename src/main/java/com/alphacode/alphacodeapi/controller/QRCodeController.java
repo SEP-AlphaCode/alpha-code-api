@@ -3,8 +3,12 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.service.QRCodeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/qr-codes")
@@ -24,10 +28,21 @@ public class QRCodeController {
         return qrCodeService.getById(id);
     }
 
+    @GetMapping("by-code/{code}")
+    public QRCodeDto getByCode(@PathVariable String code) {
+        return qrCodeService.getByCode(code);
+    }
+
     @PostMapping()
-    public QRCodeDto create(@RequestBody QRCodeDto qrCodeDto) {
+    public QRCodeDto create(@RequestBody QRCodeDto requestDto) {
+        QRCodeDto qrCodeDto = new QRCodeDto();
+        qrCodeDto.setCode(requestDto.getCode());
+        qrCodeDto.setType(requestDto.getType());
+        qrCodeDto.setData(requestDto.getData());
+
         return qrCodeService.create(qrCodeDto);
     }
+
 
     @PutMapping("/{id}")
     public QRCodeDto update(@PathVariable Integer id, @RequestBody QRCodeDto qrCodeDto) {

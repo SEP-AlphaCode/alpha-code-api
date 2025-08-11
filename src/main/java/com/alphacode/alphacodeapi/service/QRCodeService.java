@@ -15,4 +15,6 @@ public interface QRCodeService {
     QRCodeDto update(Integer id,QRCodeDto qrCodeDto);
 
     void delete(Integer id);
+
+    QRCodeDto getByCode(String code);
 }

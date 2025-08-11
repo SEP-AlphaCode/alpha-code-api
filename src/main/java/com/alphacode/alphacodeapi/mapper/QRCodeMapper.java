@@ -2,8 +2,16 @@ package com.alphacode.alphacodeapi.mapper;
 
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.entity.QRCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Map;
 
 public class QRCodeMapper {
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+
     public static QRCodeDto toDto(com.alphacode.alphacodeapi.entity.QRCode qrCode) {
         if (qrCode == null) {
             return null;
@@ -11,9 +19,15 @@ public class QRCodeMapper {
         QRCodeDto qrCodeDto = new QRCodeDto();
         qrCodeDto.setId(qrCode.getId());
         qrCodeDto.setCode(qrCode.getCode());
-        qrCodeDto.setAction(qrCode.getAction());
-        qrCodeDto.setExpression(qrCode.getExpression());
-        qrCodeDto.setVoice(qrCode.getVoice());
+        qrCodeDto.setType(qrCode.getType());
+//        qrCodeDto.setData(qrCode.getData());
+        try {
+            if (qrCode.getData() != null) {
+                qrCodeDto.setData(objectMapper.readValue(qrCode.getData(), Map.class));
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Lỗi khi parse JSON data", e);
+        }
         qrCodeDto.setStatus(qrCode.getStatus());
         qrCodeDto.setCreatedDate(qrCode.getCreatedDate());
         qrCodeDto.setLastEdited(qrCode.getLastEdited());
@@ -29,9 +43,15 @@ public class QRCodeMapper {
         QRCode qrCode = new QRCode();
         qrCode.setId(qrCodeDto.getId());
         qrCode.setCode(qrCodeDto.getCode());
-        qrCode.setAction(qrCodeDto.getAction());
-        qrCode.setExpression(qrCodeDto.getExpression());
-        qrCode.setVoice(qrCodeDto.getVoice());
+        qrCode.setType(qrCodeDto.getType());
+//        qrCode.setData(qrCodeDto.getData());
+        try {
+            if (qrCodeDto.getData() != null) {
+                qrCode.setData(objectMapper.writeValueAsString(qrCodeDto.getData()));
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Lỗi khi chuyển data thành JSON", e);
+        }
         qrCode.setStatus(qrCodeDto.getStatus());
         qrCode.setCreatedDate(qrCodeDto.getCreatedDate());
         qrCode.setLastEdited(qrCodeDto.getLastEdited());
