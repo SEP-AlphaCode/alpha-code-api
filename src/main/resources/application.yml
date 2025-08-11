@@ -5,16 +5,13 @@ open:
     description: SEP project with AlphaMini API
     serverUrl: ${OPEN_API_SERVERURL}
 
-server:
-  servlet:
-    context-path: /tour-service
-
 springdoc:
   swagger-ui:
     path: /swagger
 
 logging:
   level:
-    net.devh.boot.grpc: DEBUG
-    com.tourmate.TourService.grpc: DEBUG
-
+    org:
+      springdoc: INFO
+      springframework: INFO
+      io: INFO
