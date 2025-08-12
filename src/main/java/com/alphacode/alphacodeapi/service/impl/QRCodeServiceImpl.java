@@ -7,6 +7,7 @@ import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.QRCodeRepository;
 import com.alphacode.alphacodeapi.service.QRCodeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -33,7 +34,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     private final QRCodeRepository repository;
     private final S3ServiceImpl s3Service;
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     public PagedResult<QRCodeDto> getAll(int page, int size, Integer status) {
@@ -83,18 +84,23 @@ public class QRCodeServiceImpl implements QRCodeService {
 
 
     @Override
-    public QRCodeDto update(Integer id, QRCodeDto qrCodeDto) {
+    public QRCodeDto update(Integer id, QRCodeDto qrCodeDto) throws JsonProcessingException {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+
         existed.setCode(qrCodeDto.getCode());
         existed.setType(qrCodeDto.getType());
-        existed.setData(qrCodeDto.getData().toString());
-        existed.setStatus(qrCodeDto.getStatus());
+
+        if (qrCodeDto.getData() != null) {
+            existed.setData(objectMapper.writeValueAsString(qrCodeDto.getData()));
+        }
+
         existed.setLastEdited(LocalDateTime.now());
-        existed.setImageUrl(qrCodeDto.getImageUrl());
+
         QRCode savedEntity = repository.save(existed);
         return QRCodeMapper.toDto(savedEntity);
     }
+
 
     @Override
     public void delete(Integer id) {

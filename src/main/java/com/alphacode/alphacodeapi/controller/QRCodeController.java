@@ -45,7 +45,7 @@ public class QRCodeController {
 
 
     @PutMapping("/{id}")
-    public QRCodeDto update(@PathVariable Integer id, @RequestBody QRCodeDto qrCodeDto) {
+    public QRCodeDto update(@PathVariable Integer id, @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException{
         return qrCodeService.update(id, qrCodeDto);
     }
 

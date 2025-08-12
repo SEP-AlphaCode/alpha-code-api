@@ -2,6 +2,7 @@ package com.alphacode.alphacodeapi.service;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface QRCodeService {
 
     QRCodeDto create(QRCodeDto qrCodeDto);
 
-    QRCodeDto update(Integer id,QRCodeDto qrCodeDto);
+    QRCodeDto update(Integer id,QRCodeDto qrCodeDto) throws JsonProcessingException;
 
     void delete(Integer id);
 
