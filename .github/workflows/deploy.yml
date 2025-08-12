@@ -1,4 +1,4 @@
-name: Build and Deploy to Ubuntu
+name: Build, Push Docker Image and Deploy to Ubuntu with Podman
 
 on:
   push:
@@ -6,55 +6,52 @@ on:
       - deploy
 
 jobs:
-  build-and-deploy:
+  build-and-push-image:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Cho phép chạy ./mvnw
-      - name: Set execute permission for mvnw
-        run: chmod +x ./mvnw
-
-      # 3. Setup JDK 24
-      - name: Setup JDK 24
-        uses: actions/setup-java@v4
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-          distribution: temurin
-          java-version: 24
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # 4. Build bằng Maven, skip test
-      - name: Build with Maven
-        run: ./mvnw clean package -DskipTests
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      # 5. Copy file JAR sang server đúng thư mục target
-      - name: Copy JAR to server
-        uses: appleboy/scp-action@master
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: ./target/*.jar
-          target: ~/alpha-code-api/target/
+          context: .
+          push: true
+          tags: norman1910/alpha-code-api:latest
+          cache-from: type=registry,ref=norman1910/alpha-code-api:latest
+          cache-to: type=inline
 
-      # 6. SSH remote chạy app trong tmux để app không bị kill khi SSH đóng
-      - name: Run Spring Boot app on server (tmux)
-        uses: appleboy/ssh-action@master
+  deploy:
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            # Kill app đang chạy (nếu có)
-            pkill -f 'java -jar' || true
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
-            cd ~/alpha-code-api/target
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-            # Kiểm tra tmux đã có chưa, nếu chưa cài, bạn cần cài tmux trên server 1 lần
-            command -v tmux || (echo "tmux not found" && exit 1)
-
-            # Chạy app trong session tmux tên 'springboot'
-            tmux kill-session -t springboot || true
-            tmux new-session -d -s springboot "java -jar alpha-code-api-0.0.1-SNAPSHOT.jar > app.log 2>&1"
+      - name: Deploy container with podman-compose via SSH
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
+            set -e
+            cd /home/norman/alpha-code-api
+            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose pull
+            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose up -d
+          EOF
