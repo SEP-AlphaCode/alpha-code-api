@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: ./target/*.jar
-          target: ~/alpha-code-api/
+          target: ~/alpha-code-api/target/
 
       # Bước 5: SSH remote để khởi động ứng dụng trên server
       - name: Run Spring Boot app on server
@@ -48,5 +48,5 @@ jobs:
           script: |
             pkill -f 'java -jar' || true
             cd ~/alpha-code-api/target
-            nohup java -jar alpha-code-api-0.0.1-SNAPSHOT.jar > app.log 2>&1 < /dev/null &
+            nohup setsid java -jar alpha-code-api-0.0.1-SNAPSHOT.jar > app.log 2>&1 < /dev/null &
             sleep 5
