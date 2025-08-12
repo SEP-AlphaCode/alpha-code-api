@@ -1,6 +1,6 @@
 # Stage 1: Build với Maven (nếu bạn muốn build trong Docker)
 # Nếu bạn build jar ở ngoài rồi, có thể bỏ stage này
-FROM maven:3.9.3-eclipse-temurin-24 AS build
+FROM maven:3.9-eclipse-temurin-24-alpine AS build
 
 WORKDIR /app
 
