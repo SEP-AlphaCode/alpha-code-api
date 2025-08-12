@@ -60,6 +60,9 @@ public class QRCodeServiceImpl implements QRCodeService {
         if (qrCodeDto == null || qrCodeDto.getCode() == null || qrCodeDto.getType() == null) {
             throw new IllegalArgumentException("QRCodeDto và các trường code, type không được null");
         }
+        if (getByCode(qrCodeDto.getCode()) != null) {
+            throw new IllegalArgumentException("QRCode with this code already exists");
+        }
         try {
             QRCode entity = QRCodeMapper.toEntity(qrCodeDto);
             entity.setCreatedDate(LocalDateTime.now());
