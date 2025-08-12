@@ -49,3 +49,4 @@ jobs:
             pkill -f 'java -jar' || true
             cd ~/alpha-code-api
             nohup java -jar *.jar > app.log 2>&1 &
+            exit 0
