@@ -47,6 +47,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             pkill -f 'java -jar' || true
-            cd ~/alpha-code-api
+            cd ~/alpha-code-api/target
             nohup java -jar *.jar > app.log 2>&1 &
             exit 0
