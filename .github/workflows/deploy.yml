@@ -47,6 +47,16 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             pkill -f 'java -jar' || true
+            echo "After pkill:"
+            ps aux | grep java
+            
             cd ~/alpha-code-api/target
+          echo "Current dir: $(pwd)"
+            echo "Files here:"
+            ls -l
+            
             nohup setsid java -jar alpha-code-api-0.0.1-SNAPSHOT.jar > app.log 2>&1 < /dev/null &
+            echo "Java started"
+            ps aux | grep java
+            
             sleep 5
