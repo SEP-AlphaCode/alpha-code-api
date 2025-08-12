@@ -3,7 +3,7 @@ open:
     title: Alpha Mini API
     version: 1.0.0
     description: SEP project with AlphaMini API
-    serverUrl: ${OPEN_API_SERVERURL}
+    serverUrl: ${OPEN_API_SERVERURL:http://localhost:8080}
 
 springdoc:
   swagger-ui:
