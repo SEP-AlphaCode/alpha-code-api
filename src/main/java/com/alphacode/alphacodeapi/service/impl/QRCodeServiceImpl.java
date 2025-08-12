@@ -65,7 +65,7 @@ public class QRCodeServiceImpl implements QRCodeService {
             entity.setCreatedDate(LocalDateTime.now());
             entity.setStatus(1);
 
-            String fileName = "qr_" + entity.getCode() + System.currentTimeMillis() + ".png";
+            String fileName = "qr_" + entity.getCode() + "_" + System.currentTimeMillis() + ".png";
             String imageUrl = generateAndUploadQRCode(entity.getCode(), fileName);
             entity.setImageUrl(imageUrl);
 
