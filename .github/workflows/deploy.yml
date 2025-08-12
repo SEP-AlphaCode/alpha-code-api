@@ -48,7 +48,7 @@ jobs:
           script: |
             pkill -f 'java -jar' || true
             # Change directory to where the JAR was actually copied by scp-action
-            cd ~/alpha-code-api/
+            cd ~/alpha-code-api/target
             nohup java -jar *.jar > app.log 2>&1 &
             sleep 5 # Give the Java process a moment to detach
             exit 0
