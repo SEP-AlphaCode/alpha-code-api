@@ -53,4 +53,9 @@ public class QRCodeController {
     public void delete(@PathVariable Integer id) {
         qrCodeService.delete(id);
     }
+
+    @PutMapping("/{id}/status")
+    public QRCodeDto changeStatus(@PathVariable Integer id, @RequestParam Integer status) {
+        return qrCodeService.changeStatus(id, status);
+    }
 }

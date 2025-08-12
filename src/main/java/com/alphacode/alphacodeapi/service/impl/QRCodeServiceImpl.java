@@ -119,6 +119,20 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     }
 
+    @Override
+    public QRCodeDto changeStatus(Integer id, Integer status) {
+        var existed = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+        if (status != null) {
+            existed.setStatus(status);
+        } else {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+        existed.setLastEdited(LocalDateTime.now());
+        QRCode savedEntity = repository.save(existed);
+        return QRCodeMapper.toDto(savedEntity);
+    }
+
     private String generateAndUploadQRCode(String text, String fileName) throws WriterException, IOException {
         int width = 300;
         int height = 300;

@@ -18,4 +18,6 @@ public interface QRCodeService {
     void delete(Integer id);
 
     QRCodeDto getByCode(String code);
+
+    QRCodeDto changeStatus(Integer id, Integer status);
 }
