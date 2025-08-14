@@ -27,6 +27,11 @@ public class AccountController {
         return service.getAll(page, size, status);
     }
 
+    @GetMapping("/full-name")
+    public AccountDto findAccountByFullName(@RequestParam String fullName) {
+        return service.findAccountByFullName(fullName);
+    }
+
     @GetMapping("/{id}")
     public AccountDto getById(@PathVariable UUID id) {
         return service.getById(id);

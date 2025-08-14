@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "attachments")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Role {
+public class Attachment {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -26,12 +25,19 @@ public class Role {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
+    @Column(name = "message_id", nullable = false, columnDefinition = "uuid")
+    private UUID messageId;
 
-    @Column(name = "status", nullable = false)
-    private Integer status;
+    @Column(name = "file_url", nullable = false, length = 255)
+    private String fileUrl;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private List<Account> accounts;
+    @Column(name = "file_type", nullable = false, length = 255)
+    private String fileType;
+
+    @Column(name = "file_size", nullable = false)
+    private Long fileSize;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_id", insertable = false, updatable = false)
+    private Message message;
 }

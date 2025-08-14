@@ -14,7 +14,7 @@ public interface QRCodeService {
 
     QRCodeDto create(QRCodeDto qrCodeDto);
 
-    QRCodeDto update(UUID id,QRCodeDto qrCodeDto) throws JsonProcessingException;
+    QRCodeDto update(UUID id,QRCodeDto qrCodeDto);
 
     void delete(UUID id);
 

@@ -37,9 +37,9 @@ public class QRCodeController {
     @PostMapping()
     public QRCodeDto create(@RequestBody QRCodeDto requestDto) {
         QRCodeDto qrCodeDto = new QRCodeDto();
-        qrCodeDto.setCode(requestDto.getCode());
-        qrCodeDto.setType(requestDto.getType());
-        qrCodeDto.setData(requestDto.getData());
+        qrCodeDto.setName(requestDto.getName());
+        qrCodeDto.setQrCode(requestDto.getQrCode());
+        qrCodeDto.setActivityId(requestDto.getActivityId());
 
         return qrCodeService.create(qrCodeDto);
     }

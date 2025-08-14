@@ -55,7 +55,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto create(AccountDto accountDto, MultipartFile avatarFile) {
         try {
             Account entity = AccountMapper.toEntity(accountDto);
-            entity.setCreatedDate(LocalDateTime.now());
+            entity.setCreateDate(LocalDateTime.now());
             entity.setStatus(1);
             entity.setBannedReason(null);
 
@@ -88,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setFullName(accountDto.getFullName());
         existingAccount.setPhone(accountDto.getPhone());
         existingAccount.setGender(accountDto.getGender());
-        existingAccount.setLastEdited(LocalDateTime.now());
+        existingAccount.setLastUpdate(LocalDateTime.now());
         existingAccount.setEmail(accountDto.getEmail());
 
         if (accountDto.getRoleId() != null) {
@@ -108,8 +108,14 @@ public class AccountServiceImpl implements AccountService {
 
 //        repository.delete(id);
         account.setStatus(0);
-        account.setLastEdited(LocalDateTime.now());
+        account.setLastUpdate(LocalDateTime.now());
         repository.save(account);
+    }
+
+    @Override
+    public AccountDto findAccountByFullName(String fullName) {
+        var account = repository.findAccountByFullName(fullName);
+        return AccountMapper.toDto(account);
     }
 
 

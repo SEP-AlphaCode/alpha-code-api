@@ -17,4 +17,6 @@ public interface AccountService {
     AccountDto update(UUID id,AccountDto accountDto);
 
     void delete(UUID id);
+
+    AccountDto findAccountByFullName(String fullName);
 }

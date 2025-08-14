@@ -17,11 +17,9 @@ public class QRCodeDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    private String code;
+    private String name;
 
-    private String type;
-
-    private Map<String, Object> data;
+    private String qrCode;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
@@ -34,4 +32,6 @@ public class QRCodeDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
+
+    private UUID activityId;
 }

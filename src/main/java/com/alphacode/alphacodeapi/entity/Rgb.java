@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "rgbs")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Role {
+public class Rgb {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -26,12 +25,12 @@ public class Role {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
+    @Column(name = "r", nullable = false)
+    private Integer r;
 
-    @Column(name = "status", nullable = false)
-    private Integer status;
+    @Column(name = "g", nullable = false)
+    private Integer g;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private List<Account> accounts;
+    @Column(name = "b", nullable = false)
+    private Integer b;
 }

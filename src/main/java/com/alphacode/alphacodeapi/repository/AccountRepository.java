@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
     Page<Account> findAllByStatus(Integer status, Pageable pageable);
+
+    Account findAccountByFullName(String fullName);
 }
