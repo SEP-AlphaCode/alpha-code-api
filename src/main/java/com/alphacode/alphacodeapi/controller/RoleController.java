@@ -1,16 +1,11 @@
 package com.alphacode.alphacodeapi.controller;
 
-import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.RoleDto;
-import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.service.RoleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,8 +16,11 @@ public class RoleController {
     private final RoleService service;
 
     @GetMapping
-    public List<RoleDto> getAll() {
-        return service.getAll();
+    public PagedResult<RoleDto> getAll(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "status", required = false) Integer status) {
+        return service.getAll(page, size, status);
     }
 
     @GetMapping("/{id}")
