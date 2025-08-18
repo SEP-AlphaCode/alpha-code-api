@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.ActionDto;
+import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.entity.Action;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.ActionMapper;
@@ -8,6 +9,7 @@ import com.alphacode.alphacodeapi.repository.ActionRepository;
 import com.alphacode.alphacodeapi.service.ActionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +27,17 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ActionDto> getAllActions() {
-        return actionRepository.findAll().stream()
-                .map(ActionMapper::toDto)
-                .collect(Collectors.toList());
+    public PagedResult<ActionDto> getAllActions(int page, int size, Integer status) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Action> pageResult;
+
+        if (status != null) {
+            pageResult = actionRepository.findAllByStatus(status, pageable);
+        } else {
+            pageResult = actionRepository.findAll(pageable);
+        }
+        
+        return new PagedResult<>(pageResult.map(ActionMapper::toDto));
     }
 
     @Override

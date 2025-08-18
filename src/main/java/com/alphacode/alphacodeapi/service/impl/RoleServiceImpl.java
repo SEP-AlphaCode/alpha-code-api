@@ -1,15 +1,18 @@
 package com.alphacode.alphacodeapi.service.impl;
 
-import com.alphacode.alphacodeapi.dto.AccountDto;
+import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.RoleDto;
+import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.RoleMapper;
 import com.alphacode.alphacodeapi.repository.RoleRepository;
 import com.alphacode.alphacodeapi.service.RoleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,10 +22,17 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository repository;
 
     @Override
-    public List<RoleDto> getAll() {
-        return repository.findAll().stream()
-                .map(RoleMapper::toDto)
-                .toList();
+    public PagedResult<RoleDto> getAll(int page, int size, Integer status) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Role> pageResult;
+
+        if (status != null) {
+            pageResult = repository.findAllByStatus(status, pageable);
+        } else {
+            pageResult = repository.findAll(pageable);
+        }
+        
+        return new PagedResult<>(pageResult.map(RoleMapper::toDto));
     }
 
     @Override

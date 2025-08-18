@@ -1,12 +1,14 @@
 package com.alphacode.alphacodeapi.controller;
 
 import com.alphacode.alphacodeapi.dto.ActionDto;
+import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,8 +20,11 @@ public class ActionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ActionDto> getAllActions() {
-        return actionService.getAllActions();
+    public PagedResult<ActionDto> getAllActions(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "status", required = false) Integer status) {
+        return actionService.getAllActions(page, size, status);
     }
 
     @GetMapping("/{id}")
