@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +51,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
-    public QRCodeDto getById(Integer id) {
+    public QRCodeDto getById(UUID id) {
         var qrCode = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
         return QRCodeMapper.toDto(qrCode);
@@ -58,10 +59,10 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     public QRCodeDto create(QRCodeDto qrCodeDto) {
-        if (qrCodeDto == null || qrCodeDto.getCode() == null || qrCodeDto.getType() == null) {
-            throw new IllegalArgumentException("QRCodeDto và các trường code, type không được null");
+        if (qrCodeDto == null || qrCodeDto.getQrCode() == null) {
+            throw new IllegalArgumentException("QRCodeDto và các trường không được null");
         }
-        if (getByCode(qrCodeDto.getCode()) != null) {
+        if (getByCode(qrCodeDto.getQrCode()) != null) {
             throw new IllegalArgumentException("QRCode with this code already exists");
         }
         try {
@@ -69,8 +70,8 @@ public class QRCodeServiceImpl implements QRCodeService {
             entity.setCreatedDate(LocalDateTime.now());
             entity.setStatus(1);
 
-            String fileName = "qr_" + entity.getCode() + "_" + System.currentTimeMillis() + ".png";
-            String imageUrl = generateAndUploadQRCode(entity.getCode(), fileName);
+            String fileName = "qr_" + entity.getQrCode() + "_" + System.currentTimeMillis() + ".png";
+            String imageUrl = generateAndUploadQRCode(entity.getQrCode(), fileName);
             entity.setImageUrl(imageUrl);
 
             QRCode savedEntity = repository.save(entity);
@@ -83,17 +84,29 @@ public class QRCodeServiceImpl implements QRCodeService {
 
 
 
+//    @Override
+//    public QRCodeDto update(UUID id, QRCodeDto qrCodeDto) throws JsonProcessingException {
+//        var existed = repository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+//
+//        existed.setQrCode(qrCodeDto.getCode());
+//
+//        if (qrCodeDto.getData() != null) {
+//            existed.set(objectMapper.writeValueAsString(qrCodeDto.getData()));
+//        }
+//
+//        existed.setLastEdited(LocalDateTime.now());
+//
+//        QRCode savedEntity = repository.save(existed);
+//        return QRCodeMapper.toDto(savedEntity);
+//    }
+
     @Override
-    public QRCodeDto update(Integer id, QRCodeDto qrCodeDto) throws JsonProcessingException {
+    public QRCodeDto update(UUID id, QRCodeDto qrCodeDto) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 
-        existed.setCode(qrCodeDto.getCode());
-        existed.setType(qrCodeDto.getType());
-
-        if (qrCodeDto.getData() != null) {
-            existed.setData(objectMapper.writeValueAsString(qrCodeDto.getData()));
-        }
+        existed.setQrCode(qrCodeDto.getQrCode());
 
         existed.setLastEdited(LocalDateTime.now());
 
@@ -101,18 +114,19 @@ public class QRCodeServiceImpl implements QRCodeService {
         return QRCodeMapper.toDto(savedEntity);
     }
 
-
     @Override
-    public void delete(Integer id) {
+    public void delete(UUID id) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 //        repository.deleteById(id);
         existed.setStatus(0);
+        existed.setLastEdited(LocalDateTime.now());
+        repository.save(existed);
     }
 
     @Override
     public QRCodeDto getByCode(String code) {
-        var existed = repository.findQRCodeByCode(code).getId();
+        var existed = repository.findQRCodeByQrCode(code).getId();
         return repository.findById(existed)
                 .map(QRCodeMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
@@ -120,7 +134,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
-    public QRCodeDto changeStatus(Integer id, Integer status) {
+    public QRCodeDto changeStatus(UUID id, Integer status) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
         if (status != null) {

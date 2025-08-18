@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "qr_codes")
+@Table(name = "musics")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QRCode {
+public class Music {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -29,25 +29,28 @@ public class QRCode {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "qr_code", nullable = false, length = 255)
-    private String qrCode;
+    @Column(name = "url", nullable = false, length = 255)
+    private String url;
+
+    @Column(name = "create_date", nullable = false)
+    private LocalDateTime createDate;
+
+    @Column(name = "last_update")
+    private LocalDateTime lastUpdate;
+
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
 
     @Column(name = "status", nullable = false)
-    private Integer status;
+    private Boolean status;
 
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "class_id", nullable = false, columnDefinition = "uuid")
+    private UUID classId;
 
-    @Column(name = "last_edited")
-    private LocalDateTime lastEdited;
-
-    @Column(name = "image_url", nullable = false, length = 255)
-    private String imageUrl;
-
-    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid")
-    private UUID activityId;
+    @Column(name = "image", nullable = false, length = 255)
+    private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id", insertable = false, updatable = false)
-    private Activity activity;
+    @JoinColumn(name = "class_id", insertable = false, updatable = false)
+    private Class aClass;
 }

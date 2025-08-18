@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "qr_codes")
+@Table(name = "actions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QRCode {
+public class Action {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -29,25 +29,21 @@ public class QRCode {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "qr_code", nullable = false, length = 255)
-    private String qrCode;
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
 
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "last_update")
+    private LocalDateTime lastUpdate;
 
-    @Column(name = "last_edited")
-    private LocalDateTime lastEdited;
+    @Column(name = "create_date", nullable = false)
+    private LocalDateTime createDate;
 
-    @Column(name = "image_url", nullable = false, length = 255)
-    private String imageUrl;
-
-    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid")
-    private UUID activityId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id", insertable = false, updatable = false)
-    private Activity activity;
+    @Column(name = "can_interrupt", nullable = false)
+    private Boolean canInterrupt;
 }
