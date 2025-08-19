@@ -39,26 +39,10 @@ public class AccountController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public AccountDto create(
-            @RequestParam ("username") String username,
-            @RequestParam ("password") String password,
-            @RequestParam ("fullName") String fullName,
-            @RequestParam ("phone") String phone,
-            @RequestParam ("email") String email,
-            @RequestParam ("gender") Integer gender,
-            @RequestParam ("roleId") UUID roleId,
-            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
-
-        AccountDto accountDto = new AccountDto();
-        accountDto.setUsername(username);
-        accountDto.setPassword(password);
-        accountDto.setFullName(fullName);
-        accountDto.setPhone(phone);
-        accountDto.setEmail(email);
-        accountDto.setGender(gender);
-        accountDto.setRoleId(roleId);
+            @RequestBody AccountDto accountDto,
+            @RequestPart(value = "avatarFile") MultipartFile avatarFile) {
         return service.create(accountDto, avatarFile);
     }
-
 
     @PutMapping("/{id}")
     public AccountDto update(@PathVariable UUID id, @RequestBody AccountDto dto){
