@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.service;
 
 import com.alphacode.alphacodeapi.dto.ActivityDto;
+import com.alphacode.alphacodeapi.dto.PagedResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,12 +13,14 @@ import java.util.UUID;
 public interface ActivityService {
 
     /**
-     * Get all activities with pagination.
+     * Get all activities with pagination and optional status filter.
      *
-     * @param pageable pagination information
-     * @return a page of ActivityDto objects
+     * @param page   the page number (1-based)
+     * @param size   the page size
+     * @param status the status to filter by (optional)
+     * @return a paged result of ActivityDto objects
      */
-    Page<ActivityDto> getAllActivities(Pageable pageable);
+    PagedResult<ActivityDto> getAll(int page, int size, Integer status);
 
     /**
      * Get an activity by ID.

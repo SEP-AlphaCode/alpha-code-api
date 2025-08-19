@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.controller;
 
 import com.alphacode.alphacodeapi.dto.ActivityDto;
+import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,11 +27,11 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get all activities with pagination")
-    public Page<ActivityDto> getAllActivities(
-            @PageableDefault(size = 20) Pageable pageable) {
-        return activityService.getAllActivities(pageable);
+    public PagedResult<ActivityDto> getAll(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "status", required = false) Integer status) {
+        return activityService.getAll(page, size, status);
     }
 
     @GetMapping("/{id}")

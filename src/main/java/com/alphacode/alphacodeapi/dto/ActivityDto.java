@@ -24,8 +24,11 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActivityDto {
     // Response fields (read-only)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createDate;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
     // Request fields (for create/update)

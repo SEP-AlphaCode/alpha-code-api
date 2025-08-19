@@ -8,7 +8,9 @@ import com.alphacode.alphacodeapi.repository.ActivityRepository;
 import com.alphacode.alphacodeapi.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import com.alphacode.alphacodeapi.dto.PagedResult;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +30,16 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ActivityDto> getAllActivities(Pageable pageable) {
-        log.debug("Fetching all activities with pagination - page: {}, size: {}",
-                pageable.getPageNumber(), pageable.getPageSize());
-        return activityRepository.findAll(pageable)
-                .map(activityMapper::toDto);
+    public PagedResult<ActivityDto> getAll(int page, int size, Integer status) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Activity> pageResult;
+
+        if (status != null) {
+            pageResult = activityRepository.findAllByStatus(status, pageable);
+        } else {
+            pageResult = activityRepository.findAll(pageable);
+        }
+        return new PagedResult<>(pageResult.map(activityMapper::toDto));
     }
 
     @Override
