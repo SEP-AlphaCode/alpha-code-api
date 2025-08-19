@@ -46,7 +46,7 @@ public class AccountController {
             @RequestParam ("email") String email,
             @RequestParam ("gender") Integer gender,
             @RequestParam ("roleId") UUID roleId,
-            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
+            @RequestPart(value = "avatarFile") MultipartFile avatarFile) {
 
         AccountDto accountDto = new AccountDto();
         accountDto.setUsername(username);

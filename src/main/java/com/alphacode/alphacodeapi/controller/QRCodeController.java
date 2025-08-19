@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/qr-codes")
 @RequiredArgsConstructor
+@Tag(name = "QRCodes")
 public class QRCodeController {
     private final QRCodeService qrCodeService;
 

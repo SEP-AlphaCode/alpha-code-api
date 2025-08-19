@@ -5,17 +5,20 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.QRCode;
 import com.alphacode.alphacodeapi.entity.Role;
+import com.alphacode.alphacodeapi.exception.AuthenticationException;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RoleRepository;
 import com.alphacode.alphacodeapi.service.AccountService;
+import com.alphacode.alphacodeapi.util.JwtUtil;
 import com.google.zxing.WriterException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +33,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
     private final RoleRepository roleRepository;
     private final S3ServiceImpl s3Service;
+    private final JwtUtil jwtUtil;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public PagedResult<AccountDto> getAll(int page, int size, Integer status) {
@@ -54,10 +59,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto create(AccountDto accountDto, MultipartFile avatarFile) {
         try {
+            if (repository.existsByUsername(accountDto.getUsername())) {
+                throw new AuthenticationException("Username is already taken");
+            }
+            if (repository.existsByEmail(accountDto.getEmail())) {
+                throw new AuthenticationException("Email is already registered");
+            }
+
             Account entity = AccountMapper.toEntity(accountDto);
             entity.setCreateDate(LocalDateTime.now());
             entity.setStatus(1);
             entity.setBannedReason(null);
+            entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
 
             if (accountDto.getRoleId() != null) {
                 Role role = roleRepository.findById(accountDto.getRoleId())

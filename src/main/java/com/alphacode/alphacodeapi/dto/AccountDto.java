@@ -37,6 +37,7 @@ public class AccountDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String image;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

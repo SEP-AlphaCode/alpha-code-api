@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ public class LoginDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     public static class LoginResponse {
         private String token;
         private AccountDto account;
