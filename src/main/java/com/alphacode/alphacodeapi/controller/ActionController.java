@@ -3,6 +3,7 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.ActionDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/actions")
 @RequiredArgsConstructor
+@Tag(name = "Actions")
 public class ActionController {
 
     private final ActionService actionService;

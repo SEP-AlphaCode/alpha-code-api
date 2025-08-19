@@ -3,6 +3,7 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.RoleDto;
 import com.alphacode.alphacodeapi.service.RoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
+@Tag(name = "Roles")
 public class RoleController {
 
     private final RoleService service;
