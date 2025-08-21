@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -66,4 +68,11 @@ public class Student {
 
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<StudentParent> studentParents;
+
+    @ManyToMany
+    @JoinTable(name = "student_parents",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id"))
+    private Set<Account> accounts = new LinkedHashSet<>();
+
 }
