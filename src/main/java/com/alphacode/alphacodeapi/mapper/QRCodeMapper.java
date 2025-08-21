@@ -73,6 +73,7 @@ public static QRCodeDto toDto(com.alphacode.alphacodeapi.entity.QRCode qrCode) {
     qrCodeDto.setLastEdited(qrCode.getLastEdited());
     qrCodeDto.setImageUrl(qrCode.getImageUrl());
     qrCodeDto.setActivityId(qrCode.getActivityId());
+    qrCodeDto.setActivityName(qrCode.getActivity().getName());
 
     return qrCodeDto;
 }

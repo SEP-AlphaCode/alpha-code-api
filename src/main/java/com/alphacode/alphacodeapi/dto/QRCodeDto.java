@@ -33,5 +33,7 @@ public class QRCodeDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
 
+    private String activityName;
+
     private UUID activityId;
 }
