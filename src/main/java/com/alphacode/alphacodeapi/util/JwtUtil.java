@@ -45,6 +45,10 @@ public class JwtUtil {
                 .compact();
     }
 
+    public Integer getRefreshTokenExpirationMs() {
+        return refreshTokenExpirationMs;
+    }
+
     public String generateRefreshToken(Account account) {
         return Jwts.builder()
                 .subject(account.getUsername())
