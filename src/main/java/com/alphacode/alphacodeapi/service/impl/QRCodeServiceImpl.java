@@ -106,7 +106,11 @@ public class QRCodeServiceImpl implements QRCodeService {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 
+        existed.setName(qrCodeDto.getName());
         existed.setQrCode(qrCodeDto.getQrCode());
+        existed.setStatus(qrCodeDto.getStatus());
+        existed.setImageUrl(qrCodeDto.getImageUrl());
+        existed.setActivityId(qrCodeDto.getActivityId());
 
         existed.setLastEdited(LocalDateTime.now());
 
@@ -115,13 +119,46 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
-//        repository.deleteById(id);
-        existed.setStatus(0);
+
+        if (qrCodeDto.getQrCode() != null) {
+            existed.setQrCode(qrCodeDto.getQrCode());
+        }
+        if (qrCodeDto.getName() != null) {
+            existed.setName(qrCodeDto.getName());
+        }
+        if (qrCodeDto.getStatus() != null) {
+            existed.setStatus(qrCodeDto.getStatus());
+        }
+        if (qrCodeDto.getImageUrl() != null) {
+            existed.setImageUrl(qrCodeDto.getImageUrl());
+        }
+        if (qrCodeDto.getActivityId() != null) {
+            existed.setActivityId(qrCodeDto.getActivityId());
+        }
         existed.setLastEdited(LocalDateTime.now());
-        repository.save(existed);
+
+        QRCode savedEntity = repository.save(existed);
+        return QRCodeMapper.toDto(savedEntity);
+    }
+
+    @Override
+    public String delete(UUID id) {
+        try{
+            var existed = repository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+//        repository.deleteById(id);
+            existed.setStatus(0);
+            existed.setLastEdited(LocalDateTime.now());
+            repository.save(existed);
+            return "Deleted QRCode with ID: " + id;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error deleting QRCode", e);
+        }
+
     }
 
     @Override

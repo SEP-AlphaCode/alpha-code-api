@@ -20,12 +20,15 @@ public class JwtUtil {
     @Value("${jwt.expiration-ms}")
     private int jwtExpirationMs;
 
+    @Value("${jwt.refresh-expiration-ms}")
+    private int refreshTokenExpirationMs;
+
     // Generate a secure key from the secret string
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Account account) {
+    public String generateAccessToken(Account account) {
         return Jwts.builder()
                 .subject(account.getUsername())
                 .claims(Map.of(
@@ -36,10 +39,20 @@ public class JwtUtil {
                         "roleId", account.getRoleId()
                 ))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // vd: 15 phút
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
+
+    public String generateRefreshToken(Account account) {
+        return Jwts.builder()
+                .subject(account.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs)) // vd: 7 ngày
+                .signWith(getSigningKey(), Jwts.SIG.HS512)
+                .compact();
+    }
+
 
     public Claims getAllClaims(String token) {
         return Jwts.parser()

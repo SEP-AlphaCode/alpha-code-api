@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
         } else {
             pageResult = repository.findAll(pageable);
         }
-        
+
         return new PagedResult<>(pageResult.map(RoleMapper::toDto));
     }
 
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         if (repository.findByName(roleDto.getName()) != null &&
-            !existingRole.getName().equals(roleDto.getName())) {
+                !existingRole.getName().equals(roleDto.getName())) {
             throw new IllegalArgumentException("Role with this name already exists");
         }
 
@@ -72,16 +72,39 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void delete(UUID id) {
-        var role = repository.findById(id)
+    public RoleDto patchUpdate(UUID id, RoleDto roleDto) {
+        var existingRole = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
-        if (role.getAccounts() != null && !role.getAccounts().isEmpty()) {
-            throw new IllegalArgumentException("Cannot delete role with associated accounts");
+        if (repository.findByName(roleDto.getName()) != null &&
+                !existingRole.getName().equals(roleDto.getName())) {
+            throw new IllegalArgumentException("Role with this name already exists");
         }
 
+        if (roleDto.getName() != null)
+            existingRole.setName(roleDto.getName());
+
+        var updatedRole = repository.save(existingRole);
+        return RoleMapper.toDto(updatedRole);
+    }
+
+    @Override
+    public String delete(UUID id) {
+        try {
+            var role = repository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+            if (role.getAccounts() != null && !role.getAccounts().isEmpty()) {
+                throw new IllegalArgumentException("Cannot delete role with associated accounts");
+            }
+
 //        repository.delete(role);
-        role.setStatus(0);
-        repository.save(role);
+            role.setStatus(0);
+            repository.save(role);
+            return "Role deleted successfully with ID: " + id;
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting role", e);
+        }
+
     }
 }

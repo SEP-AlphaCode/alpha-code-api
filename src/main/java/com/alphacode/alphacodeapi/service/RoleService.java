@@ -18,5 +18,7 @@ public interface RoleService {
 
     RoleDto update(UUID id, RoleDto roleDto);
 
-    void delete(UUID id);
+    RoleDto patchUpdate(UUID id, RoleDto roleDto);
+
+    String delete(UUID id);
 }
