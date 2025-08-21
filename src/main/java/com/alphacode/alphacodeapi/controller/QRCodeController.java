@@ -5,14 +5,17 @@ import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/qr-codes")
 @RequiredArgsConstructor
+@Tag(name = "QRCodes")
 public class QRCodeController {
     private final QRCodeService qrCodeService;
 
@@ -24,7 +27,7 @@ public class QRCodeController {
     }
 
     @GetMapping("/{id}")
-    public QRCodeDto getById(@PathVariable Integer id) {
+    public QRCodeDto getById(@PathVariable UUID id) {
         return qrCodeService.getById(id);
     }
 
@@ -36,26 +39,31 @@ public class QRCodeController {
     @PostMapping()
     public QRCodeDto create(@RequestBody QRCodeDto requestDto) {
         QRCodeDto qrCodeDto = new QRCodeDto();
-        qrCodeDto.setCode(requestDto.getCode());
-        qrCodeDto.setType(requestDto.getType());
-        qrCodeDto.setData(requestDto.getData());
+        qrCodeDto.setName(requestDto.getName());
+        qrCodeDto.setQrCode(requestDto.getQrCode());
+        qrCodeDto.setActivityId(requestDto.getActivityId());
 
         return qrCodeService.create(qrCodeDto);
     }
 
 
     @PutMapping("/{id}")
-    public QRCodeDto update(@PathVariable Integer id, @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException{
+    public QRCodeDto update(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException{
+        return qrCodeService.update(id, qrCodeDto);
+    }
+
+    @PatchMapping("/{id}")
+    public QRCodeDto patchUpdate(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) {
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
-        qrCodeService.delete(id);
+    public String delete(@PathVariable UUID id) {
+        return qrCodeService.delete(id);
     }
 
     @PutMapping("/{id}/status")
-    public QRCodeDto changeStatus(@PathVariable Integer id, @RequestParam Integer status) {
+    public QRCodeDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }
 }

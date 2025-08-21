@@ -1,6 +1,6 @@
 package com.alphacode.alphacodeapi.repository;
 
-import com.alphacode.alphacodeapi.entity.QRCode;
+import com.alphacode.alphacodeapi.entity.Action;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface  QRCodeRepository extends JpaRepository<QRCode, UUID> {
-    Page<QRCode> findAllByStatus(Integer status, Pageable pageable);
-    QRCode findQRCodeByQrCode(String code);
+public interface ActionRepository extends JpaRepository<Action, UUID> {
+    Page<Action> findAllByStatus(Integer status, Pageable pageable);
 }

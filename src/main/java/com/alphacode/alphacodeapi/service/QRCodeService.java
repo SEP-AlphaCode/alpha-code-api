@@ -5,19 +5,22 @@ import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface QRCodeService {
     PagedResult<QRCodeDto> getAll(int page, int size, Integer status);
 
-    QRCodeDto getById(Integer id);
+    QRCodeDto getById(UUID id);
 
     QRCodeDto create(QRCodeDto qrCodeDto);
 
-    QRCodeDto update(Integer id,QRCodeDto qrCodeDto) throws JsonProcessingException;
+    QRCodeDto update(UUID id,QRCodeDto qrCodeDto);
 
-    void delete(Integer id);
+    QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto);
+
+    String delete(UUID id);
 
     QRCodeDto getByCode(String code);
 
-    QRCodeDto changeStatus(Integer id, Integer status);
+    QRCodeDto changeStatus(UUID id, Integer status);
 }

@@ -7,22 +7,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeDto {
+public class AccountDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    private String name;
+    private String username;
 
-    private String qrCode;
+    private String password;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer status;
+    private String fullName;
+
+    private String phone;
+
+    private String email;
+
+    private Integer gender;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
@@ -31,7 +35,16 @@ public class QRCodeDto {
     private LocalDateTime lastEdited;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    private Integer status;
 
-    private UUID activityId;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String image;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String bannedReason;
+
+    private UUID roleId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String roleName;
 }

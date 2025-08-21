@@ -7,31 +7,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeDto {
+public class OsmoCardDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
+    private String color;
+
     private String name;
 
-    private String qrCode;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdDate;
+    private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastEdited;
+    private LocalDateTime createDate;
+
+    private UUID expressionId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    private String expressionName;
 
-    private UUID activityId;
+    private UUID actionId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String actionName;
+
+    private UUID danceId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String danceName;
 }
