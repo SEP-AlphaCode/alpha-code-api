@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,8 +17,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class RobotPermission {
-    @EmbeddedId
-    private RobotPermissionId id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
     @Column(name = "status", nullable = false)
     private Boolean status;
@@ -28,13 +35,11 @@ public class RobotPermission {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @MapsId("robotId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "robot_id")
+    @JoinColumn(name = "robot_id", nullable = false)
     private Robot robot;
 
-    @MapsId("activityId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id")
+    @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
 }
