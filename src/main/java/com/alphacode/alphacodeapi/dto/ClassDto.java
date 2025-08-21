@@ -25,7 +25,6 @@ public class ClassDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
 
 
