@@ -115,14 +115,56 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void delete(UUID id) {
-        Account account = repository.findById(id)
+    public AccountDto patchUpdate(UUID id, AccountDto accountDto) {
+        Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
+        if (accountDto.getUsername() != null) {
+            existingAccount.setUsername(accountDto.getUsername());
+        }
+        if (accountDto.getPassword() != null) {
+            existingAccount.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        }
+        if (accountDto.getFullName() != null) {
+            existingAccount.setFullName(accountDto.getFullName());
+        }
+        if (accountDto.getPhone() != null) {
+            existingAccount.setPhone(accountDto.getPhone());
+        }
+        if (accountDto.getGender() != null) {
+            existingAccount.setGender(accountDto.getGender());
+        }
+        if (accountDto.getEmail() != null) {
+            existingAccount.setEmail(accountDto.getEmail());
+        }
+        if (accountDto.getRoleId() != null) {
+            Role role = roleRepository.findById(accountDto.getRoleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+            existingAccount.setRole(role);
+        }
+        existingAccount.setLastUpdate(LocalDateTime.now());
+
+        Account updatedEntity = repository.save(existingAccount);
+        return AccountMapper.toDto(updatedEntity);
+
+    }
+
+    @Override
+    public String delete(UUID id) {
+        try{
+            Account account = repository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
 //        repository.delete(id);
-        account.setStatus(0);
-        account.setLastUpdate(LocalDateTime.now());
-        repository.save(account);
+            account.setStatus(0);
+            account.setLastUpdate(LocalDateTime.now());
+            repository.save(account);
+            return "Xoá thành công Account với ID: " + id;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Lỗi khi xoá Account", e);
+        }
+
     }
 
     @Override

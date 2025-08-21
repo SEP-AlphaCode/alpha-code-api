@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,8 +17,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class ConversationMember {
-    @EmbeddedId
-    private ConversationMemberId id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
     @Column(name = "joined_at", nullable = false)
     private LocalDateTime joinedAt;
@@ -25,13 +32,11 @@ public class ConversationMember {
     @Column(name = "role", nullable = false, length = 255)
     private String role;
 
-    @MapsId("conversationId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "conversation_id")
+    @JoinColumn(name = "conversation_id", nullable = false)
     private Conversation conversation;
 
-    @MapsId("accountId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

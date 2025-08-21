@@ -20,8 +20,8 @@ public class LoginDto {
     @AllArgsConstructor
     @Builder
     public static class LoginResponse {
-        private String token;
-        private AccountDto account;
+        private String accessToken;
+        private String refreshToken;
     }
 }
 

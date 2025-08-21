@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,8 +17,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class TeacherClass {
-    @EmbeddedId
-    private TeacherClassId id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
     @Column(name = "status", nullable = false)
     private Integer status;
@@ -28,13 +35,11 @@ public class TeacherClass {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @MapsId("teacherId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", nullable = false)
     private Account teacher;
 
-    @MapsId("classId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id")
+    @JoinColumn(name = "class_id", nullable = false)
     private Class aClass;
 }

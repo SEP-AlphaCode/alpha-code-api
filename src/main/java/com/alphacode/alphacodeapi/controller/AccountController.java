@@ -67,8 +67,13 @@ public class AccountController {
         return service.update(id, dto);
     }
 
+    @PatchMapping("/{id}")
+    public AccountDto patchUpdate(@PathVariable UUID id, @RequestBody AccountDto dto) {
+        return service.patchUpdate(id, dto);
+    }
+
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
-        service.delete(id);
+    public String delete(@PathVariable UUID id) {
+        return service.delete(id);
     }
 }

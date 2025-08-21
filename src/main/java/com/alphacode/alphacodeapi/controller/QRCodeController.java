@@ -52,9 +52,14 @@ public class QRCodeController {
         return qrCodeService.update(id, qrCodeDto);
     }
 
+    @PatchMapping("/{id}")
+    public QRCodeDto patchUpdate(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) {
+        return qrCodeService.update(id, qrCodeDto);
+    }
+
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
-        qrCodeService.delete(id);
+    public String delete(@PathVariable UUID id) {
+        return qrCodeService.delete(id);
     }
 
     @PutMapping("/{id}/status")

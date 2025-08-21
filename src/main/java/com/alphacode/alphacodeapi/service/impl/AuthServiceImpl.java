@@ -38,19 +38,19 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (account.getStatus() == 0) {
-//            throw new AuthenticationException("Account is disabled");
             return LoginDto.LoginResponse.builder()
-                    .token("Tài khoản của bạn đã bị khóa.")
-                    .account(null)
+                    .accessToken(null)
+                    .refreshToken(null)
                     .build();
         }
 
         // Generate JWT token and return response
-        String token = jwtUtil.generateToken(account);
-        AccountDto accountDTO = AccountMapper.toDto(account);
+        String accessToken = jwtUtil.generateAccessToken(account);
+        String refreshToken = jwtUtil.generateRefreshToken(account);
+
         return LoginDto.LoginResponse.builder()
-                .token(token)
-                .account(accountDTO)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }
