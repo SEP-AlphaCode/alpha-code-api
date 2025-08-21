@@ -20,13 +20,11 @@ public class ClassDto {
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdDate;
+    private LocalDateTime createDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
-
-
 }
