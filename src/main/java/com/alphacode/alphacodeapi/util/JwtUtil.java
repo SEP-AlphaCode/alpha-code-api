@@ -36,7 +36,8 @@ public class JwtUtil {
                         "fullName", account.getFullName(),
                         "username", account.getUsername(),
                         "email", account.getEmail(),
-                        "roleId", account.getRoleId()
+                        "roleId", account.getRoleId(),
+                        "roleName", account.getRole().getName()
                 ))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // vd: 15 phút
@@ -47,6 +48,14 @@ public class JwtUtil {
     public String generateRefreshToken(Account account) {
         return Jwts.builder()
                 .subject(account.getUsername())
+                .claims(Map.of(
+                        "id", account.getId(),
+                        "fullName", account.getFullName(),
+                        "username", account.getUsername(),
+                        "email", account.getEmail(),
+                        "roleId", account.getRoleId(),
+                        "roleName", account.getRole().getName()
+                ))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs)) // vd: 7 ngày
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
