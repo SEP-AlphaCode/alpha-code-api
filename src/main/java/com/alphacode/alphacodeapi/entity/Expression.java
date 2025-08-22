@@ -30,27 +30,18 @@ public class Expression {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 255)
-    private String description;
+    @Column(name = "image_url", nullable = false, length = 255)
+    private String imageUrl;
 
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
+    @Column(name = "description", length = 255)
+    private String description;
 
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "last_update")
-    private LocalDateTime lastUpdate;
-
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "icon_url", nullable = false, length = 255)
-    private String iconUrl;
-
-    @OneToMany(mappedBy = "expression", fetch = FetchType.LAZY)
-    private List<OsmoCard> osmoCards;
-
-    @OneToMany(mappedBy = "expression", fetch = FetchType.LAZY)
-    private List<ActivityDetail> activityDetails;
+    @Column(name = "last_update")
+    private LocalDateTime lastUpdate;
 }

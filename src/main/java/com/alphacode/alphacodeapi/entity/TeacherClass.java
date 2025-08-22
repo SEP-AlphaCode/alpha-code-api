@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,14 +19,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class TeacherClass {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
-    private UUID id;
+
+    @EmbeddedId
+    private TeacherClassId id;  // PK: teacher_id + class_id
 
     @Column(name = "status", nullable = false)
     private Integer status;
@@ -36,16 +32,30 @@ public class TeacherClass {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
+    @Column(name = "accountsrole_id", nullable = false, columnDefinition = "uuid")
+    private UUID accountsRoleId;
+
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("teacherId")
     @JoinColumn(name = "teacher_id", nullable = false)
     private Account teacher;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("classId")
     @JoinColumn(name = "class_id", nullable = false)
-    private Class aClass;
+    private SchoolClass schoolClass;
 
-    @NotNull
-    @Column(name = "accountsrole_id", nullable = false)
-    private UUID accountsroleId;
+    // ---- Composite key ----
+    @Embeddable
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TeacherClassId implements Serializable {
+        @Column(name = "teacher_id", columnDefinition = "uuid")
+        private UUID teacherId;
 
+        @Column(name = "class_id", columnDefinition = "uuid")
+        private UUID classId;
+    }
 }

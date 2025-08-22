@@ -8,15 +8,16 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "activity_event")
+@Table(name = "spaces")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ActivityEvent {
+public class Space {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -29,22 +30,26 @@ public class ActivityEvent {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "type", nullable = false, length = 255)
-    private String type;
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+
+    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID organizationId;
+
+    @Column(name = "create_date", nullable = false)
+    private LocalDateTime createDate;
+
+    @Column(name = "last_update")
+    private LocalDateTime lastUpdate;
 
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(name = "last_update", nullable = true)
-    private LocalDateTime lastUpdate;
-
-    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid")
-    private UUID activityId;
-
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id", insertable = false, updatable = false)
-    private Activity activity;
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Organization organization;
+
+    @OneToMany(mappedBy = "space", fetch = FetchType.LAZY)
+    private List<Device> devices;
 }

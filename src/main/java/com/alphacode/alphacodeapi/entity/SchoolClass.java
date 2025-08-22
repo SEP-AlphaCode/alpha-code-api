@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "conversations")
+@Table(name = "classes")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Conversation {
+public class SchoolClass {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -27,14 +27,8 @@ public class Conversation {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "name", length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
-
-    @Column(name = "is_group", nullable = false)
-    private Boolean isGroup;
-
-    @Column(name = "status", nullable = false)
-    private Integer status;
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
@@ -42,16 +36,13 @@ public class Conversation {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "created_by", nullable = false, columnDefinition = "uuid")
-    private UUID createdBy;
+    @Column(name = "status", nullable = false)
+    private Integer status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", insertable = false, updatable = false)
-    private Account createdByAccount;
+    // ---- Quan hệ ----
+    @OneToMany(mappedBy = "schoolClass", fetch = FetchType.LAZY)
+    private List<Music> musics;
 
-    @OneToMany(mappedBy = "conversation", fetch = FetchType.LAZY)
-    private List<ConversationMember> conversationMembers;
-
-    @OneToMany(mappedBy = "conversation", fetch = FetchType.LAZY)
-    private List<Message> messages;
+    @OneToMany(mappedBy = "schoolClass", fetch = FetchType.LAZY)
+    private List<TeacherClass> teacherClasses;
 }

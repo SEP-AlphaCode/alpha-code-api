@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class Rgb {
     @Column(name = "b", nullable = false)
     private Integer b;
 
-    @OneToMany(mappedBy = "rgb")
-    private Set<ActivityDetail> activityDetails = new LinkedHashSet<>();
-
+    // ---- Quan hệ ----
+    @OneToMany(mappedBy = "rgb", fetch = FetchType.LAZY)
+    private List<ActivityStep> activitySteps;
 }

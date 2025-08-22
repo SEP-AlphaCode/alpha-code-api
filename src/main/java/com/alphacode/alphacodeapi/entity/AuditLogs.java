@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "dances")
+@Table(name = "audit_logs")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Dance {
+public class AuditLogs {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -27,28 +26,23 @@ public class Dance {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
+    @Column(name = "user_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID userId;
 
-    @Column(name = "description", nullable = false, length = 255)
-    private String description;
+    @Column(name = "action", nullable = false, length = 255)
+    private String action;
 
-    @Column(name = "status", nullable = false)
-    private Integer status;
+    @Column(name = "entity_id", nullable = false, columnDefinition = "uuid")
+    private UUID entityId;
 
-    @Column(name = "last_update")
-    private LocalDateTime lastUpdate;
+    @Column(name = "entity", nullable = false, length = 255)
+    private String entity;
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
-
     // ---- Quan hệ ----
-    @OneToMany(mappedBy = "dance", fetch = FetchType.LAZY)
-    private List<ActivityStep> activitySteps;
-
-    @OneToMany(mappedBy = "dance", fetch = FetchType.LAZY)
-    private List<OsmoCard> osmoCards;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Account user;
 }

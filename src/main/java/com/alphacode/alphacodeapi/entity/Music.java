@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class Music {
     private String name;
 
     @Column(name = "url", nullable = false, length = 255)
-    private String url;
+    private String url; // .wav file
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
@@ -46,17 +47,17 @@ public class Music {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "class_id", nullable = false, columnDefinition = "uuid")
+    @Column(name = "class_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
     private UUID classId;
 
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id", insertable = false, updatable = false)
-    private Class aClass;
+    @JoinColumn(name = "class_id", nullable = false)
+    private SchoolClass schoolClass;
 
-    @OneToMany(mappedBy = "music")
-    private Set<Activity> activities = new LinkedHashSet<>();
-
+    @OneToMany(mappedBy = "music", fetch = FetchType.LAZY)
+    private List<Activity> activities;
 }

@@ -49,8 +49,14 @@ public class Organization {
     private String phone;
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+    private List<Account> accounts;
+
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
     private List<Activity> activities;
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
-    private List<Account> accounts;
+    private List<Space> spaces;
+
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+    private List<Robot> robots;
 }

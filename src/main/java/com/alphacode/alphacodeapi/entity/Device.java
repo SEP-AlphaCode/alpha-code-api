@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "classes")
+@Table(name = "devices")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Class {
+public class Device {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -27,8 +26,14 @@ public class Class {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
+    @Column(name = "space_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID spaceId;
+
+    @Column(name = "type", nullable = false, length = 255)
+    private String type;
+
+    @Column(name = "ip_config", nullable = false, columnDefinition = "jsonb")
+    private String ipConfig;
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
@@ -39,12 +44,8 @@ public class Class {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @OneToMany(mappedBy = "aClass", fetch = FetchType.LAZY)
-    private List<Student> students;
-
-    @OneToMany(mappedBy = "aClass", fetch = FetchType.LAZY)
-    private List<TeacherClass> teacherClasses;
-
-    @OneToMany(mappedBy = "aClass", fetch = FetchType.LAZY)
-    private List<Music> musics;
+    // ---- Quan hệ ----
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "space_id", nullable = false)
+    private Space space;
 }
