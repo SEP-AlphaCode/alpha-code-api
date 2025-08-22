@@ -5,12 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "robot_permissions")
@@ -20,8 +17,20 @@ import java.util.UUID;
 @Builder
 public class RobotPermission {
 
-    @EmbeddedId
-    private RobotPermissionId id;  // PK gồm id + robot_id + activity_id
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @org.hibernate.annotations.GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
+
+    @Column(name = "robot_id", nullable = false, columnDefinition = "uuid")
+    private UUID robotId;
+
+    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid")
+    private UUID activityId;
 
     @Column(name = "status", nullable = false)
     private Integer status;
@@ -34,28 +43,10 @@ public class RobotPermission {
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("robotId")
-    @JoinColumn(name = "robot_id", nullable = false)
+    @JoinColumn(name = "robot_id", insertable = false, updatable = false)
     private Robot robot;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("activityId")
-    @JoinColumn(name = "activity_id", nullable = false)
+    @JoinColumn(name = "activity_id", insertable = false, updatable = false)
     private Activity activity;
-
-    // ---- Composite key class ----
-    @Embeddable
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class RobotPermissionId implements Serializable {
-        @Column(name = "id", columnDefinition = "uuid")
-        private UUID id;
-
-        @Column(name = "robot_id", columnDefinition = "uuid")
-        private UUID robotId;
-
-        @Column(name = "activity_id", columnDefinition = "uuid")
-        private UUID activityId;
-    }
 }
