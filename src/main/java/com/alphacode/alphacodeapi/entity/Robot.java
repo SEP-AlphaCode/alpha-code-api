@@ -48,12 +48,12 @@ public class Robot {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid")
     private UUID organizationId;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false, insertable = false, updatable = false)
     private Organization organization;
 
     @OneToMany(mappedBy = "robot", fetch = FetchType.LAZY)

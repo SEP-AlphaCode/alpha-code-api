@@ -26,7 +26,7 @@ public class Device {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "space_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "space_id", nullable = false, columnDefinition = "uuid")
     private UUID spaceId;
 
     @Column(name = "type", nullable = false, length = 255)
@@ -46,6 +46,6 @@ public class Device {
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "space_id", nullable = false)
+    @JoinColumn(name = "space_id", nullable = false, insertable = false, updatable = false)
     private Space space;
 }

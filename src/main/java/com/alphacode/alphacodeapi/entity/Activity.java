@@ -49,7 +49,7 @@ public class Activity {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", updatable = false)
     private UUID organizationId;
 
     @Column(name = "description", nullable = false, length = 255)
@@ -58,16 +58,16 @@ public class Activity {
     @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
 
-    @Column(name = "music_id", columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "music_id", columnDefinition = "uuid")
     private UUID musicId;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false, insertable = false, updatable = false)
     private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "music_id")
+    @JoinColumn(name = "music_id", insertable = false, updatable = false)
     private Music music;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)

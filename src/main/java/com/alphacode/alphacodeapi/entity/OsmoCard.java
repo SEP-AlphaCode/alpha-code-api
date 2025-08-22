@@ -41,25 +41,25 @@ public class OsmoCard {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "expression_id", columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "expression_id", columnDefinition = "uuid")
     private UUID expressionId;
 
-    @Column(name = "action_id", columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "action_id", columnDefinition = "uuid")
     private UUID actionId;
 
-    @Column(name = "dance_id", columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "dance_id", columnDefinition = "uuid")
     private UUID danceId;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expression_id")
+    @JoinColumn(name = "expression_id", insertable = false, updatable = false)
     private Expression expression;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "action_id")
+    @JoinColumn(name = "action_id", insertable = false, updatable = false)
     private Action action;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dance_id")
+    @JoinColumn(name = "dance_id", insertable = false, updatable = false)
     private Dance dance;
 }
