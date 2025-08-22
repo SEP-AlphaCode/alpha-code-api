@@ -1,39 +1,53 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.entity.Class;
+import com.alphacode.alphacodeapi.entity.StudentParent;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeDto {
+@Builder
+public class StudentDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    private String name;
+    private String fullName;
 
-    private String qrCode;
+    private UUID classId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String facialRecordData;
+
+    private String shortName;
+
+    private String nickname;
+
+    private LocalDateTime dateOfBirth;
+
+    private Integer gender;
+
     private Integer status;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdDate;
+    private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastEdited;
+    private LocalDateTime createDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    private String image;
 
-    private String activityName;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String className;
 
-    private UUID activityId;
 }

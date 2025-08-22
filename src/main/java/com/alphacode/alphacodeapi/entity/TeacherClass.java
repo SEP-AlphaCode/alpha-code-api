@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,4 +43,9 @@ public class TeacherClass {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
     private Class aClass;
+
+    @NotNull
+    @Column(name = "accountsrole_id", nullable = false)
+    private UUID accountsroleId;
+
 }

@@ -1,39 +1,34 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeDto {
+public class RefreshTokenDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private UUID id;
+    private UUID id;   // server quản lý, client không set
 
-    private String name;
-
-    private String qrCode;
+    private String token; // client sẽ nhận được khi login/refresh
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer status;
+    private UUID accountId; // không cho client gửi, chỉ để admin hoặc backend đọc
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdDate;
+    private LocalDateTime expiredAt; // client cần biết để refresh
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastEdited;
+    private LocalDateTime createAt;  // server quản lý
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    private LocalDateTime revokedAt; // server quản lý
 
-    private String activityName;
-
-    private UUID activityId;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Boolean isActive; // server quản lý
 }

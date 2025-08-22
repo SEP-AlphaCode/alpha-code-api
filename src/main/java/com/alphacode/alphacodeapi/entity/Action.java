@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -46,4 +48,11 @@ public class Action {
 
     @Column(name = "can_interrupt", nullable = false)
     private Boolean canInterrupt;
+
+    @OneToMany(mappedBy = "action")
+    private Set<ActivityDetail> activityDetails = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "action")
+    private Set<OsmoCard> osmoCards = new LinkedHashSet<>();
+
 }
