@@ -24,13 +24,16 @@ public class JwtUtil {
     @Value("${jwt.refresh-expiration-ms}")
     private int refreshTokenExpirationMs;
 
+    @Value("${jwt.reset-password-expiration-ms}")
+    private int resetPasswordTokenExpirationMs;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateAccessToken(Account account) {
         return Jwts.builder()
-                .subject(account.getUsername())
+                .subject(account.getId().toString())
                 .claims(Map.of(
                         "id", account.getId(),
                         "fullName", account.getFullName(),
@@ -51,7 +54,7 @@ public class JwtUtil {
 
     public String generateRefreshToken(Account account) {
         return Jwts.builder()
-                .subject(account.getUsername())
+                .subject(account.getId().toString())
                 .claims(Map.of(
                         "id", account.getId(),
                         "fullName", account.getFullName(),
@@ -93,5 +96,22 @@ public class JwtUtil {
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaims(token);
         return claimsResolver.apply(claims);
+    }
+
+    public String generateResetPasswordToken(Account account) {
+        return Jwts.builder()
+                .setSubject(account.getId().toString())
+                .claims(Map.of(
+                        "id", account.getId(),
+                        "email", account.getEmail()
+                ))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + resetPasswordTokenExpirationMs))
+                .signWith(getSigningKey(), Jwts.SIG.HS512)
+                .compact();
+    }
+
+    public String extractEmail(String token) {
+        return getAllClaims(token).get("email", String.class);
     }
 }

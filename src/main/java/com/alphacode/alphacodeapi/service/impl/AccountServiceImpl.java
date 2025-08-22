@@ -2,27 +2,33 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
+import com.alphacode.alphacodeapi.dto.ResetPassworDto;
 import com.alphacode.alphacodeapi.entity.Account;
-import com.alphacode.alphacodeapi.entity.QRCode;
 import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.AccountMapper;
-import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RoleRepository;
 import com.alphacode.alphacodeapi.service.AccountService;
+import com.alphacode.alphacodeapi.util.EmailBody;
 import com.alphacode.alphacodeapi.util.JwtUtil;
-import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -35,6 +41,10 @@ public class AccountServiceImpl implements AccountService {
     private final S3ServiceImpl s3Service;
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
+    @Value("${web-base-url}")
+    private String webBaseUrl;
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Override
     public PagedResult<AccountDto> getAll(int page, int size, Integer status) {
@@ -173,5 +183,55 @@ public class AccountServiceImpl implements AccountService {
         return AccountMapper.toDto(account);
     }
 
+    @Override
+    public boolean requestResetPassword(String email) throws MessagingException {
+        var account = repository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with email: " + email));
 
+        MimeMessage message = mailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(email);
+        helper.setSubject("Đặt lại mật khẩu - AlphaCode");
+
+        var resetToken = jwtUtil.generateResetPasswordToken(account);
+        var resetLink = webBaseUrl + "/reset-password/reset?token=" + resetToken;
+
+        var emailBody = EmailBody.getResetPasswordEmailBody(account.getFullName(), resetLink);
+
+        helper.setText(emailBody, true);
+
+        // Put logo picture (inline image với cid:alphacode-logo)
+        ClassPathResource logoImage = new ClassPathResource("static/images/alphacode-logo.png");
+        helper.addInline("alphacode-logo", logoImage);
+
+        try {
+            mailSender.send(message);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    @Override
+    public boolean confirmResetPassword(ResetPassworDto dto) {
+        String email = jwtUtil.extractEmail(dto.getResetToken());
+
+        Account account = repository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid reset token"));
+
+        // 2. Check token is valid or not
+        if (!jwtUtil.validateJwtToken(dto.getResetToken())) {
+            throw new IllegalArgumentException("Reset token is invalid or expired");
+        }
+
+        // 3. Hash new password
+        account.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+
+        // 4. Save new password to db
+        repository.save(account);
+        return true;
+    }
 }
