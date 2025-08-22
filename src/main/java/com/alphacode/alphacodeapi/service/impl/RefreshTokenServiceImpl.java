@@ -6,6 +6,7 @@ import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.RefreshToken;
 import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.mapper.RefreshTokenMapper;
+import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RefreshTokenRepository;
 import com.alphacode.alphacodeapi.service.AccountService;
 import com.alphacode.alphacodeapi.service.RefreshTokenService;
@@ -27,6 +28,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     @Value("${jwt.refresh-expiration-ms}")
     private long refreshTokenExpirationMs;
@@ -61,14 +63,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         // 2. Decode JWT to take account infomation
         UUID accountId = jwtUtil.extractClaim(refreshToken, claims -> UUID.fromString(claims.get("id", String.class)));
-        var account = accountService.getById(accountId);
+        var account = accountRepository.getReferenceById(accountId);
 
         // 3. Generate new token
-        String newAccessToken = jwtUtil.generateAccessToken(AccountMapper.toEntity(account));
-        String newRefreshToken = jwtUtil.generateRefreshToken(AccountMapper.toEntity(account));
+        String newAccessToken = jwtUtil.generateAccessToken(account);
+        String newRefreshToken = jwtUtil.generateRefreshToken(account);
 
         // 4. Remove old refresh token and save new one
-        refreshTokenRepository.deleteByToken(refreshToken);
+        refreshTokenRepository.delete(token.get());
         RefreshToken item = new RefreshToken();
         item.setToken(newRefreshToken);
         item.setAccountId(account.getId());
