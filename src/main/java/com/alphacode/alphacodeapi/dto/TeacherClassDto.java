@@ -7,27 +7,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ClassDto {
+public class TeacherClassDto {
+    private UUID teacherId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private UUID id;
+    private String teacherName;
 
-    private String name;
-
+    private UUID classId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createdDate;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastUpdate;
+    private String className;
 
     private Integer status;
-
-    private List<TeacherClassDto> teachers;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime createDate;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime lastUpdate;
 }

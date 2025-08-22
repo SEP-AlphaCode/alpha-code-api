@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "qr_codes")
+@Table(name = "telemetry_event")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QRCode {
+public class TelemetryEvent {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -26,36 +26,27 @@ public class QRCode {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
-
-    @Column(name = "qr_code", nullable = false, length = 255)
-    private String qrCode;
-
-    @Column(name = "status", nullable = false)
-    private Integer status;
-
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(name = "last_edited")
-    private LocalDateTime lastEdited;
-
-    @Column(name = "image_url", nullable = false, length = 255)
-    private String imageUrl;
+    @Column(name = "robot_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID robotId;
 
     @Column(name = "activity_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
     private UUID activityId;
 
-    @Column(name = "account_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
-    private UUID accountId;
+    @Column(name = "event_type", nullable = false)
+    private Integer eventType;
+
+    @Column(name = "latency", nullable = false)
+    private Float latency;
+
+    @Column(name = "create_date", nullable = false)
+    private LocalDateTime createDate;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id", nullable = false)
-    private Activity activity;
+    @JoinColumn(name = "robot_id", nullable = false)
+    private Robot robot;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "activity_id", nullable = false)
+    private Activity activity;
 }

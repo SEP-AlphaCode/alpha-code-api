@@ -26,10 +26,10 @@ public class RefreshToken {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "token", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "token", nullable = false, length = 255)
     private String token;
 
-    @Column(name = "account_id", nullable = false, columnDefinition = "uuid")
+    @Column(name = "account_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
     private UUID accountId;
 
     @Column(name = "expired_at", nullable = false)
@@ -44,7 +44,8 @@ public class RefreshToken {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "osmo_card")
+@Table(name = "activity_steps")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OsmoCard {
+public class ActivityStep {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -26,20 +25,14 @@ public class OsmoCard {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "color", nullable = false, length = 255)
-    private String color;
+    @Column(name = "type", nullable = false, length = 255)
+    private String type;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
+    @Column(name = "start_time", nullable = false)
+    private Integer startTime;
 
-    @Column(name = "status", nullable = false)
-    private Integer status;
-
-    @Column(name = "last_update")
-    private LocalDateTime lastUpdate;
-
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "duration", nullable = false)
+    private Float duration;
 
     @Column(name = "expression_id", columnDefinition = "uuid", insertable = false, updatable = false)
     private UUID expressionId;
@@ -49,6 +42,12 @@ public class OsmoCard {
 
     @Column(name = "dance_id", columnDefinition = "uuid", insertable = false, updatable = false)
     private UUID danceId;
+
+    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID activityId;
+
+    @Column(name = "rgb_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID rgbId;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,4 +61,12 @@ public class OsmoCard {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dance_id")
     private Dance dance;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "activity_id", nullable = false)
+    private Activity activity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rgb_id", nullable = false)
+    private Rgb rgb;
 }

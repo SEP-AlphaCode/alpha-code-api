@@ -44,9 +44,6 @@ public class Account {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "role_id", nullable = false, columnDefinition = "uuid")
-    private UUID roleId;
-
     @Column(name = "banned_reason", length = 255)
     private String bannedReason;
 
@@ -62,45 +59,33 @@ public class Account {
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
 
-    @Column(name = "organization_id", columnDefinition = "uuid")
-    private UUID organizationId;
-
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
+    @Column(name = "role_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID roleId;
+
+    @Column(name = "organization_id", columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID organizationId;
+
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", insertable = false, updatable = false)
+    @JoinColumn(name = "organization_id")
     private Organization organization;
-
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
-    private List<TeacherClass> teacherClasses;
-
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<StudentParent> studentParents;
-
-    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private List<Conversation> createdConversations;
-
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<ConversationMember> conversationMemberships;
-
-    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
-    private List<Message> sentMessages;
-
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<MessageReadStatus> messageReadStatuses;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<RefreshToken> refreshTokens;
 
-    @ManyToMany
-    @JoinTable(name = "student_parents",
-            joinColumns = @JoinColumn(name = "parent_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> students = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private List<QRCode> qrCodes;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<AuditLogs> auditLogs;
+
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
+    private List<TeacherClass> teacherClasses;
 }
