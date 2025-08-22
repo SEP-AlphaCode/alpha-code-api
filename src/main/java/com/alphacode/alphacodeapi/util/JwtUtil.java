@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.function.Function;
 
 @Component
 public class JwtUtil {
@@ -23,7 +24,6 @@ public class JwtUtil {
     @Value("${jwt.refresh-expiration-ms}")
     private int refreshTokenExpirationMs;
 
-    // Generate a secure key from the secret string
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
@@ -40,7 +40,7 @@ public class JwtUtil {
                         "roleName", account.getRole().getName()
                 ))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // vd: 15 phút
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
@@ -61,11 +61,10 @@ public class JwtUtil {
                         "roleName", account.getRole().getName()
                 ))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs)) // vd: 7 ngày
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
-
 
     public Claims getAllClaims(String token) {
         return Jwts.parser()
@@ -76,12 +75,7 @@ public class JwtUtil {
     }
 
     public String getUsernameFromJwt(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+        return getAllClaims(token).getSubject();
     }
 
     public boolean validateJwtToken(String token) {
@@ -92,8 +86,12 @@ public class JwtUtil {
                     .parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Log error if needed
             return false;
         }
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 }
