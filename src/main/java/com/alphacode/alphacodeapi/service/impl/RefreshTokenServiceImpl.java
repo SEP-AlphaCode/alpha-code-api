@@ -69,6 +69,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         // 4. Remove old refresh token and save new one
         refreshTokenRepository.deleteByToken(refreshToken);
-        return new LoginDto.LoginResponse(newAccessToken, newRefreshToken);
+        RefreshToken item = new RefreshToken();
+        item.setToken(newRefreshToken);
+        item.setAccountId(account.getId());
+        item.setIsActive(true);
+        item.setCreateAt(LocalDateTime.now());
+        item.setExpiredAt(LocalDateTime.now().plusSeconds(jwtUtil.getRefreshTokenExpirationMs() / 1000)); // convert ms -> sec
+        refreshTokenRepository.save(item);
+
+       return LoginDto.LoginResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .build();
     }
 }
