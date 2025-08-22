@@ -2,9 +2,9 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.ClassDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.entity.Class;
+import com.alphacode.alphacodeapi.entity.SchoolClass;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.ClassMapper;
+import com.alphacode.alphacodeapi.mapper.SchoolClassMapper;
 import com.alphacode.alphacodeapi.repository.ClassRepository;
 import com.alphacode.alphacodeapi.service.ClassService;
 import lombok.RequiredArgsConstructor;
@@ -25,48 +25,49 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public PagedResult<ClassDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Class> pageResult;
+        Page<SchoolClass> pageResult;
 
         if (status != null) {
             pageResult = repository.findAllByStatus(status, pageable);
         } else {
             pageResult = repository.findAll(pageable);
         }
-        return new PagedResult<>(pageResult.map(ClassMapper::toDto));
+
+        return new PagedResult<>(pageResult.map(SchoolClassMapper::toDto));
     }
 
     @Override
     public ClassDto getById(UUID id) {
-        Class entity = repository.findById(id)
+        SchoolClass entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
-        return ClassMapper.toDto(entity);
+        return SchoolClassMapper.toDto(entity);
     }
 
     @Override
     public ClassDto create(ClassDto dto) {
-        Class entity = ClassMapper.toEntity(dto);
+        SchoolClass entity = SchoolClassMapper.toEntity(dto);
         entity.setCreateDate(LocalDateTime.now());
         entity.setStatus(1);
-        Class saved = repository.save(entity);
-        return ClassMapper.toDto(saved);
+        SchoolClass saved = repository.save(entity);
+        return SchoolClassMapper.toDto(saved);
     }
 
     @Override
     public ClassDto update(UUID id, ClassDto dto) {
-        Class existing = repository.findById(id)
+        SchoolClass existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
 
         existing.setName(dto.getName());
         existing.setLastUpdate(LocalDateTime.now());
         existing.setStatus(dto.getStatus());
 
-        Class updated = repository.save(existing);
-        return ClassMapper.toDto(updated);
+        SchoolClass updated = repository.save(existing);
+        return SchoolClassMapper.toDto(updated);
     }
 
     @Override
     public ClassDto patchUpdate(UUID id, ClassDto dto) {
-        Class existing = repository.findById(id)
+        SchoolClass existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
 
         if (dto.getName() != null) {
@@ -77,13 +78,13 @@ public class ClassServiceImpl implements ClassService {
         }
         existing.setLastUpdate(LocalDateTime.now());
 
-        Class updated = repository.save(existing);
-        return ClassMapper.toDto(updated);
+        SchoolClass updated = repository.save(existing);
+        return SchoolClassMapper.toDto(updated);
     }
 
     @Override
     public String delete(UUID id) {
-        Class entity = repository.findById(id)
+        SchoolClass entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
         entity.setStatus(0); // 👉 soft delete
         entity.setLastUpdate(LocalDateTime.now());
