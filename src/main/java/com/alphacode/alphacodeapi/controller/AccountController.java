@@ -70,14 +70,11 @@ public class AccountController {
         return service.update(id, dto);
     }
 
-    @PostMapping("/request-reset-password")
+    @PostMapping("/reset-password/request")
     public ResponseEntity<String> requestResetPassword(@RequestParam String email) throws MessagingException {
         boolean success = service.requestResetPassword(email);
-        if (success) {
-            return ResponseEntity.ok("Reset password link sent to email");
-        } else {
-            return ResponseEntity.badRequest().body("Email not found or failed to send mail");
-        }
+        return success ? ResponseEntity.ok("Reset password link sent to email")
+                : ResponseEntity.badRequest().body("Email not found or failed to send mail");
     }
 
     @PostMapping("/reset-password/confirm")
