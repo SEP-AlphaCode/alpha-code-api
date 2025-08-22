@@ -6,9 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -34,7 +37,8 @@ public class Activity {
     private String type;
 
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
-    private String data;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, Object> data;
 
     @Column(name = "status", nullable = false)
     private Integer status;

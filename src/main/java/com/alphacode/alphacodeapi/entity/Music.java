@@ -44,7 +44,7 @@ public class Music {
     private Integer duration;
 
     @Column(name = "status", nullable = false)
-    private Boolean status;
+    private Integer status;
 
     @Column(name = "class_id", nullable = false, columnDefinition = "uuid")
     private UUID classId;
