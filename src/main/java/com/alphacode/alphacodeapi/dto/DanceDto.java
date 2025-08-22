@@ -32,7 +32,9 @@ public class DanceDto {
 
     private Integer duration;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<OsmoCardDto> osmoCards;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<ActivityStepDto> activitySteps;
 
 }
