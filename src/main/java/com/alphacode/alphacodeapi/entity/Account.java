@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Account {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -44,6 +43,9 @@ public class Account {
     @Column(name = "status", nullable = false)
     private Integer status;
 
+    @Column(name = "role_id", nullable = false, columnDefinition = "uuid")
+    private UUID roleId;
+
     @Column(name = "banned_reason", length = 255)
     private String bannedReason;
 
@@ -59,22 +61,19 @@ public class Account {
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
 
+    @Column(name = "organization_id", columnDefinition = "uuid")
+    private UUID organizationId;
+
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
-    @Column(name = "role_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
-    private UUID roleId;
-
-    @Column(name = "organization_id", columnDefinition = "uuid", insertable = false, updatable = false)
-    private UUID organizationId;
-
-    // ---- Quan hệ ----
+    // 🔗 Quan hệ thực tế trong schema
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
+    @JoinColumn(name = "organization_id", insertable = false, updatable = false)
     private Organization organization;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
@@ -85,7 +84,4 @@ public class Account {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<AuditLogs> auditLogs;
-
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
-    private List<TeacherClass> teacherClasses;
 }
