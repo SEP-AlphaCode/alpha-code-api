@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -19,7 +20,7 @@ public class ActivityDto {
     private UUID id;
     private String name;
     private String type;
-    private Map<String, Object> data;
+    private List<Map<String, Object>> data;
     private Integer status;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createDate;
@@ -34,7 +35,7 @@ public class ActivityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String musicName;
 
-    public static ActivityDto withAllFields(UUID id, String name, String type, Map<String,Object> data,
+    public static ActivityDto withAllFields(UUID id, String name, String type, List<Map<String, Object>> data,
                                             Integer status, LocalDateTime createDate, LocalDateTime lastUpdate,
                                             UUID organizationId, String description, String imageUrl,
                                             UUID musicId, String organizationName, String musicName) {

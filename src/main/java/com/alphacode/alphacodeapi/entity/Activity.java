@@ -38,7 +38,7 @@ public class Activity {
 
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, Object> data;
+    private List<Map<String, Object>> data;
 
     @Column(name = "status", nullable = false)
     private Integer status;
