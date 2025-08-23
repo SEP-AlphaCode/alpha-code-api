@@ -50,6 +50,7 @@ public class OsmoCard {
     @Column(name = "dance_id", columnDefinition = "uuid")
     private UUID danceId;
 
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expression_id", insertable = false, updatable = false)
     private Expression expression;

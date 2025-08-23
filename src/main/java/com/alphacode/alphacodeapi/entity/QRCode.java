@@ -44,10 +44,18 @@ public class QRCode {
     @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
 
-    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid")
+    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
     private UUID activityId;
 
+    @Column(name = "account_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    private UUID accountId;
+
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id", insertable = false, updatable = false)
+    @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 }

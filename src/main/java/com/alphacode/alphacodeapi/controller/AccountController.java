@@ -3,12 +3,15 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
+import com.alphacode.alphacodeapi.dto.ResetPassworDto;
 import com.alphacode.alphacodeapi.service.AccountService;
 import com.alphacode.alphacodeapi.service.impl.AccountServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,6 +69,21 @@ public class AccountController {
     public AccountDto update(@PathVariable UUID id, @RequestBody AccountDto dto){
         return service.update(id, dto);
     }
+
+    @PostMapping("/reset-password/request")
+    public ResponseEntity<String> requestResetPassword(@RequestParam String email) throws MessagingException {
+        boolean success = service.requestResetPassword(email);
+        return success ? ResponseEntity.ok("Reset password link sent to email")
+                : ResponseEntity.badRequest().body("Email not found or failed to send mail");
+    }
+
+    @PostMapping("/reset-password/confirm")
+    public ResponseEntity<String> confirmResetPassword(@RequestBody ResetPassworDto dto) {
+        boolean success = service.confirmResetPassword(dto);
+        return success ? ResponseEntity.ok("Password reset successful")
+                : ResponseEntity.badRequest().body("Token is invalid or expired");
+    }
+
 
     @PatchMapping("/{id}")
     public AccountDto patchUpdate(@PathVariable UUID id, @RequestBody AccountDto dto) {

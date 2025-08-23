@@ -2,10 +2,10 @@ package com.alphacode.alphacodeapi.mapper;
 
 import com.alphacode.alphacodeapi.dto.DanceDto;
 import com.alphacode.alphacodeapi.dto.OsmoCardDto;
-import com.alphacode.alphacodeapi.dto.ActivityDetailDto;
+import com.alphacode.alphacodeapi.dto.ActivityStepDto;
 import com.alphacode.alphacodeapi.entity.Dance;
 import com.alphacode.alphacodeapi.entity.OsmoCard;
-import com.alphacode.alphacodeapi.entity.ActivityDetail;
+import com.alphacode.alphacodeapi.entity.ActivityStep;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +16,7 @@ public class DanceMapper {
         if (dance == null) {
             return null;
         }
+
         DanceDto dto = new DanceDto();
         dto.setId(dance.getId());
         dto.setName(dance.getName());
@@ -25,20 +26,22 @@ public class DanceMapper {
         dto.setCreateDate(dance.getCreateDate());
         dto.setDuration(dance.getDuration());
 
-        // Map osmoCards nếu cần
+        // Map osmoCards
         if (dance.getOsmoCards() != null) {
-            List<OsmoCardDto> osmoCardDtos = dance.getOsmoCards().stream()
-                    .map(DanceMapper::toOsmoCardDto)
-                    .collect(Collectors.toList());
-            // dto.setOsmoCards(osmoCardDtos); // cần thêm List<OsmoCardDto> vào DanceDto nếu muốn
+            dto.setOsmoCards(
+                    dance.getOsmoCards().stream()
+                            .map(DanceMapper::toOsmoCardDto)
+                            .collect(Collectors.toList())
+            );
         }
 
-        // Map activityDetails nếu cần
-        if (dance.getActivityDetails() != null) {
-            List<ActivityDetailDto> activityDetailDtos = dance.getActivityDetails().stream()
-                    .map(DanceMapper::toActivityDetailDto)
-                    .collect(Collectors.toList());
-            // dto.setActivityDetails(activityDetailDtos); // cần thêm List<ActivityDetailDto> vào DanceDto nếu muốn
+        // Map activitySteps
+        if (dance.getActivitySteps() != null) {
+            dto.setActivitySteps(
+                    dance.getActivitySteps().stream()
+                            .map(DanceMapper::toActivityStepDto)
+                            .collect(Collectors.toList())
+            );
         }
 
         return dto;
@@ -61,6 +64,7 @@ public class DanceMapper {
 
     private static OsmoCardDto toOsmoCardDto(OsmoCard osmoCard) {
         if (osmoCard == null) return null;
+
         OsmoCardDto dto = new OsmoCardDto();
         dto.setId(osmoCard.getId());
         dto.setName(osmoCard.getName());
@@ -73,12 +77,10 @@ public class DanceMapper {
             dto.setExpressionId(osmoCard.getExpression().getId());
             dto.setExpressionName(osmoCard.getExpression().getName());
         }
-
         if (osmoCard.getAction() != null) {
             dto.setActionId(osmoCard.getAction().getId());
             dto.setActionName(osmoCard.getAction().getName());
         }
-
         if (osmoCard.getDance() != null) {
             dto.setDanceId(osmoCard.getDance().getId());
             dto.setDanceName(osmoCard.getDance().getName());
@@ -87,24 +89,34 @@ public class DanceMapper {
         return dto;
     }
 
-    private static ActivityDetailDto toActivityDetailDto(ActivityDetail detail) {
-        if (detail == null) return null;
-        ActivityDetailDto dto = new ActivityDetailDto();
-        dto.setId(detail.getId());
-        dto.setType(detail.getType());
-        dto.setStartTime(detail.getStartTime());
-        dto.setDuration(detail.getDuration());
-        dto.setExpressionId(detail.getExpressionId());
-        dto.setActionId(detail.getActionId());
-        dto.setDanceId(detail.getDanceId());
-        dto.setActivityId(detail.getActivityId());
-        dto.setRgbId(detail.getRgbId());
+    private static ActivityStepDto toActivityStepDto(ActivityStep step) {
+        if (step == null) return null;
 
-        if (detail.getExpression() != null) dto.setExpressionName(detail.getExpression().getName());
-        if (detail.getAction() != null) dto.setActionName(detail.getAction().getName());
-        if (detail.getDance() != null) dto.setDanceName(detail.getDance().getName());
-        if (detail.getActivity() != null) dto.setActivityName(detail.getActivity().getName());
-        if (detail.getRgb() != null) dto.setRgbId(detail.getRgb().getId());
+        ActivityStepDto dto = new ActivityStepDto();
+        dto.setId(step.getId());
+        dto.setType(step.getType());
+        dto.setStartTime(step.getStartTime());
+        dto.setDuration(step.getDuration());
+
+        if (step.getExpression() != null) {
+            dto.setExpressionId(step.getExpression().getId());
+            dto.setExpressionName(step.getExpression().getName());
+        }
+        if (step.getAction() != null) {
+            dto.setActionId(step.getAction().getId());
+            dto.setActionName(step.getAction().getName());
+        }
+        if (step.getDance() != null) {
+            dto.setDanceId(step.getDance().getId());
+            dto.setDanceName(step.getDance().getName());
+        }
+        if (step.getActivity() != null) {
+            dto.setActivityId(step.getActivity().getId());
+            dto.setActivityName(step.getActivity().getName());
+        }
+        if (step.getRgb() != null) {
+            dto.setRgbId(step.getRgb().getId());
+        }
 
         return dto;
     }

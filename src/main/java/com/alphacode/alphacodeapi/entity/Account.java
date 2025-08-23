@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Account {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -68,6 +67,7 @@ public class Account {
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
+    // 🔗 Quan hệ thực tế trong schema
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
@@ -76,31 +76,12 @@ public class Account {
     @JoinColumn(name = "organization_id", insertable = false, updatable = false)
     private Organization organization;
 
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY)
-    private List<TeacherClass> teacherClasses;
-
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<StudentParent> studentParents;
-
-    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private List<Conversation> createdConversations;
-
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<ConversationMember> conversationMemberships;
-
-    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
-    private List<Message> sentMessages;
-
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<MessageReadStatus> messageReadStatuses;
-
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<RefreshToken> refreshTokens;
 
-    @ManyToMany
-    @JoinTable(name = "student_parents",
-            joinColumns = @JoinColumn(name = "parent_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Set<Student> students = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private List<QRCode> qrCodes;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<AuditLogs> auditLogs;
 }

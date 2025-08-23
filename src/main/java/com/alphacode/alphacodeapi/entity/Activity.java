@@ -1,14 +1,17 @@
 package com.alphacode.alphacodeapi.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -33,6 +36,7 @@ public class Activity {
     @Column(name = "type", nullable = false, length = 255)
     private String type;
 
+    @Type(JsonType.class)
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
     private String data;
 
@@ -45,7 +49,7 @@ public class Activity {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid")
+    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", updatable = false)
     private UUID organizationId;
 
     @Column(name = "description", nullable = false, length = 255)
@@ -57,8 +61,9 @@ public class Activity {
     @Column(name = "music_id", columnDefinition = "uuid")
     private UUID musicId;
 
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", insertable = false, updatable = false)
+    @JoinColumn(name = "organization_id", nullable = false, insertable = false, updatable = false)
     private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -66,11 +71,14 @@ public class Activity {
     private Music music;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
-    private List<QRCode> QRCodes;
+    private List<ActivityStep> steps;
+
+    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
+    private List<QRCode> qrCodes;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     private List<RobotPermission> robotPermissions;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
-    private List<ActivityDetail> activityDetails;
+    private List<TelemetryEvent> telemetryEvents;
 }

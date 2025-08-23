@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,17 +16,24 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class RobotPermission {
+
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
+    @org.hibernate.annotations.GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
+    @Column(name = "robot_id", nullable = false, columnDefinition = "uuid")
+    private UUID robotId;
+
+    @Column(name = "activity_id", nullable = false, columnDefinition = "uuid")
+    private UUID activityId;
+
     @Column(name = "status", nullable = false)
-    private Boolean status;
+    private Integer status;
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
@@ -35,11 +41,12 @@ public class RobotPermission {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "robot_id", nullable = false)
+    @JoinColumn(name = "robot_id", insertable = false, updatable = false)
     private Robot robot;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "activity_id", nullable = false)
+    @JoinColumn(name = "activity_id", insertable = false, updatable = false)
     private Activity activity;
 }

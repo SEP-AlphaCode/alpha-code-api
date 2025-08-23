@@ -48,6 +48,17 @@ public class Robot {
     @Column(name = "status", nullable = false)
     private Integer status;
 
+    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid")
+    private UUID organizationId;
+
+    // ---- Quan hệ ----
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = false, insertable = false, updatable = false)
+    private Organization organization;
+
     @OneToMany(mappedBy = "robot", fetch = FetchType.LAZY)
-    private List<RobotPermission> robotPermissions;
+    private List<RobotPermission> permissions;
+
+    @OneToMany(mappedBy = "robot", fetch = FetchType.LAZY)
+    private List<TelemetryEvent> telemetryEvents;
 }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -49,10 +50,11 @@ public class Action {
     @Column(name = "can_interrupt", nullable = false)
     private Boolean canInterrupt;
 
-    @OneToMany(mappedBy = "action")
-    private Set<ActivityDetail> activityDetails = new LinkedHashSet<>();
+    // Quan hệ ngược với ActivityStep
+    @OneToMany(mappedBy = "action", fetch = FetchType.LAZY)
+    private List<ActivityStep> activitySteps;
 
-    @OneToMany(mappedBy = "action")
-    private Set<OsmoCard> osmoCards = new LinkedHashSet<>();
-
+    // Quan hệ ngược với OsmoCard
+    @OneToMany(mappedBy = "action", fetch = FetchType.LAZY)
+    private List<OsmoCard> osmoCards;
 }

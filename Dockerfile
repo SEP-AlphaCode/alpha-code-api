@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=build /app/target/alpha-code-api-0.0.1-SNAPSHOT.jar ./app.jar
 
 # Expose port app chạy (thường 8080)
-EXPOSE 8080
+EXPOSE 8081
 
 # Chạy ứng dụng
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,12 +1,10 @@
 package com.alphacode.alphacodeapi.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,14 +16,24 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class TeacherClass {
+
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
+    @org.hibernate.annotations.GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
+
+    @Column(name = "teacher_id", nullable = false, columnDefinition = "uuid")
+    private UUID teacherId;
+
+    @Column(name = "class_id", nullable = false, columnDefinition = "uuid")
+    private UUID classId;
+
+    @Column(name = "accountsrole_id", nullable = false, columnDefinition = "uuid")
+    private UUID accountsRoleId;
 
     @Column(name = "status", nullable = false)
     private Integer status;
@@ -36,16 +44,12 @@ public class TeacherClass {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
+    // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
     private Account teacher;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id", nullable = false)
-    private Class aClass;
-
-    @NotNull
-    @Column(name = "accountsrole_id", nullable = false)
-    private UUID accountsroleId;
-
+    @JoinColumn(name = "class_id", insertable = false, updatable = false)
+    private SchoolClass schoolClass;
 }
