@@ -33,6 +33,12 @@ public class AlphaCodeApiApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void logApplicationPort() {
 		String port = environment.getProperty("local.server.port");
-		System.out.println("Application started on port: " + port);
+		String address = environment.getProperty("server.address", "localhost"); // mặc định localhost
+
+		String contextPath = environment.getProperty("server.servlet.context-path", "");
+
+		String url = "http://" + address + ":" + port + contextPath + "/swagger";
+		System.out.println("🚀 Application started at: " + url);
 	}
+
 }

@@ -10,6 +10,8 @@ import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RefreshTokenRepository;
 import com.alphacode.alphacodeapi.service.AuthService;
 import com.alphacode.alphacodeapi.util.JwtUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,5 +66,34 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public LoginDto.LoginResponse googleLogin(String request) {
+        try {
+            FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(request);
+
+            String email = firebaseToken.getEmail();
+            String name = (String) firebaseToken.getClaims().get("name");
+//            String sub = payload.getSubject();
+
+            Account account = repository.findByEmail(email).orElse(null);
+
+            // If no account is found, throw AuthenticationException
+            if (account == null) {
+                throw new AuthenticationException("Your account does not have permission to access this application. Please contact the administrator.");
+            }
+
+            String accessToken = jwtUtil.generateAccessToken(account);
+            String refreshToken = jwtUtil.generateRefreshToken(account);
+
+            return LoginDto.LoginResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+        } catch (Exception e) {
+            throw new AuthenticationException("Google login failed: " + e.getMessage());
+        }
     }
 }

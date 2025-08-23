@@ -26,4 +26,9 @@ public class AuthController {
     public  LoginDto.LoginResponse refreshNewToken(@RequestParam String refreshToken) {
         return refreshTokenService.refreshNewToken(refreshToken);
     }
+
+    @PostMapping("/google-login")
+    public LoginDto.LoginResponse googleLogin(@RequestBody String idToken) {
+        return service.googleLogin(idToken);
+    }
 }
