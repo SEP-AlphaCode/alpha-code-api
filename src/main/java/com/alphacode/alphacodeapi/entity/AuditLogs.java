@@ -26,9 +26,6 @@ public class AuditLogs {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "user_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
-    private UUID userId;
-
     @Column(name = "action", nullable = false, length = 255)
     private String action;
 
