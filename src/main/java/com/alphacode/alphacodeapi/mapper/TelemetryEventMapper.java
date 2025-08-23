@@ -12,7 +12,13 @@ public class TelemetryEventMapper {
         TelemetryEventDto telemetryEventDto = new TelemetryEventDto();
         telemetryEventDto.setId(telemetryEvent.getId());
         telemetryEventDto.setRobotId(telemetryEvent.getRobotId());
+        if (telemetryEvent.getRobot() != null) {
+            telemetryEventDto.setRobotName(telemetryEvent.getRobot().getName());
+        }
         telemetryEventDto.setActivityId(telemetryEvent.getActivityId());
+        if (telemetryEvent.getActivity() != null) {
+            telemetryEventDto.setActivityName(telemetryEvent.getActivity().getName());
+        }
         telemetryEventDto.setEventType(telemetryEvent.getEventType());
         telemetryEventDto.setLatency(telemetryEvent.getLatency());
         telemetryEventDto.setCreateDate(telemetryEvent.getCreateDate());

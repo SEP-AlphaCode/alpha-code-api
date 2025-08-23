@@ -14,24 +14,24 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TelemetryEventDto {
+public class DeviceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    private UUID robotId;
+    private UUID spaceId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String robotName;
+    private String spaceName;
 
-    private UUID activityId;
+    private String type;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String activityName;
-
-    private Integer eventType;
-
-    private Float latency;
+    private String ipConfig;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createDate;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime lastUpdate;
+
+    private Integer status;
 }
