@@ -26,9 +26,6 @@ public class AuditLogs {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "user_id", nullable = false, columnDefinition = "uuid", insertable = false)
-    private UUID userId;
-
     @Column(name = "action", nullable = false, length = 255)
     private String action;
 
@@ -43,6 +40,6 @@ public class AuditLogs {
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private Account user;
 }
