@@ -11,6 +11,9 @@ springdoc:
       url: ${OPEN_API_SERVERURL:http://localhost:8081}
   swagger-ui:
     path: /swagger
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
 
 logging:
   level:
