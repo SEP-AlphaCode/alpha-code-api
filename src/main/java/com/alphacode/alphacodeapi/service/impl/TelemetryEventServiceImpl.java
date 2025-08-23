@@ -25,11 +25,16 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     private final TelemetryEventRepository repository;
 
     @Override
-    public PagedResult<TelemetryEventDto> getAll(int page, int size) {
+    public PagedResult<TelemetryEventDto> getAll(UUID robotId, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TelemetryEvent> pageResult;
 
-        pageResult = repository.findAll(pageable);
+        if (robotId != null) {
+            pageResult = repository.findAllByRobotId(robotId, pageable);
+        } else {
+
+            pageResult = repository.findAll(pageable);
+        }
 
         return new PagedResult<>(pageResult.map(TelemetryEventMapper::toDto));
     }
@@ -39,16 +44,6 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
         var telemetryEvent = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
         return TelemetryEventMapper.toDto(telemetryEvent);
-    }
-
-    @Override
-    public PagedResult<TelemetryEventDto> getByRobotId(UUID robotId, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<TelemetryEvent> pageResult;
-
-        pageResult = repository.findAllByRobotId(robotId, pageable);
-
-        return new PagedResult<>(pageResult.map(TelemetryEventMapper::toDto));
     }
 
     @Override
@@ -80,16 +75,16 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
 
-        if (dto.getRobotId() != null){
+        if (dto.getRobotId() != null) {
             existing.setRobotId(dto.getRobotId());
         }
-        if (dto.getActivityId() != null){
+        if (dto.getActivityId() != null) {
             existing.setActivityId(dto.getActivityId());
         }
-        if (dto.getEventType() != null){
+        if (dto.getEventType() != null) {
             existing.setEventType(dto.getEventType());
         }
-        if (dto.getLatency() != null){
+        if (dto.getLatency() != null) {
             existing.setLatency(dto.getLatency());
         }
 

@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface RgbRepository extends JpaRepository<Rgb, UUID> {
-    Page<Rgb> findAll(UUID robotId, Pageable pageable);
+    Page<Rgb> findAll(Pageable pageable);
 }

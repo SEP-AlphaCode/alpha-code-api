@@ -7,11 +7,9 @@ import com.alphacode.alphacodeapi.dto.TelemetryEventDto;
 import java.util.UUID;
 
 public interface TelemetryEventService {
-    PagedResult<TelemetryEventDto> getAll(int page, int size);
+    PagedResult<TelemetryEventDto> getAll(UUID robotId,int page, int size);
 
     TelemetryEventDto getById(UUID id);
-
-    PagedResult<TelemetryEventDto> getByRobotId(UUID robotId, int page, int size);
 
     TelemetryEventDto create(TelemetryEventDto dto);
 

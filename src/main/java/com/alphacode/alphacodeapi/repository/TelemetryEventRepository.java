@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface TelemetryEventRepository extends JpaRepository<TelemetryEvent, UUID> {
-    Page<TelemetryEvent> findAllPageable(Pageable pageable);
+    Page<TelemetryEvent> findAll(Pageable pageable);
     Page<TelemetryEvent> findAllByRobotId(UUID robotId, Pageable pageable);
 }

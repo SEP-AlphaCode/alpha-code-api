@@ -19,24 +19,16 @@ public class TelemetryEventController {
 
     @GetMapping
     public PagedResult<TelemetryEventDto> getAll(
+            @RequestParam(value = "robotId", required = false) UUID robotId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
             ) {
-        return service.getAll(page, size);
+        return service.getAll(robotId, page, size);
     }
 
     @GetMapping("/{id}")
     public TelemetryEventDto getById(@PathVariable UUID id) {
         return service.getById(id);
-    }
-
-    @GetMapping("/robot/{robotId}")
-    public PagedResult<TelemetryEventDto> getByRobotId(
-            @PathVariable UUID robotId,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
-    ) {
-        return service.getByRobotId(robotId, page, size);
     }
 
     @PostMapping()
