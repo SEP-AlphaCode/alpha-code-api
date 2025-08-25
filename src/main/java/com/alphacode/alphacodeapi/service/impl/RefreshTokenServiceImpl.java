@@ -84,4 +84,18 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .refreshToken(newRefreshToken)
                 .build();
     }
+
+    @Override
+    public String logout(String refreshToken) {
+        var token = refreshTokenRepository.findRefreshTokenByTokenAndIsActive(refreshToken, true);
+        if (token.isEmpty()) {
+            throw new RuntimeException("Refresh token is not valid or has expired");
+        }
+
+        refreshTokenRepository.delete(token.get());
+
+        return "Logout successful";
+    }
+
+
 }

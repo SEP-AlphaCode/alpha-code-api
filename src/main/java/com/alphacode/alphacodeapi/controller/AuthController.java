@@ -31,4 +31,9 @@ public class AuthController {
     public LoginDto.LoginResponse googleLogin(@RequestBody String idToken) {
         return service.googleLogin(idToken);
     }
+
+    @PostMapping("/logout")
+    public String logout(@RequestParam String refreshToken) {
+        return refreshTokenService.logout(refreshToken);
+    }
 }
