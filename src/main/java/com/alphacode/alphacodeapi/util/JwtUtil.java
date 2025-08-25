@@ -33,7 +33,6 @@ public class JwtUtil {
 
     public String generateAccessToken(Account account) {
         return Jwts.builder()
-                .subject(account.getId().toString())
                 .claims(Map.of(
                         "id", account.getId(),
                         "fullName", account.getFullName(),
@@ -54,7 +53,6 @@ public class JwtUtil {
 
     public String generateRefreshToken(Account account) {
         return Jwts.builder()
-                .subject(account.getId().toString())
                 .claims(Map.of(
                         "id", account.getId(),
                         "username", account.getUsername(),
@@ -97,13 +95,12 @@ public class JwtUtil {
 
     public String generateResetPasswordToken(Account account) {
         return Jwts.builder()
-                .setSubject(account.getId().toString())
                 .claims(Map.of(
                         "id", account.getId(),
                         "email", account.getEmail()
                 ))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + resetPasswordTokenExpirationMs))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + resetPasswordTokenExpirationMs))
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
