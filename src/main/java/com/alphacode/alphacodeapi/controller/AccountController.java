@@ -44,13 +44,13 @@ public class AccountController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public AccountDto create(
-            @RequestParam ("username") String username,
-            @RequestParam ("password") String password,
-            @RequestParam ("fullName") String fullName,
-            @RequestParam ("phone") String phone,
-            @RequestParam ("email") String email,
-            @RequestParam ("gender") Integer gender,
-            @RequestParam ("roleId") UUID roleId,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("phone") String phone,
+            @RequestParam("email") String email,
+            @RequestParam("gender") Integer gender,
+            @RequestParam("roleId") UUID roleId,
             @RequestPart(value = "avatarFile") MultipartFile avatarFile) {
 
         AccountDto accountDto = new AccountDto();
@@ -66,8 +66,67 @@ public class AccountController {
 
 
     @PutMapping("/{id}")
-    public AccountDto update(@PathVariable UUID id, @RequestBody AccountDto dto){
+    public AccountDto update(@PathVariable UUID id, @RequestBody AccountDto dto) {
         return service.update(id, dto);
+    }
+
+    @PutMapping(value = "/{id}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public AccountDto updateProfile(
+            @PathVariable UUID id,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("phone") String phone,
+            @RequestParam("email") String email,
+            @RequestParam("gender") Integer gender,
+            @RequestParam("roleId") UUID roleId,
+            @RequestPart(value = "avatarFile") MultipartFile avatarFile) {
+        AccountDto accountDto = new AccountDto();
+        accountDto.setId(id);
+        accountDto.setUsername(username);
+        accountDto.setPassword(password);
+        accountDto.setFullName(fullName);
+        accountDto.setPhone(phone);
+        accountDto.setEmail(email);
+        accountDto.setGender(gender);
+        accountDto.setRoleId(roleId);
+        return service.updateProfile(id, accountDto, avatarFile);
+    }
+
+    @PatchMapping(value = "/{id}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public AccountDto patchUpdateProfile(
+            @PathVariable UUID id,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "fullName", required = false) String fullName,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "gender", required = false) Integer gender,
+            @RequestParam(value = "roleId", required = false) UUID roleId,
+            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
+        AccountDto accountDto = new AccountDto();
+        if (username != null) {
+            accountDto.setUsername(username);
+        }
+        if (password != null) {
+            accountDto.setPassword(password);
+        }
+        if (fullName != null) {
+            accountDto.setFullName(fullName);
+        }
+        if (phone != null) {
+            accountDto.setPhone(phone);
+        }
+        if (email != null) {
+            accountDto.setEmail(email);
+        }
+        if (gender != null) {
+            accountDto.setGender(gender);
+        }
+        if (roleId != null) {
+            accountDto.setRoleId(roleId);
+        }
+        return service.patchUpdateProfile(id, accountDto, avatarFile);
     }
 
     @PostMapping("/reset-password/request")
@@ -93,5 +152,15 @@ public class AccountController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
+    }
+
+    @PatchMapping("/{id}/change-password")
+    public AccountDto changePassword(@PathVariable UUID id, @RequestParam String oldPassword, @RequestParam String newPassword) {
+        return service.changePassword(id, oldPassword, newPassword);
+    }
+
+    @PatchMapping("/{id}/change-status")
+    public AccountDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return service.changeStatus(id, status);
     }
 }
