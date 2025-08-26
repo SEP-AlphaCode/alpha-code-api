@@ -51,5 +51,5 @@ public class TeacherClass {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", insertable = false, updatable = false)
-    private SchoolClass schoolClass;
+    private ClassEntity classEntity;
 }

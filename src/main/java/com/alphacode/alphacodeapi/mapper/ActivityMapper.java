@@ -23,21 +23,20 @@ public class ActivityMapper {
             return null;
         }
 
-        return ActivityDto.withAllFields(
-                activity.getId(),
-                activity.getName(),
-                activity.getType(),
-                activity.getData(),
-                activity.getStatus(),
-                activity.getCreateDate(),
-                activity.getLastUpdate(),
-                activity.getOrganizationId(),
-                activity.getDescription(),
-                activity.getImageUrl(),
-                activity.getMusicId(),
-                activity.getOrganization() != null ? activity.getOrganization().getName() : null,
-                activity.getMusic() != null ? activity.getMusic().getName() : null
-        );
+        ActivityDto dto = new ActivityDto();
+        dto.setId(activity.getId());
+        dto.setName(activity.getName());
+        dto.setType(activity.getType());
+        dto.setData(activity.getData());
+        dto.setStatus(activity.getStatus());
+        dto.setCreateDate(activity.getCreateDate());
+        dto.setLastUpdate(activity.getLastUpdate());
+        dto.setOrganizationId(activity.getOrganizationId());
+        dto.setDescription(activity.getDescription());
+        dto.setImageUrl(activity.getImageUrl());
+        dto.setMusicId(activity.getMusicId());
+
+        return dto;
     }
 
     /**

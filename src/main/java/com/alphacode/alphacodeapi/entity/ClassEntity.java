@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SchoolClass {
+public class ClassEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -40,9 +40,9 @@ public class SchoolClass {
     private Integer status;
 
     // ---- Quan hệ ----
-    @OneToMany(mappedBy = "schoolClass", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "classEntity", fetch = FetchType.LAZY)
     private List<Music> musics;
 
-    @OneToMany(mappedBy = "schoolClass", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "classEntity", fetch = FetchType.LAZY)
     private List<TeacherClass> teacherClasses;
 }

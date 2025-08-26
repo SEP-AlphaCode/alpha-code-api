@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClassDto {
+public class ClassEntityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 

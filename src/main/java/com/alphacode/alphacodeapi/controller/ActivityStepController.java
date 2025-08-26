@@ -1,8 +1,8 @@
 package com.alphacode.alphacodeapi.controller;
 
-import com.alphacode.alphacodeapi.dto.ClassEntityDto;
+import com.alphacode.alphacodeapi.dto.ActivityStepDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.service.ClassEntityService;
+import com.alphacode.alphacodeapi.service.ActivityStepService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -10,38 +10,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/classes")
-@RequiredArgsConstructor
-@Tag(name = "Classes")
-public class ClassController {
-    private final ClassEntityService service;
+@RequestMapping("/api/v1/activity-steps")
+@RequiredArgsConstructor    
+@Tag(name = "ActivitySteps")
+public class ActivityStepController {
+
+    private final ActivityStepService service;
 
     @GetMapping
-    public PagedResult<ClassEntityDto> getAll(
+    public PagedResult<ActivityStepDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "status", required = false) Integer status
-    ) {
-        return service.getAll(page, size, status);
+            @RequestParam(value = "activityId", required = false) UUID activityId) {
+        return service.getAll(page, size, activityId);
     }
 
     @GetMapping("/{id}")
-    public ClassEntityDto getById(@PathVariable UUID id) {
+    public ActivityStepDto getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping
-    public ClassEntityDto create(@RequestBody ClassEntityDto dto) {
+    public ActivityStepDto create(@RequestBody ActivityStepDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    public ClassEntityDto update(@PathVariable UUID id, @RequestBody ClassEntityDto dto) {
+    public ActivityStepDto update(@PathVariable UUID id, @RequestBody ActivityStepDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
-    public ClassEntityDto patchUpdate(@PathVariable UUID id, @RequestBody ClassEntityDto dto) {
+    public ActivityStepDto patchUpdate(@PathVariable UUID id, @RequestBody ActivityStepDto dto) {
         return service.patchUpdate(id, dto);
     }
 

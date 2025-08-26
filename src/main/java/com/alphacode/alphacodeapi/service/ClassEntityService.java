@@ -1,11 +1,11 @@
 package com.alphacode.alphacodeapi.service;
 
-import com.alphacode.alphacodeapi.dto.ClassDto;
+import com.alphacode.alphacodeapi.dto.ClassEntityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 
 import java.util.UUID;
 
-public interface ClassService {
+public interface ClassEntityService {
 
     /**
      * Lấy tất cả class có phân trang
@@ -15,27 +15,27 @@ public interface ClassService {
      * @param status lọc theo trạng thái (có thể null)
      * @return danh sách class
      */
-    PagedResult<ClassDto> getAll(int page, int size, Integer status);
+    PagedResult<ClassEntityDto> getAll(int page, int size, Integer status);
 
     /**
      * Lấy chi tiết class theo ID
      */
-    ClassDto getById(UUID id);
+    ClassEntityDto getById(UUID id);
 
     /**
      * Tạo mới class
      */
-    ClassDto create(ClassDto dto);
+    ClassEntityDto create(ClassEntityDto dto);
 
     /**
      * Update toàn bộ class (PUT)
      */
-    ClassDto update(UUID id, ClassDto dto);
+    ClassEntityDto update(UUID id, ClassEntityDto dto);
 
     /**
      * Update một phần class (PATCH)
      */
-    ClassDto patchUpdate(UUID id, ClassDto dto);
+    ClassEntityDto patchUpdate(UUID id, ClassEntityDto dto);
 
     /**
      * Soft delete class (chỉ đổi status = 0)

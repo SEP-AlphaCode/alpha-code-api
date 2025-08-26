@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -56,7 +54,7 @@ public class Music {
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
-    private SchoolClass schoolClass;
+    private ClassEntity classEntity;
 
     @OneToMany(mappedBy = "music", fetch = FetchType.LAZY)
     private List<Activity> activities;
