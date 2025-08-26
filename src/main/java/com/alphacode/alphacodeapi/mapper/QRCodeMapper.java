@@ -18,7 +18,7 @@ public class QRCodeMapper {
         dto.setImageUrl(qrCode.getImageUrl());
         dto.setActivityId(qrCode.getActivityId());
         dto.setAccountId(qrCode.getAccountId());
-        //dto.setActivityName(qrCode.getActivity() != null ? qrCode.getActivity().getName() : null);
+        dto.setActivityName(qrCode.getActivity() != null ? qrCode.getActivity().getName() : null);
 
         return dto;
     }
