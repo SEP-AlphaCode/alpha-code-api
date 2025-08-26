@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/activity-steps")
-@RequiredArgsConstructor    
+@RequiredArgsConstructor
 @Tag(name = "ActivitySteps")
 public class ActivityStepController {
 

@@ -2,15 +2,20 @@ package com.alphacode.alphacodeapi.mapper;
 
 import com.alphacode.alphacodeapi.dto.ActivityDto;
 import com.alphacode.alphacodeapi.entity.Activity;
+import com.alphacode.alphacodeapi.repository.MusicRepository;
+import com.alphacode.alphacodeapi.repository.OrganizationRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 /**
  * Mapper for converting between Activity entity and ActivityDto.
  */
 @Component
+@RequiredArgsConstructor
 public class ActivityMapper {
+
+    private final OrganizationRepository organizationRepository;
+    private final MusicRepository musicRepository;
 
     /**
      * Converts an Activity entity to ActivityDto.
@@ -36,15 +41,27 @@ public class ActivityMapper {
         dto.setImageUrl(activity.getImageUrl());
         dto.setMusicId(activity.getMusicId());
 
+        // Lấy organizationName từ organizationId
+        if (activity.getOrganizationId() != null) {
+            dto.setOrganizationName(
+                    organizationRepository.findById(activity.getOrganizationId())
+                            .map(org -> org.getName())
+                            .orElse(null)
+            );
+        }
+
+        // Lấy musicName từ musicId
+        if (activity.getMusicId() != null) {
+            dto.setMusicName(
+                    musicRepository.findById(activity.getMusicId())
+                            .map(music -> music.getName())
+                            .orElse(null)
+            );
+        }
+
         return dto;
     }
 
-    /**
-     * Converts an ActivityDto to Activity entity.
-     *
-     * @param dto the ActivityDto to convert
-     * @return the converted Activity entity, or null if the input is null
-     */
     public Activity toEntity(ActivityDto dto) {
         if (dto == null) {
             return null;
@@ -65,13 +82,6 @@ public class ActivityMapper {
                 .build();
     }
 
-    /**
-     * Updates an existing Activity entity with values from ActivityDto.
-     *
-     * @param dto    the ActivityDto with updated values
-     * @param entity the Activity entity to update
-     * @return the updated Activity entity
-     */
     public Activity updateEntity(ActivityDto dto, Activity entity) {
         if (dto == null || entity == null) {
             return entity;
@@ -102,7 +112,7 @@ public class ActivityMapper {
             entity.setMusicId(dto.getMusicId());
         }
 
-        // Always update the lastUpdate timestamp when any field is updated
+        // update timestamp
         entity.setLastUpdate(java.time.LocalDateTime.now());
 
         return entity;

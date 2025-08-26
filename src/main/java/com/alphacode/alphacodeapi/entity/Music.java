@@ -45,9 +45,6 @@ public class Music {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "class_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
-    private UUID classId;
-
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
