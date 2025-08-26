@@ -113,12 +113,7 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setGender(accountDto.getGender());
         existingAccount.setLastUpdate(LocalDateTime.now());
         existingAccount.setEmail(accountDto.getEmail());
-
-        if (accountDto.getRoleId() != null) {
-            Role role = roleRepository.findById(accountDto.getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-            existingAccount.setRole(role);
-        }
+        existingAccount.setRoleId(accountDto.getRoleId());
 
         Account updatedEntity = repository.save(existingAccount);
         return AccountMapper.toDto(updatedEntity);
@@ -175,9 +170,7 @@ public class AccountServiceImpl implements AccountService {
             existingAccount.setEmail(accountDto.getEmail());
         }
         if (accountDto.getRoleId() != null) {
-            Role role = roleRepository.findById(accountDto.getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-            existingAccount.setRole(role);
+            existingAccount.setRoleId(accountDto.getRoleId());
         }
         existingAccount.setLastUpdate(LocalDateTime.now());
 
