@@ -18,7 +18,15 @@ public interface AccountService {
 
     AccountDto update(UUID id,AccountDto accountDto);
 
+    AccountDto updateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile);
+
     AccountDto patchUpdate(UUID id, AccountDto accountDto);
+
+    AccountDto patchUpdateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile);
+
+    AccountDto changePassword(UUID id, String oldPassword, String newPassword);
+
+    AccountDto changeStatus(UUID id, Integer status);
 
     String delete(UUID id);
 

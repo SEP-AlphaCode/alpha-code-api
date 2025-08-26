@@ -55,11 +55,8 @@ public class JwtUtil {
         return Jwts.builder()
                 .claims(Map.of(
                         "id", account.getId(),
-                        "fullName", account.getFullName(),
                         "username", account.getUsername(),
-                        "email", account.getEmail(),
-                        "roleId", account.getRoleId(),
-                        "roleName", account.getRole().getName()
+                        "email", account.getEmail()
                 ))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
