@@ -55,8 +55,9 @@ public class QRCodeController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Patch update QRCode")
     public QRCodeDto patchUpdate(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) {
-        return qrCodeService.update(id, qrCodeDto);
+        return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
