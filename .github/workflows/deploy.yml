@@ -6,7 +6,25 @@ on:
       - deploy
 
 jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '24'
+          cache: maven
+
+      - name: Build and run tests
+        run: mvn clean verify --file pom.xml
+
+
   build-and-push-image:
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
