@@ -6,7 +6,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import java.util.UUID;
 
 public interface DanceService {
-    PagedResult<DanceDto> getAll(int page, int size, Integer status);
+    PagedResult<DanceDto> getPagedDances(int page, int size, String search);
 
     DanceDto getById(UUID id);
 

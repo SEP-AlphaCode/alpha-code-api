@@ -24,11 +24,11 @@ public class DanceServiceImpl implements DanceService {
     private final DanceRepository repository;
 
     @Override
-    public PagedResult<DanceDto> getAll(int page, int size, Integer status) {
+    public PagedResult<DanceDto> getPagedDances(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Dance> pageResult;
-        if (status != null) {
-            pageResult = repository.findAllByStatus(status, pageable);
+        if (search != null) {
+            pageResult = repository.findPagedDances(search, pageable);
         } else {
             pageResult = repository.findAll(pageable);
         }

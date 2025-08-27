@@ -18,12 +18,12 @@ public class DanceController {
     private final DanceService service;
 
     @GetMapping
-    public PagedResult<DanceDto> getAll(
+    public PagedResult<DanceDto> getPagedDances(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "status", required = false) Integer status
+            @RequestParam(value = "search", required = false) String search
     ) {
-        return service.getAll(page, size, status);
+        return service.getPagedDances(page, size, search);
     }
 
     @GetMapping("/{id}")
