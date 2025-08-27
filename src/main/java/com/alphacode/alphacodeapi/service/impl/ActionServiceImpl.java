@@ -52,7 +52,7 @@ public class ActionServiceImpl implements ActionService {
     @Transactional
     public ActionDto createAction(ActionDto actionDto) {
         Action action = ActionMapper.toEntity(actionDto);
-        action.setCreateDate(LocalDateTime.now());
+        action.setCreatedDate(LocalDateTime.now());
         action.setLastUpdate(LocalDateTime.now());
         Action savedAction = actionRepository.save(action);
         return ActionMapper.toDto(savedAction);

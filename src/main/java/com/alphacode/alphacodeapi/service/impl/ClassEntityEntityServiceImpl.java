@@ -46,7 +46,7 @@ public class ClassEntityEntityServiceImpl implements ClassEntityService {
     @Override
     public ClassEntityDto create(ClassEntityDto dto) {
         ClassEntity entity = ClassEntityMapper.toEntity(dto);
-        entity.setCreateDate(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
         entity.setStatus(1);
         ClassEntity saved = repository.save(entity);
         return ClassEntityMapper.toDto(saved);

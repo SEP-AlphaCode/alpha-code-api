@@ -38,8 +38,8 @@ public class OsmoCard {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "expression_id", columnDefinition = "uuid")
     private UUID expressionId;

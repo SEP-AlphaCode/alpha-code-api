@@ -17,7 +17,7 @@ public class OrganizationDto {
     private String name;
     private String location;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
     private Integer status;

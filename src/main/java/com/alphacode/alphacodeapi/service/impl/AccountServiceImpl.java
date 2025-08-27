@@ -77,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
             }
 
             Account entity = AccountMapper.toEntity(accountDto);
-            entity.setCreateDate(LocalDateTime.now());
+            entity.setCreatedDate(LocalDateTime.now());
             entity.setStatus(1);
             entity.setBannedReason(null);
             entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));

@@ -48,7 +48,7 @@ public class MusicServiceImpl implements MusicService {
     @Override
     public MusicDto create(MusicDto dto) {
         Music music = MusicMapper.toEntity(dto);
-        music.setCreateDate(LocalDateTime.now());
+        music.setCreatedDate(LocalDateTime.now());
         music.setLastUpdate(LocalDateTime.now());
         Music saved = repository.save(music);
         return MusicMapper.toDto(saved);

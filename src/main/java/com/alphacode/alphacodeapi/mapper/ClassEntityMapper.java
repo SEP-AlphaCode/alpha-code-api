@@ -16,7 +16,7 @@ public class ClassEntityMapper {
         ClassEntityDto dto = new ClassEntityDto();
         dto.setId(classEntity.getId());
         dto.setName(classEntity.getName());
-        dto.setCreatedDate(classEntity.getCreateDate());
+        dto.setCreatedDate(classEntity.getCreatedDate());
         dto.setLastUpdate(classEntity.getLastUpdate());
         dto.setStatus(classEntity.getStatus());
 
@@ -40,7 +40,7 @@ public class ClassEntityMapper {
         ClassEntity classEntity = new ClassEntity();
         classEntity.setId(dto.getId());
         classEntity.setName(dto.getName());
-        classEntity.setCreateDate(dto.getCreatedDate());
+        classEntity.setCreatedDate(dto.getCreatedDate());
         classEntity.setLastUpdate(dto.getLastUpdate());
         classEntity.setStatus(dto.getStatus());
         return classEntity;
@@ -55,7 +55,7 @@ public class ClassEntityMapper {
         dto.setClassId(teacherClass.getClassEntity().getId());
         dto.setClassName(teacherClass.getClassEntity().getName());
         dto.setStatus(teacherClass.getStatus());
-        dto.setCreateDate(teacherClass.getCreateDate());
+        dto.setCreatedDate(teacherClass.getCreatedDate());
         dto.setLastUpdate(teacherClass.getLastUpdate());
         return dto;
     }

@@ -52,7 +52,7 @@ public class DeviceServiceImpl implements DeviceService {
     public DeviceDto create(DeviceDto dto) {
         Device entity = DeviceMapper.toEntity(dto);
 
-        entity.setCreateDate(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
 
         Device saved = repository.save(entity);
         return DeviceMapper.toDto(saved);

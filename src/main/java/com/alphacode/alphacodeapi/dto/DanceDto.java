@@ -28,7 +28,7 @@ public class DanceDto {
     private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     private Integer duration;
 

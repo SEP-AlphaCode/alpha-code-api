@@ -33,5 +33,5 @@ public class TelemetryEventDto {
     private Float latency;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 }

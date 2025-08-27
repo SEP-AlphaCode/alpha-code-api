@@ -34,7 +34,7 @@ public class ActivityMapper {
         dto.setType(activity.getType());
         dto.setData(activity.getData());
         dto.setStatus(activity.getStatus());
-        dto.setCreateDate(activity.getCreateDate());
+        dto.setCreatedDate(activity.getCreatedDate());
         dto.setLastUpdate(activity.getLastUpdate());
         dto.setOrganizationId(activity.getOrganizationId());
         dto.setDescription(activity.getDescription());
@@ -73,7 +73,7 @@ public class ActivityMapper {
                 .type(dto.getType())
                 .data(dto.getData())
                 .status(dto.getStatus())
-                .createDate(dto.getCreateDate() != null ? dto.getCreateDate() : null)
+                .createdDate(dto.getCreatedDate() != null ? dto.getCreatedDate() : null)
                 .lastUpdate(dto.getLastUpdate())
                 .organizationId(dto.getOrganizationId())
                 .description(dto.getDescription())

@@ -21,7 +21,7 @@ public class TelemetryEventMapper {
         }
         telemetryEventDto.setEventType(telemetryEvent.getEventType());
         telemetryEventDto.setLatency(telemetryEvent.getLatency());
-        telemetryEventDto.setCreateDate(telemetryEvent.getCreateDate());
+        telemetryEventDto.setCreatedDate(telemetryEvent.getCreatedDate());
         return telemetryEventDto;
     }
 
@@ -36,7 +36,7 @@ public class TelemetryEventMapper {
         telemetryEvent.setActivityId(telemetryEventDto.getActivityId());
         telemetryEvent.setEventType(telemetryEventDto.getEventType());
         telemetryEvent.setLatency(telemetryEventDto.getLatency());
-        telemetryEvent.setCreateDate(telemetryEventDto.getCreateDate());
+        telemetryEvent.setCreatedDate(telemetryEventDto.getCreatedDate());
         return telemetryEvent;
     }
 }

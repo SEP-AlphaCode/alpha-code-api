@@ -41,8 +41,8 @@ public class TeacherClass {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)

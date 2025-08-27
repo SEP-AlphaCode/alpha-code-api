@@ -24,7 +24,7 @@ public class RefreshTokenDto {
     private LocalDateTime expiredAt; // client cần biết để refresh
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createAt;  // server quản lý
+    private LocalDateTime createdDate;  // server quản lý
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime revokedAt; // server quản lý

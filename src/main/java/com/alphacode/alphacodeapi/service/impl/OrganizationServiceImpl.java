@@ -46,7 +46,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationDto create(OrganizationDto dto) {
         var entity = OrganizationMapper.toEntity(dto);
-        entity.setCreateDate(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
         entity.setLastUpdate(LocalDateTime.now());
 
         var saved = repository.save(entity);

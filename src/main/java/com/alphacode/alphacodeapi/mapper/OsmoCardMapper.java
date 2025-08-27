@@ -14,7 +14,7 @@ public class OsmoCardMapper {
         dto.setName(osmoCard.getName());
         dto.setStatus(osmoCard.getStatus());
         dto.setLastUpdate(osmoCard.getLastUpdate());
-        dto.setCreateDate(osmoCard.getCreateDate());
+        dto.setCreatedDate(osmoCard.getCreatedDate());
         dto.setExpressionId(osmoCard.getExpressionId());
         if (osmoCard.getExpression() != null) {
             dto.setExpressionName(osmoCard.getExpression().getName());
@@ -40,7 +40,7 @@ public class OsmoCardMapper {
         osmoCard.setName(osmoCardDto.getName());
         osmoCard.setStatus(osmoCardDto.getStatus());
         osmoCard.setLastUpdate(osmoCardDto.getLastUpdate());
-        osmoCard.setCreateDate(osmoCardDto.getCreateDate());
+        osmoCard.setCreatedDate(osmoCardDto.getCreatedDate());
         osmoCard.setExpressionId(osmoCardDto.getExpressionId());
         osmoCard.setActionId(osmoCardDto.getActionId());
         osmoCard.setDanceId(osmoCardDto.getDanceId());

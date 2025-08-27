@@ -13,7 +13,7 @@ public class MusicMapper {
         dto.setId(music.getId());
         dto.setName(music.getName());
         dto.setUrl(music.getUrl());
-        dto.setCreateDate(music.getCreateDate());
+        dto.setCreatedDate(music.getCreatedDate());
         dto.setLastUpdate(music.getLastUpdate());
         dto.setDuration(music.getDuration());
         dto.setStatus(music.getStatus());
@@ -36,7 +36,7 @@ public class MusicMapper {
         music.setId(dto.getId());
         music.setName(dto.getName());
         music.setUrl(dto.getUrl());
-        music.setCreateDate(dto.getCreateDate());
+        music.setCreatedDate(dto.getCreatedDate());
         music.setLastUpdate(dto.getLastUpdate());
         music.setDuration(dto.getDuration());
         music.setStatus(dto.getStatus());

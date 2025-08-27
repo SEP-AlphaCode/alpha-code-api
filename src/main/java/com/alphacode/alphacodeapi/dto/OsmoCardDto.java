@@ -26,7 +26,7 @@ public class OsmoCardDto {
     private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     private UUID expressionId;
 

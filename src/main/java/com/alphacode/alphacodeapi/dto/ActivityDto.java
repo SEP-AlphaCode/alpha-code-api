@@ -23,7 +23,7 @@ public class ActivityDto {
     private String data;
     private Integer status;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
     private UUID organizationId;
@@ -45,7 +45,7 @@ public class ActivityDto {
                 .type(type)
                 .data(data)
                 .status(status)
-                .createDate(createDate)
+                .createdDate(createDate)
                 .lastUpdate(lastUpdate)
                 .organizationId(organizationId)
                 .description(description)

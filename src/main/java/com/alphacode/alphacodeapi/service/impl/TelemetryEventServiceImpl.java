@@ -50,7 +50,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     public TelemetryEventDto create(TelemetryEventDto dto) {
 
         var telemetryEvent = TelemetryEventMapper.toEntity(dto);
-        telemetryEvent.setCreateDate(LocalDateTime.now());
+        telemetryEvent.setCreatedDate(LocalDateTime.now());
 
         var saved = repository.save(telemetryEvent);
         return TelemetryEventMapper.toDto(saved);

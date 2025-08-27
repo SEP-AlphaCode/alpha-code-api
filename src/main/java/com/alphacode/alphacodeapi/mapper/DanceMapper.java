@@ -23,7 +23,7 @@ public class DanceMapper {
         dto.setDescription(dance.getDescription());
         dto.setStatus(dance.getStatus());
         dto.setLastUpdate(dance.getLastUpdate());
-        dto.setCreateDate(dance.getCreateDate());
+        dto.setCreatedDate(dance.getCreatedDate());
         dto.setDuration(dance.getDuration());
 
         // Map osmoCards
@@ -57,7 +57,7 @@ public class DanceMapper {
         dance.setDescription(dto.getDescription());
         dance.setStatus(dto.getStatus());
         dance.setLastUpdate(dto.getLastUpdate());
-        dance.setCreateDate(dto.getCreateDate());
+        dance.setCreatedDate(dto.getCreatedDate());
         dance.setDuration(dto.getDuration());
         return dance;
     }
@@ -71,7 +71,7 @@ public class DanceMapper {
         dto.setColor(osmoCard.getColor());
         dto.setStatus(osmoCard.getStatus());
         dto.setLastUpdate(osmoCard.getLastUpdate());
-        dto.setCreateDate(osmoCard.getCreateDate());
+        dto.setCreatedDate(osmoCard.getCreatedDate());
 
         if (osmoCard.getExpression() != null) {
             dto.setExpressionId(osmoCard.getExpression().getId());
