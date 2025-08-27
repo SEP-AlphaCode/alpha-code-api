@@ -77,6 +77,9 @@ public class Activity {
     private List<QRCode> qrCodes;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
+    private List<Marker> markers;
+
+    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     private List<RobotPermission> robotPermissions;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
