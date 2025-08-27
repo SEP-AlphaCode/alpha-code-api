@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.MusicEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,4 +26,9 @@ public class MusicDto {
     private Integer status;
     private UUID classId;
     private String image;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return MusicEnum.fromCode(this.status);
+    }
 }

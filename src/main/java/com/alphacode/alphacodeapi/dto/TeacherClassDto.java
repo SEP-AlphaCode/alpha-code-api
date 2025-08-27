@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.TeacherClassEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,4 +29,9 @@ public class TeacherClassDto {
     private LocalDateTime createDate;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return TeacherClassEnum.fromCode(this.status);
+    }
 }

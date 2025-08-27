@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.AccountEnum;
+import com.alphacode.alphacodeapi.enums.ActivityEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,24 +37,8 @@ public class ActivityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String musicName;
 
-    public static ActivityDto withAllFields(UUID id, String name, String type, String data,
-                                            Integer status, LocalDateTime createDate, LocalDateTime lastUpdate,
-                                            UUID organizationId, String description, String imageUrl,
-                                            UUID musicId, String organizationName, String musicName) {
-        return ActivityDto.builder()
-                .id(id)
-                .name(name)
-                .type(type)
-                .data(data)
-                .status(status)
-                .createDate(createDate)
-                .lastUpdate(lastUpdate)
-                .organizationId(organizationId)
-                .description(description)
-                .imageUrl(imageUrl)
-                .musicId(musicId)
-                .organizationName(organizationName)
-                .musicName(musicName)
-                .build();
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return ActivityEnum.fromCode(this.status);
     }
 }

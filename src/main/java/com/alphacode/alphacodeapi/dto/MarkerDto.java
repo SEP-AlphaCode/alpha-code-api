@@ -1,6 +1,8 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.entity.Activity;
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.MarkerEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
@@ -35,4 +37,8 @@ public class MarkerDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String activityName;
 
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return MarkerEnum.fromCode(this.status);
+    }
 }
