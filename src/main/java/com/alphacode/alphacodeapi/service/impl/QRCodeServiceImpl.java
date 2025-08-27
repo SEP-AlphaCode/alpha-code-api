@@ -117,6 +117,7 @@ public class QRCodeServiceImpl implements QRCodeService {
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 
         existed.setName(qrCodeDto.getName());
+        existed.setColor(qrCodeDto.getColor());
         existed.setQrCode(qrCodeDto.getQrCode());
         existed.setStatus(qrCodeDto.getStatus());
         existed.setImageUrl(qrCodeDto.getImageUrl());
@@ -140,6 +141,12 @@ public class QRCodeServiceImpl implements QRCodeService {
 
         boolean regenerateImage = false;
 
+        if (qrCodeDto.getQrCode() != null) {
+            existed.setQrCode(qrCodeDto.getQrCode());
+        }
+        if (qrCodeDto.getColor() != null) {
+            existed.setColor(qrCodeDto.getColor());
+        }
         if (qrCodeDto.getName() != null) {
             existed.setName(qrCodeDto.getName());
         }
