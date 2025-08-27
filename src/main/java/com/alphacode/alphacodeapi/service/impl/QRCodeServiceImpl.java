@@ -135,35 +135,33 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     public QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto) {
-        var existed = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+        QRCode existed = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("QRCode not found with id " + id));
 
         boolean regenerateImage = false;
 
+        if (qrCodeDto.getName() != null) {
+            existed.setName(qrCodeDto.getName());
+        }
         if (qrCodeDto.getQrCode() != null && !qrCodeDto.getQrCode().equals(existed.getQrCode())) {
             existed.setQrCode(qrCodeDto.getQrCode());
             regenerateImage = true;
         }
-        if (qrCodeDto.getName() != null) {
-            existed.setName(qrCodeDto.getName());
-        }
-        if (qrCodeDto.getStatus() != null) {
-            existed.setStatus(qrCodeDto.getStatus());
-        }
-        if (qrCodeDto.getImageUrl() != null) {
-            existed.setImageUrl(qrCodeDto.getImageUrl());
+        if (qrCodeDto.getAccountId() != null) {
+            existed.setAccountId(qrCodeDto.getAccountId());
         }
         if (qrCodeDto.getActivityId() != null) {
             existed.setActivityId(qrCodeDto.getActivityId());
         }
-        if (qrCodeDto.getAccountId() != null) {
-            existed.setAccountId(qrCodeDto.getAccountId());
-        }
 
+        // regenerate image nếu cần
         if (regenerateImage) {
+            String fileName = "qr_" + existed.getQrCode() + "_" + System.currentTimeMillis() + ".png";
             try {
-                String fileName = "qr_" + existed.getQrCode() + "_" + System.currentTimeMillis() + ".png";
                 String imageUrl = generateAndUploadQRCode(existed.getQrCode(), fileName);
+                if (imageUrl == null) {
+                    throw new RuntimeException("Không tạo được QR image");
+                }
                 existed.setImageUrl(imageUrl);
             } catch (WriterException | IOException e) {
                 throw new RuntimeException("Lỗi khi tạo lại QRCode image", e);
@@ -172,8 +170,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 
         existed.setLastEdited(LocalDateTime.now());
 
-        QRCode savedEntity = repository.save(existed);
-        return QRCodeMapper.toDto(savedEntity);
+        return QRCodeMapper.toDto(repository.save(existed));
     }
 
     @Override
