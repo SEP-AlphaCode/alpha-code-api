@@ -77,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
             }
 
             Account entity = AccountMapper.toEntity(accountDto);
-            entity.setCreateDate(LocalDateTime.now());
+            entity.setCreatedDate(LocalDateTime.now());
             entity.setStatus(1);
             entity.setBannedReason(null);
             entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
@@ -113,13 +113,35 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setGender(accountDto.getGender());
         existingAccount.setLastUpdate(LocalDateTime.now());
         existingAccount.setEmail(accountDto.getEmail());
+        existingAccount.setRoleId(accountDto.getRoleId());
 
-        if (accountDto.getRoleId() != null) {
-            Role role = roleRepository.findById(accountDto.getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-            existingAccount.setRole(role);
+        Account updatedEntity = repository.save(existingAccount);
+        return AccountMapper.toDto(updatedEntity);
+    }
+
+    @Override
+    public AccountDto updateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile) {
+        Account existingAccount = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+        existingAccount.setUsername(accountDto.getUsername());
+        existingAccount.setPassword(accountDto.getPassword());
+        existingAccount.setFullName(accountDto.getFullName());
+        existingAccount.setPhone(accountDto.getPhone());
+        existingAccount.setGender(accountDto.getGender());
+        existingAccount.setLastUpdate(LocalDateTime.now());
+        existingAccount.setEmail(accountDto.getEmail());
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            try {
+                String fileKey = "avatars/" + System.currentTimeMillis() + "_" + avatarFile.getOriginalFilename();
+                String avatarUrl = s3Service.uploadBytes(avatarFile.getBytes(), fileKey, avatarFile.getContentType());
+                existingAccount.setImage(avatarUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Lỗi khi tải lên ảnh đại diện", e);
+            }
+
         }
-
         Account updatedEntity = repository.save(existingAccount);
         return AccountMapper.toDto(updatedEntity);
     }
@@ -148,9 +170,7 @@ public class AccountServiceImpl implements AccountService {
             existingAccount.setEmail(accountDto.getEmail());
         }
         if (accountDto.getRoleId() != null) {
-            Role role = roleRepository.findById(accountDto.getRoleId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-            existingAccount.setRole(role);
+            existingAccount.setRoleId(accountDto.getRoleId());
         }
         existingAccount.setLastUpdate(LocalDateTime.now());
 
@@ -160,8 +180,80 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountDto patchUpdateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile) {
+        Account existingAccount = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+        if (accountDto.getUsername() != null) {
+            existingAccount.setUsername(accountDto.getUsername());
+        }
+        if (accountDto.getPassword() != null) {
+            existingAccount.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        }
+        if (accountDto.getFullName() != null) {
+            existingAccount.setFullName(accountDto.getFullName());
+        }
+        if (accountDto.getPhone() != null) {
+            existingAccount.setPhone(accountDto.getPhone());
+        }
+        if (accountDto.getGender() != null) {
+            existingAccount.setGender(accountDto.getGender());
+        }
+        if (accountDto.getEmail() != null) {
+            existingAccount.setEmail(accountDto.getEmail());
+        }
+        if (accountDto.getRoleId() != null) {
+            Role role = roleRepository.findById(accountDto.getRoleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+            existingAccount.setRole(role);
+        }
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            try {
+                String fileKey = "avatars/" + System.currentTimeMillis() + "_" + avatarFile.getOriginalFilename();
+                String avatarUrl = s3Service.uploadBytes(avatarFile.getBytes(), fileKey, avatarFile.getContentType());
+                existingAccount.setImage(avatarUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Lỗi khi tải lên ảnh đại diện", e);
+            }
+
+        }
+
+        existingAccount.setLastUpdate(LocalDateTime.now());
+
+        Account updatedEntity = repository.save(existingAccount);
+        return AccountMapper.toDto(updatedEntity);
+    }
+
+    @Override
+    public AccountDto changePassword(UUID id, String oldPassword, String newPassword) {
+        Account existingAccount = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+        if (!passwordEncoder.matches(oldPassword, existingAccount.getPassword())) {
+            throw new AuthenticationException("Old password is incorrect");
+        }
+
+        existingAccount.setPassword(passwordEncoder.encode(newPassword));
+        existingAccount.setLastUpdate(LocalDateTime.now());
+        Account updatedEntity = repository.save(existingAccount);
+        return AccountMapper.toDto(updatedEntity);
+    }
+
+    @Override
+    public AccountDto changeStatus(UUID id, Integer status) {
+        Account existingAccount = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+        existingAccount.setStatus(status);
+        existingAccount.setLastUpdate(LocalDateTime.now());
+        Account updatedEntity = repository.save(existingAccount);
+        return AccountMapper.toDto(updatedEntity);
+    }
+
+    @Override
     public String delete(UUID id) {
-        try{
+        try {
             Account account = repository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
@@ -170,8 +262,7 @@ public class AccountServiceImpl implements AccountService {
             account.setLastUpdate(LocalDateTime.now());
             repository.save(account);
             return "Xoá thành công Account với ID: " + id;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Lỗi khi xoá Account", e);
         }
 

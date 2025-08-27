@@ -15,7 +15,7 @@ public class ActionMapper {
                 .description(action.getDescription())
                 .duration(action.getDuration())
                 .status(action.getStatus())
-                .createdDate(action.getCreateDate())
+                .createdDate(action.getCreatedDate())
                 .lastUpdate(action.getLastUpdate())
                 .canInterrupt(action.getCanInterrupt())
                 .build();
@@ -31,7 +31,7 @@ public class ActionMapper {
                 .description(dto.getDescription())
                 .duration(dto.getDuration())
                 .status(dto.getStatus())
-                .createDate(dto.getCreatedDate())
+                .createdDate(dto.getCreatedDate())
                 .lastUpdate(dto.getLastUpdate())
                 .canInterrupt(dto.getCanInterrupt())
                 .build();

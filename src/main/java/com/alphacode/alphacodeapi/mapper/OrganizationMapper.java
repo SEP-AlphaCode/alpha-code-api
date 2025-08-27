@@ -12,7 +12,7 @@ public class OrganizationMapper {
         dto.setId(organization.getId());
         dto.setName(organization.getName());
         dto.setLocation(organization.getLocation());
-        dto.setCreateDate(organization.getCreateDate());
+        dto.setCreatedDate(organization.getCreatedDate());
         dto.setLastUpdate(organization.getLastUpdate());
         dto.setStatus(organization.getStatus());
         dto.setEmail(organization.getEmail());
@@ -28,7 +28,7 @@ public class OrganizationMapper {
         organization.setId(dto.getId());
         organization.setName(dto.getName());
         organization.setLocation(dto.getLocation());
-        organization.setCreateDate(dto.getCreateDate());
+        organization.setCreatedDate(dto.getCreatedDate());
         organization.setLastUpdate(dto.getLastUpdate());
         organization.setStatus(dto.getStatus());
         organization.setEmail(dto.getEmail());

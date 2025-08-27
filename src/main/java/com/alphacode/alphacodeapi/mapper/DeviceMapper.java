@@ -17,7 +17,7 @@ public class DeviceMapper {
         }
         deviceDto.setType(device.getType());
         deviceDto.setIpConfig(device.getIpConfig());
-        deviceDto.setCreateDate(device.getCreateDate());
+        deviceDto.setCreatedDate(device.getCreatedDate());
         deviceDto.setLastUpdate(device.getLastUpdate());
         deviceDto.setStatus(device.getStatus());
         return deviceDto;
@@ -33,7 +33,7 @@ public class DeviceMapper {
         device.setSpaceId(deviceDto.getSpaceId());
         device.setType(deviceDto.getType());
         device.setIpConfig(deviceDto.getIpConfig());
-        device.setCreateDate(deviceDto.getCreateDate());
+        device.setCreatedDate(deviceDto.getCreatedDate());
         device.setLastUpdate(deviceDto.getLastUpdate());
         device.setStatus(deviceDto.getStatus());
         return device;

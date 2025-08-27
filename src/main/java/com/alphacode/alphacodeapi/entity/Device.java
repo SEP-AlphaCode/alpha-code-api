@@ -35,8 +35,8 @@ public class Device {
     @Column(name = "ip_config", nullable = false, columnDefinition = "jsonb")
     private String ipConfig;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;

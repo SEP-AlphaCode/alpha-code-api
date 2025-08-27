@@ -16,7 +16,7 @@ public class AccountMapper {
         dto.setFullName(account.getFullName());
         dto.setPhone(account.getPhone());
         dto.setGender(account.getGender());
-        dto.setCreatedDate(account.getCreateDate());
+        dto.setCreatedDate(account.getCreatedDate());
         dto.setLastEdited(account.getLastUpdate());
         dto.setBannedReason(account.getBannedReason());
         dto.setRoleId(account.getRoleId());
@@ -42,7 +42,7 @@ public class AccountMapper {
         account.setFullName(dto.getFullName());
         account.setPhone(dto.getPhone());
         account.setGender(dto.getGender());
-        account.setCreateDate(dto.getCreatedDate());
+        account.setCreatedDate(dto.getCreatedDate());
         account.setLastUpdate(dto.getLastEdited());
         account.setImage(dto.getImage());
         account.setBannedReason(dto.getBannedReason());

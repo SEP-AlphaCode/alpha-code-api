@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         item.setToken(refreshToken);
         item.setAccountId(account.getId());
         item.setIsActive(true);
-        item.setCreateAt(LocalDateTime.now());
+        item.setCreatedDate(LocalDateTime.now());
         item.setExpiredAt(LocalDateTime.now().plusSeconds(jwtUtil.getRefreshTokenExpirationMs() / 1000)); // convert ms -> sec
         refreshTokenRepository.save(item);
 

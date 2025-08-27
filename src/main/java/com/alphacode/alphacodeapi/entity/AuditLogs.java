@@ -35,8 +35,8 @@ public class AuditLogs {
     @Column(name = "entity", nullable = false, length = 255)
     private String entity;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)

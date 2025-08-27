@@ -38,8 +38,8 @@ public class TelemetryEvent {
     @Column(name = "latency", nullable = false)
     private Float latency;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)

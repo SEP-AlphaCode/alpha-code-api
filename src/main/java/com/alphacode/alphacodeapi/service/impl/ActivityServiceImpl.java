@@ -48,7 +48,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional
     public ActivityDto create(ActivityDto dto) {
         Activity entity = mapper.toEntity(dto);
-        entity.setCreateDate(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
         entity.setLastUpdate(LocalDateTime.now());
         if (entity.getStatus() == null) entity.setStatus(1);
         Activity saved = repository.save(entity);

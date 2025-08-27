@@ -39,8 +39,8 @@ public class Robot {
     @Column(name = "type", nullable = false, length = 255)
     private String type;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;

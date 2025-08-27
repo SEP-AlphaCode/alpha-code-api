@@ -2,6 +2,7 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
+import com.alphacode.alphacodeapi.entity.ClassEntity;
 import com.alphacode.alphacodeapi.entity.Music;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.MusicMapper;
@@ -47,7 +48,7 @@ public class MusicServiceImpl implements MusicService {
     @Override
     public MusicDto create(MusicDto dto) {
         Music music = MusicMapper.toEntity(dto);
-        music.setCreateDate(LocalDateTime.now());
+        music.setCreatedDate(LocalDateTime.now());
         music.setLastUpdate(LocalDateTime.now());
         Music saved = repository.save(music);
         return MusicMapper.toDto(saved);
@@ -62,9 +63,14 @@ public class MusicServiceImpl implements MusicService {
         existing.setUrl(dto.getUrl());
         existing.setDuration(dto.getDuration());
         existing.setStatus(dto.getStatus());
-        existing.setClassId(dto.getClassId());
         existing.setImage(dto.getImage());
         existing.setLastUpdate(LocalDateTime.now());
+
+        if (dto.getClassId() != null) {
+            ClassEntity classEntity = new ClassEntity();
+            classEntity.setId(dto.getClassId());
+            existing.setClassEntity(classEntity);
+        }
 
         Music updated = repository.save(existing);
         return MusicMapper.toDto(updated);
@@ -79,8 +85,13 @@ public class MusicServiceImpl implements MusicService {
         if (dto.getUrl() != null) existing.setUrl(dto.getUrl());
         if (dto.getDuration() != null) existing.setDuration(dto.getDuration());
         if (dto.getStatus() != null) existing.setStatus(dto.getStatus());
-        if (dto.getClassId() != null) existing.setClassId(dto.getClassId());
         if (dto.getImage() != null) existing.setImage(dto.getImage());
+
+        if (dto.getClassId() != null) {
+            ClassEntity classEntity = new ClassEntity();
+            classEntity.setId(dto.getClassId());
+            existing.setClassEntity(classEntity);
+        }
 
         existing.setLastUpdate(LocalDateTime.now());
         Music updated = repository.save(existing);

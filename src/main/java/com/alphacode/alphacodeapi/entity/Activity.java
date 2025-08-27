@@ -46,8 +46,8 @@ public class Activity {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", updatable = false)
     private UUID organizationId;
@@ -75,6 +75,9 @@ public class Activity {
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     private List<QRCode> qrCodes;
+
+    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
+    private List<Marker> markers;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     private List<RobotPermission> robotPermissions;

@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.OsmoCardEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public class OsmoCardDto {
     private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     private UUID expressionId;
 
@@ -42,4 +44,9 @@ public class OsmoCardDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String danceName;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return OsmoCardEnum.fromCode(this.status);
+    }
 }

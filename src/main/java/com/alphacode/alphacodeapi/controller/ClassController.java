@@ -1,8 +1,8 @@
 package com.alphacode.alphacodeapi.controller;
 
-import com.alphacode.alphacodeapi.dto.ClassDto;
+import com.alphacode.alphacodeapi.dto.ClassEntityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.service.ClassService;
+import com.alphacode.alphacodeapi.service.ClassEntityService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Tag(name = "Classes")
 public class ClassController {
-    private final ClassService service;
+    private final ClassEntityService service;
 
     @GetMapping
-    public PagedResult<ClassDto> getAll(
+    public PagedResult<ClassEntityDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "status", required = false) Integer status
@@ -26,22 +26,22 @@ public class ClassController {
     }
 
     @GetMapping("/{id}")
-    public ClassDto getById(@PathVariable UUID id) {
+    public ClassEntityDto getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping
-    public ClassDto create(@RequestBody ClassDto dto) {
+    public ClassEntityDto create(@RequestBody ClassEntityDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    public ClassDto update(@PathVariable UUID id, @RequestBody ClassDto dto) {
+    public ClassEntityDto update(@PathVariable UUID id, @RequestBody ClassEntityDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
-    public ClassDto patchUpdate(@PathVariable UUID id, @RequestBody ClassDto dto) {
+    public ClassEntityDto patchUpdate(@PathVariable UUID id, @RequestBody ClassEntityDto dto) {
         return service.patchUpdate(id, dto);
     }
 

@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -35,8 +33,8 @@ public class Music {
     @Column(name = "url", nullable = false, length = 255)
     private String url; // .wav file
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
@@ -47,16 +45,13 @@ public class Music {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "class_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
-    private UUID classId;
-
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
-    private SchoolClass schoolClass;
+    private ClassEntity classEntity;
 
     @OneToMany(mappedBy = "music", fetch = FetchType.LAZY)
     private List<Activity> activities;

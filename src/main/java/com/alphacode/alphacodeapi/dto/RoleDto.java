@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -19,4 +21,9 @@ public class RoleDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return RoleEnum.fromCode(this.status);
+    }
 }

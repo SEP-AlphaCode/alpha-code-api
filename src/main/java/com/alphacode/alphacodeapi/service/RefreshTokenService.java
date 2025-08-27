@@ -11,4 +11,5 @@ public interface RefreshTokenService {
     RefreshToken createRefreshToken(Account account);
     Optional<RefreshToken> findByTokenAndIsActive(String token, Boolean isActive);
     LoginDto.LoginResponse refreshNewToken(String refreshToken);
+    String logout(String refreshToken);
 }

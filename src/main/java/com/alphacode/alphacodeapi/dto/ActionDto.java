@@ -1,5 +1,6 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.ActionEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,5 +46,10 @@ public class ActionDto {
 
     @NotNull(message = "Can interrupt flag is required")
     private Boolean canInterrupt;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return ActionEnum.fromCode(this.status);
+    }
 
 }

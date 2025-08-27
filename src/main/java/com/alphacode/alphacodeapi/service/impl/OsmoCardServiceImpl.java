@@ -65,7 +65,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
         entity.setLastUpdate(LocalDateTime.now());
-        entity.setCreateDate(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
         if (entity.getActionId() != null) {
             entity.setActionId(entity.getActionId());
         } else if (entity.getDanceId() != null) {

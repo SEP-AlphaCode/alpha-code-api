@@ -33,8 +33,8 @@ public class Organization {
     @Column(name = "location", nullable = false, length = 255)
     private String location;
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;

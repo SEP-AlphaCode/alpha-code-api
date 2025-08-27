@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.AccountEnum;
+import com.alphacode.alphacodeapi.enums.ClassEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClassDto {
+public class ClassEntityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
@@ -31,4 +33,9 @@ public class ClassDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<TeacherClassDto> teachers;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return ClassEnum.fromCode(this.status);
+    }
 }

@@ -47,7 +47,7 @@ public class DanceServiceImpl implements DanceService {
         var entity = DanceMapper.toEntity(dto);
         entity.setId(null);
         entity.setLastUpdate(LocalDateTime.now());
-        entity.setCreateDate(LocalDateTime.now());
+        entity.setCreatedDate(LocalDateTime.now());
         var saved = repository.save(entity);
         return DanceMapper.toDto(saved);
     }

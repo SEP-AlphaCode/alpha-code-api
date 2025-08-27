@@ -42,7 +42,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .token(token)
                 .accountId(account.getId())
                 .expiredAt(LocalDateTime.now().plusSeconds(refreshTokenExpirationMs / 1000)) // convert ms -> sec
-                .createAt(LocalDateTime.now())
+                .createdDate(LocalDateTime.now())
                 .isActive(true)
                 .build();
 
@@ -75,7 +75,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         item.setToken(newRefreshToken);
         item.setAccountId(account.getId());
         item.setIsActive(true);
-        item.setCreateAt(LocalDateTime.now());
+        item.setCreatedDate(LocalDateTime.now());
         item.setExpiredAt(LocalDateTime.now().plusSeconds(jwtUtil.getRefreshTokenExpirationMs() / 1000)); // convert ms -> sec
         refreshTokenRepository.save(item);
 
@@ -84,4 +84,18 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .refreshToken(newRefreshToken)
                 .build();
     }
+
+    @Override
+    public String logout(String refreshToken) {
+        var token = refreshTokenRepository.findRefreshTokenByTokenAndIsActive(refreshToken, true);
+        if (token.isEmpty()) {
+            throw new RuntimeException("Refresh token is not valid or has expired");
+        }
+
+        refreshTokenRepository.delete(token.get());
+
+        return "Logout successful";
+    }
+
+
 }

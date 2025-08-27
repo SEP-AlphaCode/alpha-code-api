@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.OrganizationEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,10 +19,15 @@ public class OrganizationDto {
     private String name;
     private String location;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
     private Integer status;
     private String email;
     private String phone;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return OrganizationEnum.fromCode(this.status);
+    }
 }

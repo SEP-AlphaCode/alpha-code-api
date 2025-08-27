@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.AccountEnum;
+import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +30,7 @@ public class DanceDto {
     private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     private Integer duration;
 
@@ -36,5 +38,10 @@ public class DanceDto {
     private List<OsmoCardDto> osmoCards;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<ActivityStepDto> activitySteps;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return DanceEnum.fromCode(this.status);
+    }
 
 }

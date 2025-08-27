@@ -62,25 +62,35 @@ public class QRCodeServiceImpl implements QRCodeService {
         if (qrCodeDto == null || qrCodeDto.getQrCode() == null) {
             throw new IllegalArgumentException("QRCodeDto và các trường không được null");
         }
-        if (getByCode(qrCodeDto.getQrCode()) != null) {
-            throw new IllegalArgumentException("QRCode with this code already exists");
+
+        if (qrCodeDto.getAccountId() == null) {
+            throw new IllegalArgumentException("AccountId không được null");
         }
+
+        if (qrCodeDto.getActivityId() == null) {
+            throw new IllegalArgumentException("ActivityId không được null");
+        }
+
+        if (repository.findQRCodeByQrCode(qrCodeDto.getQrCode()).isPresent()) {
+            throw new IllegalArgumentException("QRCode với mã này đã tồn tại");
+        }
+
         try {
             QRCode entity = QRCodeMapper.toEntity(qrCodeDto);
             entity.setCreatedDate(LocalDateTime.now());
-            entity.setStatus(1);
+            entity.setStatus(qrCodeDto.getStatus() != null ? qrCodeDto.getStatus() : 1);
 
+            // Tạo QR code và upload S3
             String fileName = "qr_" + entity.getQrCode() + "_" + System.currentTimeMillis() + ".png";
             String imageUrl = generateAndUploadQRCode(entity.getQrCode(), fileName);
             entity.setImageUrl(imageUrl);
 
-            QRCode savedEntity = repository.save(entity);
-            return QRCodeMapper.toDto(savedEntity);
+            QRCode saved = repository.save(entity);
+            return QRCodeMapper.toDto(saved);
         } catch (WriterException | IOException e) {
             throw new RuntimeException("Lỗi khi tạo hoặc tải QR code", e);
         }
     }
-
 
 
 
@@ -110,7 +120,12 @@ public class QRCodeServiceImpl implements QRCodeService {
         existed.setQrCode(qrCodeDto.getQrCode());
         existed.setStatus(qrCodeDto.getStatus());
         existed.setImageUrl(qrCodeDto.getImageUrl());
-        existed.setActivityId(qrCodeDto.getActivityId());
+        if (qrCodeDto.getActivityId() != null) {
+            existed.setActivityId(qrCodeDto.getActivityId());
+        }
+        if (qrCodeDto.getAccountId() != null) {
+            existed.setAccountId(qrCodeDto.getAccountId());
+        }
 
         existed.setLastEdited(LocalDateTime.now());
 
@@ -138,6 +153,10 @@ public class QRCodeServiceImpl implements QRCodeService {
         if (qrCodeDto.getActivityId() != null) {
             existed.setActivityId(qrCodeDto.getActivityId());
         }
+        if (qrCodeDto.getAccountId() != null) {
+            existed.setAccountId(qrCodeDto.getAccountId());
+        }
+
         existed.setLastEdited(LocalDateTime.now());
 
         QRCode savedEntity = repository.save(existed);
@@ -163,11 +182,9 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     public QRCodeDto getByCode(String code) {
-        var existed = repository.findQRCodeByQrCode(code).getId();
-        return repository.findById(existed)
+        return repository.findQRCodeByQrCode(code)
                 .map(QRCodeMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
-
     }
 
     @Override

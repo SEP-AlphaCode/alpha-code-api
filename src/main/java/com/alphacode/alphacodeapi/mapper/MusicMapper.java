@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.mapper;
 
 import com.alphacode.alphacodeapi.dto.MusicDto;
+import com.alphacode.alphacodeapi.entity.ClassEntity;
 import com.alphacode.alphacodeapi.entity.Music;
 
 public class MusicMapper {
@@ -12,18 +13,19 @@ public class MusicMapper {
         dto.setId(music.getId());
         dto.setName(music.getName());
         dto.setUrl(music.getUrl());
-        dto.setCreateDate(music.getCreateDate());
+        dto.setCreatedDate(music.getCreatedDate());
         dto.setLastUpdate(music.getLastUpdate());
         dto.setDuration(music.getDuration());
         dto.setStatus(music.getStatus());
-        dto.setClassId(music.getClassId());
+
+        // map classId từ classEntity
+        if (music.getClassEntity() != null) {
+            dto.setClassId(music.getClassEntity().getId());
+            // Nếu muốn map thêm tên class
+            // dto.setClassName(music.getClassEntity().getName());
+        }
+
         dto.setImage(music.getImage());
-
-        // Nếu muốn map thêm tên class có thể thêm như AccountMapper
-        // if (music.getAClass() != null) {
-        //     dto.setClassName(music.getAClass().getName());
-        // }
-
         return dto;
     }
 
@@ -34,13 +36,19 @@ public class MusicMapper {
         music.setId(dto.getId());
         music.setName(dto.getName());
         music.setUrl(dto.getUrl());
-        music.setCreateDate(dto.getCreateDate());
+        music.setCreatedDate(dto.getCreatedDate());
         music.setLastUpdate(dto.getLastUpdate());
         music.setDuration(dto.getDuration());
         music.setStatus(dto.getStatus());
-        music.setClassId(dto.getClassId());
-        music.setImage(dto.getImage());
 
+        // map classEntity từ classId
+        if (dto.getClassId() != null) {
+            ClassEntity classEntity = new ClassEntity();
+            classEntity.setId(dto.getClassId());
+            music.setClassEntity(classEntity);
+        }
+
+        music.setImage(dto.getImage());
         return music;
     }
 }

@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.AccountEnum;
+import com.alphacode.alphacodeapi.enums.DeviceEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -28,10 +30,15 @@ public class DeviceDto {
     private String ipConfig;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
     private Integer status;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return DeviceEnum.fromCode(this.status);
+    }
 }

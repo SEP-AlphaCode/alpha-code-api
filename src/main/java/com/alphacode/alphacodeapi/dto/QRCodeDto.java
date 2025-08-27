@@ -1,5 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.enums.QRCodeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -36,4 +38,11 @@ public class QRCodeDto {
     private String activityName;
 
     private UUID activityId;
+
+    private UUID accountId;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return QRCodeEnum.fromCode(this.status);
+    }
 }

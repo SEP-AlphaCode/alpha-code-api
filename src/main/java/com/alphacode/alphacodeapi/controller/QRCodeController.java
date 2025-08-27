@@ -43,6 +43,7 @@ public class QRCodeController {
         qrCodeDto.setName(requestDto.getName());
         qrCodeDto.setQrCode(requestDto.getQrCode());
         qrCodeDto.setActivityId(requestDto.getActivityId());
+        qrCodeDto.setAccountId(requestDto.getAccountId());
 
         return qrCodeService.create(qrCodeDto);
     }
