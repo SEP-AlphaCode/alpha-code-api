@@ -26,8 +26,8 @@ public class ActionController {
     public PagedResult<ActionDto> getAllActions(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "status", required = false) Integer status) {
-        return actionService.getAllActions(page, size, status);
+            @RequestParam(value = "search", required = false) String search) {
+        return actionService.getAllActions(page, size, search);
     }
 
     @GetMapping("/{id}")

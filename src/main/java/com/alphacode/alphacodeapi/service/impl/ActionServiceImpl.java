@@ -27,12 +27,12 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional(readOnly = true)
-    public PagedResult<ActionDto> getAllActions(int page, int size, Integer status) {
+    public PagedResult<ActionDto> getAllActions(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Action> pageResult;
 
-        if (status != null) {
-            pageResult = actionRepository.findAllByStatus(status, pageable);
+        if (search != null) {
+            pageResult = actionRepository.findAllByNameOrDescriptionContaining(search, pageable);
         } else {
             pageResult = actionRepository.findAll(pageable);
         }
