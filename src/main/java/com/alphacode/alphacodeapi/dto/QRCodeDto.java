@@ -21,6 +21,8 @@ public class QRCodeDto {
 
     private String name;
 
+    private String color;
+
     private String qrCode;
 
     private Integer status;

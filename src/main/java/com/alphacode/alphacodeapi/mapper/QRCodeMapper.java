@@ -11,6 +11,7 @@ public class QRCodeMapper {
         QRCodeDto dto = new QRCodeDto();
         dto.setId(qrCode.getId());
         dto.setName(qrCode.getName());
+        dto.setColor(qrCode.getColor());
         dto.setQrCode(qrCode.getQrCode());
         dto.setStatus(qrCode.getStatus());
         dto.setCreatedDate(qrCode.getCreatedDate());
@@ -30,6 +31,7 @@ public class QRCodeMapper {
         entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setQrCode(dto.getQrCode());
+        entity.setColor(dto.getColor());
         entity.setStatus(dto.getStatus());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setLastEdited(dto.getLastEdited());

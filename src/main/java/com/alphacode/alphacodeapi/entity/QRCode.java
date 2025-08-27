@@ -29,6 +29,9 @@ public class QRCode {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
+    @Column(name = "color", length = 100)
+    private String color;
+
     @Column(name = "qr_code", nullable = false, length = 255)
     private String qrCode;
 
