@@ -138,8 +138,11 @@ public class QRCodeServiceImpl implements QRCodeService {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 
-        if (qrCodeDto.getQrCode() != null) {
+        boolean regenerateImage = false;
+
+        if (qrCodeDto.getQrCode() != null && !qrCodeDto.getQrCode().equals(existed.getQrCode())) {
             existed.setQrCode(qrCodeDto.getQrCode());
+            regenerateImage = true;
         }
         if (qrCodeDto.getName() != null) {
             existed.setName(qrCodeDto.getName());
@@ -155,6 +158,16 @@ public class QRCodeServiceImpl implements QRCodeService {
         }
         if (qrCodeDto.getAccountId() != null) {
             existed.setAccountId(qrCodeDto.getAccountId());
+        }
+
+        if (regenerateImage) {
+            try {
+                String fileName = "qr_" + existed.getQrCode() + "_" + System.currentTimeMillis() + ".png";
+                String imageUrl = generateAndUploadQRCode(existed.getQrCode(), fileName);
+                existed.setImageUrl(imageUrl);
+            } catch (WriterException | IOException e) {
+                throw new RuntimeException("Lỗi khi tạo lại QRCode image", e);
+            }
         }
 
         existed.setLastEdited(LocalDateTime.now());
