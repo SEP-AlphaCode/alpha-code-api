@@ -1,7 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.alphacode.alphacodeapi.enums.AccountEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,4 +48,9 @@ public class AccountDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String roleName;
+
+    @JsonProperty("statusText")
+    public String getStatusText() {
+        return AccountEnum.fromCode(this.status);
+    }
 }
