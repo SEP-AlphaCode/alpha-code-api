@@ -12,6 +12,6 @@ import java.util.UUID;
 
 @Repository
 public interface DanceRepository extends JpaRepository<Dance, UUID> {
-    @Query("SELECT a FROM Action a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(a.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) ORDER BY a.createdDate DESC")
+    @Query("SELECT a FROM Dance a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(a.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) ORDER BY a.createdDate DESC")
     Page<Dance> findPagedDances(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
