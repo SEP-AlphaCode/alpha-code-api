@@ -16,6 +16,9 @@ public class RobotMapper {
         dto.setLastUpdate(robot.getLastUpdate());
         dto.setStatus(robot.getStatus());
         dto.setOrganizationId(robot.getOrganizationId());
+        if (robot.getOrganization() != null) {
+            dto.setOrganizationName(robot.getOrganization().getName());
+        }
         return dto;
     }
 

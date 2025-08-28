@@ -40,6 +40,8 @@ public class RobotDto {
 
     private UUID organizationId;
 
+    private String organizationName;
+
     @JsonProperty("statusText")
     public String getStatusText() {
         return RobotEnum.fromCode(this.status);
