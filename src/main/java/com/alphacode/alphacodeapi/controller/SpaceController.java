@@ -3,6 +3,7 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.SpaceDto;
 import com.alphacode.alphacodeapi.service.SpaceService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class SpaceController {
     private final SpaceService service;
 
     @GetMapping
+    @Operation(summary = "Get all spaces with pagination")
     public PagedResult<SpaceDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -27,26 +29,31 @@ public class SpaceController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get space by id")
     public SpaceDto getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping
+    @Operation(summary = "Create new space")
     public SpaceDto create(@RequestBody SpaceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update space by id")
     public SpaceDto update(@PathVariable UUID id, @RequestBody SpaceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Patch update space by id")
     public SpaceDto patchUpdate(@PathVariable UUID id, @RequestBody SpaceDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete space by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
     }
