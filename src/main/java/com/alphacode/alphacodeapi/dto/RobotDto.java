@@ -42,7 +42,7 @@ public class RobotDto {
 
     private String organizationName;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return RobotEnum.fromCode(this.status);
     }

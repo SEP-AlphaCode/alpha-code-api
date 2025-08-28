@@ -37,7 +37,7 @@ public class DeviceDto {
 
     private Integer status;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return DeviceEnum.fromCode(this.status);
     }

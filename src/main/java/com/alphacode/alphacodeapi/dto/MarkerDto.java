@@ -37,7 +37,7 @@ public class MarkerDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String activityName;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return MarkerEnum.fromCode(this.status);
     }

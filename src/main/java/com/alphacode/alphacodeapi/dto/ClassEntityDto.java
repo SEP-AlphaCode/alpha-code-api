@@ -34,7 +34,7 @@ public class ClassEntityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<TeacherClassDto> teachers;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return ClassEnum.fromCode(this.status);
     }

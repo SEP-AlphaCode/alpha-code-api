@@ -49,7 +49,7 @@ public class AccountDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String roleName;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return AccountEnum.fromCode(this.status);
     }
