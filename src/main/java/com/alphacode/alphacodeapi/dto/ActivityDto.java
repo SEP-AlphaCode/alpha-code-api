@@ -3,10 +3,12 @@ package com.alphacode.alphacodeapi.dto;
 import com.alphacode.alphacodeapi.enums.AccountEnum;
 import com.alphacode.alphacodeapi.enums.ActivityEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -22,6 +24,7 @@ public class ActivityDto {
     private UUID id;
     private String name;
     private String type;
+    @Type(JsonType.class)
     private String data;
     private Integer status;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
