@@ -30,7 +30,7 @@ public class SpaceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String organizationName; // lấy từ entity Organization
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return AccountEnum.fromCode(this.status);
     }

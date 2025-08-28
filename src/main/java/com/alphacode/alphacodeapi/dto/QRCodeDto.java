@@ -43,7 +43,7 @@ public class QRCodeDto {
 
     private UUID accountId;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return QRCodeEnum.fromCode(this.status);
     }

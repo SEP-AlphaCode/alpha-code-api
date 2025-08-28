@@ -47,7 +47,7 @@ public class ActionDto {
     @NotNull(message = "Can interrupt flag is required")
     private Boolean canInterrupt;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return ActionEnum.fromCode(this.status);
     }

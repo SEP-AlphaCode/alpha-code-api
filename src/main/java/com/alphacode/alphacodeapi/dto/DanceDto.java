@@ -39,7 +39,7 @@ public class DanceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<ActivityStepDto> activitySteps;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return DanceEnum.fromCode(this.status);
     }

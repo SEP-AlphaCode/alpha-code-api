@@ -26,7 +26,7 @@ public class OrganizationDto {
     private String email;
     private String phone;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return OrganizationEnum.fromCode(this.status);
     }

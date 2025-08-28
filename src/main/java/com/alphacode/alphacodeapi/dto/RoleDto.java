@@ -22,7 +22,7 @@ public class RoleDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer status;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return RoleEnum.fromCode(this.status);
     }

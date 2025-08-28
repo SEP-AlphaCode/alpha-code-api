@@ -28,7 +28,7 @@ public class ExpressionDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return ExpressionEnum.fromCode(this.status);
     }

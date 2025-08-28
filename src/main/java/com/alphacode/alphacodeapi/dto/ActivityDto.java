@@ -37,7 +37,7 @@ public class ActivityDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String musicName;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return ActivityEnum.fromCode(this.status);
     }

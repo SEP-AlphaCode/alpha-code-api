@@ -27,7 +27,7 @@ public class MusicDto {
     private UUID classId;
     private String image;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return MusicEnum.fromCode(this.status);
     }
