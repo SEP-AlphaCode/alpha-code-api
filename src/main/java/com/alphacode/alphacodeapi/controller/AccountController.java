@@ -7,6 +7,7 @@ import com.alphacode.alphacodeapi.dto.ResetPassworDto;
 import com.alphacode.alphacodeapi.service.AccountService;
 import com.alphacode.alphacodeapi.service.impl.AccountServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class AccountController {
     private final AccountService service;
 
     @GetMapping
+    @Operation(summary = "Get all accounts with pagination and optional status filter")
     public PagedResult<AccountDto> getAll(@RequestParam(value = "page", defaultValue = "1") int page,
                                           @RequestParam(value = "size", defaultValue = "10") int size,
                                           @RequestParam(value = "status", required = false) Integer status) {
@@ -33,16 +35,19 @@ public class AccountController {
     }
 
     @GetMapping("/full-name")
+    @Operation(summary = "Find account by full name")
     public AccountDto findAccountByFullName(@RequestParam String fullName) {
         return service.findAccountByFullName(fullName);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get account by id")
     public AccountDto getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Create new account")
     public AccountDto create(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
@@ -66,11 +71,13 @@ public class AccountController {
 
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update account by id")
     public AccountDto update(@PathVariable UUID id, @RequestBody AccountDto dto) {
         return service.update(id, dto);
     }
 
     @PutMapping(value = "/{id}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Update account profile")
     public AccountDto updateProfile(
             @PathVariable UUID id,
             @RequestParam("username") String username,
@@ -94,6 +101,7 @@ public class AccountController {
     }
 
     @PatchMapping(value = "/{id}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Patch update account profile")
     public AccountDto patchUpdateProfile(
             @PathVariable UUID id,
             @RequestParam(value = "username", required = false) String username,
@@ -130,6 +138,7 @@ public class AccountController {
     }
 
     @PostMapping("/reset-password/request")
+    @Operation(summary = "Request reset password")
     public ResponseEntity<String> requestResetPassword(@RequestParam String email) throws MessagingException {
         boolean success = service.requestResetPassword(email);
         return success ? ResponseEntity.ok("Reset password link sent to email")
@@ -137,6 +146,7 @@ public class AccountController {
     }
 
     @PostMapping("/reset-password/confirm")
+    @Operation(summary = "Confirm reset password")
     public ResponseEntity<String> confirmResetPassword(@RequestBody ResetPassworDto dto) {
         boolean success = service.confirmResetPassword(dto);
         return success ? ResponseEntity.ok("Password reset successful")
@@ -145,21 +155,25 @@ public class AccountController {
 
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Patch update account by id")
     public AccountDto patchUpdate(@PathVariable UUID id, @RequestBody AccountDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete account by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
     }
 
     @PatchMapping("/{id}/change-password")
+    @Operation(summary = "Change password")
     public AccountDto changePassword(@PathVariable UUID id, @RequestParam String oldPassword, @RequestParam String newPassword) {
         return service.changePassword(id, oldPassword, newPassword);
     }
 
     @PatchMapping("/{id}/change-status")
+    @Operation(summary = "Change account status")
     public AccountDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
         return service.changeStatus(id, status);
     }
