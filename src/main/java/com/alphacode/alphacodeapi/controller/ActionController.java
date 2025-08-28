@@ -23,6 +23,7 @@ public class ActionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get all actions")
     public PagedResult<ActionDto> getAllActions(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -32,18 +33,21 @@ public class ActionController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get action by id")
     public ActionDto getActionById(@PathVariable UUID id) {
         return actionService.getActionById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create new action")
     public ActionDto createAction(@RequestBody ActionDto actionDto) {
         return actionService.createAction(actionDto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update action")
     public ActionDto updateAction(@PathVariable UUID id, @RequestBody ActionDto actionDto) {
         return actionService.updateAction(id, actionDto);
     }
@@ -58,6 +62,7 @@ public class ActionController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete action")
     public void deleteAction(@PathVariable UUID id) {
         actionService.deleteAction(id);
     }

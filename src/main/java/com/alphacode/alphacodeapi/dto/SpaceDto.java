@@ -1,50 +1,37 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
-import com.alphacode.alphacodeapi.enums.QRCodeEnum;
+import com.alphacode.alphacodeapi.enums.AccountEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeDto {
+public class SpaceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
     private String name;
-
-    private String color;
-
-    private String qrCode;
-
+    private String description;
+    private UUID organizationId;
     private Integer status;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastEdited;
+    private LocalDateTime lastUpdate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String activityName;
-
-    private UUID activityId;
-
-    private UUID accountId;
+    private String organizationName; // lấy từ entity Organization
 
     @JsonProperty("statusText")
     public String getStatusText() {
-        return QRCodeEnum.fromCode(this.status);
+        return AccountEnum.fromCode(this.status);
     }
 }

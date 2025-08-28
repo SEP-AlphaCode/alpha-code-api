@@ -21,6 +21,7 @@ public class QRCodeController {
     private final QRCodeService qrCodeService;
 
     @GetMapping
+    @Operation(summary = "Get all QR codes with pagination and optional status filter")
     public PagedResult<QRCodeDto> getAll(@RequestParam(value = "page", defaultValue = "1") int page,
                                          @RequestParam(value = "size", defaultValue = "10") int size,
                                          @RequestParam(value = "status", required = false) Integer status) {
@@ -28,35 +29,41 @@ public class QRCodeController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get QR code by id")
     public QRCodeDto getById(@PathVariable UUID id) {
         return qrCodeService.getById(id);
     }
 
     @GetMapping("by-code/{code}")
+    @Operation(summary = "Get QR code by code")
     public QRCodeDto getByCode(@PathVariable String code) {
         return qrCodeService.getByCode(code);
     }
 
     @PostMapping()
+    @Operation(summary = "Create new QR code")
     public QRCodeDto create(@RequestBody QRCodeDto requestDto) {
-        QRCodeDto qrCodeDto = new QRCodeDto();
-        qrCodeDto.setName(requestDto.getName());
-        qrCodeDto.setQrCode(requestDto.getQrCode());
-        qrCodeDto.setActivityId(requestDto.getActivityId());
-        qrCodeDto.setAccountId(requestDto.getAccountId());
-
-        return qrCodeService.create(qrCodeDto);
+//        QRCodeDto qrCodeDto = new QRCodeDto();
+//        qrCodeDto.setName(requestDto.getName());
+//        qrCodeDto.setQrCode(requestDto.getQrCode());
+//        qrCodeDto.setActivityId(requestDto.getActivityId());
+//        qrCodeDto.setAccountId(requestDto.getAccountId());
+//
+//        return qrCodeService.create(qrCodeDto);
+        return qrCodeService.create(requestDto);
     }
 
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update QRCode")
     public QRCodeDto update(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException{
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Patch update QRCode")
     public QRCodeDto patchUpdate(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) {
-        return qrCodeService.update(id, qrCodeDto);
+        return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
@@ -66,11 +73,13 @@ public class QRCodeController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete QRCode by id")
     public String delete(@PathVariable UUID id) {
         return qrCodeService.delete(id);
     }
 
     @PutMapping("/{id}/status")
+    @Operation(summary = "Change QRCode status")
     public QRCodeDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }

@@ -20,6 +20,7 @@ public class DeviceController {
     private final DeviceService service;
 
     @GetMapping
+    @Operation(summary = "Get all devices with pagination and optional spaceId and status filter")
     public PagedResult<DeviceDto> getAll(
             @RequestParam(value = "spaceId", required = false) UUID spaceId,
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -29,26 +30,31 @@ public class DeviceController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get device by id")
     public DeviceDto getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping
+    @Operation(summary = "Create new device")
     public DeviceDto create(@RequestBody DeviceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update device by id")
     public DeviceDto update(@PathVariable UUID id, @RequestBody DeviceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Patch update device by id")
     public DeviceDto patchUpdate(@PathVariable UUID id, @RequestBody DeviceDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete device by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
     }

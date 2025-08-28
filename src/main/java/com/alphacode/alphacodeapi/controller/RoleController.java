@@ -3,6 +3,7 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.RoleDto;
 import com.alphacode.alphacodeapi.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class RoleController {
     private final RoleService service;
 
     @GetMapping
+    @Operation(summary = "Get all roles with pagination")
     public PagedResult<RoleDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -26,11 +28,13 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get role by id")
     public RoleDto getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping()
+    @Operation(summary = "Create new role")
     public RoleDto create(@RequestBody RoleDto roleDto) {
         return service.create(roleDto);
     }
@@ -41,11 +45,13 @@ public class RoleController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Patch update role")
     public RoleDto patchUpdate(@PathVariable UUID id, @RequestBody RoleDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete role by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
     }

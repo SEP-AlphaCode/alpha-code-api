@@ -1,50 +1,50 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
-import com.alphacode.alphacodeapi.enums.QRCodeEnum;
+import com.alphacode.alphacodeapi.entity.Organization;
+import com.alphacode.alphacodeapi.enums.OsmoCardEnum;
+import com.alphacode.alphacodeapi.enums.RobotEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QRCodeDto {
+public class RobotDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
     private String name;
 
-    private String color;
+    private String ip;
 
-    private String qrCode;
+    private String code;
 
-    private Integer status;
+    private String type;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime lastEdited;
+    private LocalDateTime lastUpdate;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    private Integer status;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String activityName;
+    private UUID organizationId;
 
-    private UUID activityId;
-
-    private UUID accountId;
+    private String organizationName;
 
     @JsonProperty("statusText")
     public String getStatusText() {
-        return QRCodeEnum.fromCode(this.status);
+        return RobotEnum.fromCode(this.status);
     }
+
 }
