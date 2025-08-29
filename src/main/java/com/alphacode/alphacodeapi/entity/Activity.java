@@ -1,5 +1,6 @@
 package com.alphacode.alphacodeapi.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class Activity {
 
     @Type(JsonType.class)
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
-    private String data;
+    private JsonNode data;
 
     @Column(name = "status", nullable = false)
     private Integer status;
