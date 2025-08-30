@@ -34,9 +34,6 @@ public class Expression {
     @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
 
-    @Column(name = "description", nullable = true, length = 255)
-    private String description;
-
     @Column(name = "status", nullable = false)
     private Integer status;
 
