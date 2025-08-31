@@ -12,4 +12,5 @@ public interface ActivityService {
     ActivityDto update(UUID id, ActivityDto activityDto);
     ActivityDto patchUpdate(UUID id, ActivityDto activityDto);
     String delete(UUID id);
+    ActivityDto getByQRCode(String qrCode);
 }
