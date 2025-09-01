@@ -145,8 +145,8 @@ public class AccountController {
                 : ResponseEntity.badRequest().body("Email not found or failed to send mail");
     }
 
-    @PostMapping("/reset-password/confirm")
-    @Operation(summary = "Confirm reset password")
+    @PostMapping("/reset-password/reset")
+    @Operation(summary = "Reset the password")
     public ResponseEntity<String> confirmResetPassword(@RequestBody ResetPassworDto dto) {
         boolean success = service.confirmResetPassword(dto);
         return success ? ResponseEntity.ok("Password reset successful")
