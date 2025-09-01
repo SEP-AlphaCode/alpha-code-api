@@ -277,7 +277,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean requestResetPassword(String email) throws MessagingException {
         var account = repository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found or failed to send mail!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Email not found!"));
 
         MimeMessage message = mailSender.createMimeMessage();
 
