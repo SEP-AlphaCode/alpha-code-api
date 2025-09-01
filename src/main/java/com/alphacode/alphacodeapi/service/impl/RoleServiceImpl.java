@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -43,6 +44,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto create(RoleDto roleDto) {
         if (repository.findByName(roleDto.getName()) != null) {
             throw new IllegalArgumentException("Role with this name already exists");
@@ -56,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto update(UUID id, RoleDto roleDto) {
         var existingRole = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
@@ -72,6 +75,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDto patchUpdate(UUID id, RoleDto roleDto) {
         var existingRole = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
@@ -89,6 +93,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             var role = repository.findById(id)

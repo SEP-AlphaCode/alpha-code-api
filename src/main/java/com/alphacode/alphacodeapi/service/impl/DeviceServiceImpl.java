@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -49,6 +50,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public DeviceDto create(DeviceDto dto) {
         Device entity = DeviceMapper.toEntity(dto);
 
@@ -59,6 +61,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public DeviceDto update(UUID id, DeviceDto dto) {
         Device existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
@@ -74,6 +77,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public DeviceDto patchUpdate(UUID id, DeviceDto dto) {
         Device existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
@@ -97,6 +101,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         Device existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));

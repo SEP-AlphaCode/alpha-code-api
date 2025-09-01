@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -46,6 +47,7 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
+    @Transactional
     public MarkerDto create(MarkerDto dto) {
         var entity = MarkerMapper.toEntity(dto);
 
@@ -56,6 +58,7 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
+    @Transactional
     public MarkerDto update(UUID id, MarkerDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Marker not found"));
@@ -68,6 +71,7 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
+    @Transactional
     public MarkerDto patchUpdate(UUID id, MarkerDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Marker not found"));
@@ -89,6 +93,7 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             var existing = repository.findById(id)

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public ExpressionDto create(ExpressionDto dto) {
         Expression entity = ExpressionMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -53,6 +55,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public ExpressionDto update(UUID id, ExpressionDto dto) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
@@ -68,6 +71,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public ExpressionDto patchUpdate(UUID id, ExpressionDto dto) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
@@ -84,6 +88,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -47,6 +48,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public OsmoCardDto create(OsmoCardDto dto) {
         var entity = OsmoCardMapper.toEntity(dto);
         if (entity.getActionId() == null && entity.getDanceId() == null && entity.getExpressionId() == null) {
@@ -80,6 +82,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public OsmoCardDto update(UUID id, OsmoCardDto dto) {
         if (dto.getActionId() == null && dto.getDanceId() == null && dto.getExpressionId() == null) {
             throw new IllegalArgumentException("Osmo Card must have at least one of Action ID, Dance ID, or Expression ID set");
@@ -110,6 +113,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public OsmoCardDto patchUpdate(UUID id, OsmoCardDto dto) {
         if (dto.getActionId() != null && dto.getDanceId() != null && dto.getExpressionId() != null) {
             throw new IllegalArgumentException("Osmo Card cannot have all Action ID, Dance ID, and Expression ID set at the same time");
@@ -149,6 +153,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             var existing = repository.findById(id)

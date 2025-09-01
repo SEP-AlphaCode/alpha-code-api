@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -48,6 +49,7 @@ public class RobotServiceImpl implements RobotService {
     }
 
     @Override
+    @Transactional
     public RobotDto create(RobotDto dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Robot data must not be null");
@@ -64,6 +66,7 @@ public class RobotServiceImpl implements RobotService {
     }
 
     @Override
+    @Transactional
     public RobotDto update(UUID id, RobotDto dto) {
         var existingRobot = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Robot not found"));
@@ -80,6 +83,7 @@ public class RobotServiceImpl implements RobotService {
     }
 
     @Override
+    @Transactional
     public RobotDto patchUpdate(UUID id, RobotDto dto) {
         var existingRobot = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Robot not found"));
@@ -109,6 +113,7 @@ public class RobotServiceImpl implements RobotService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             var robot = repository.findById(id)

@@ -15,6 +15,7 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private long refreshTokenExpirationMs;
 
     @Override
+    @Transactional
     public RefreshToken createRefreshToken(Account account) {
         // Tạo token string bằng JwtUtil
         String token = jwtUtil.generateRefreshToken(account);
@@ -50,6 +52,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
+    @Transactional
     public Optional<RefreshToken> findByTokenAndIsActive(String token, Boolean isActive) {
         return refreshTokenRepository.findRefreshTokenByTokenAndIsActive(token, isActive);
     }
@@ -79,13 +82,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         item.setExpiredAt(LocalDateTime.now().plusSeconds(jwtUtil.getRefreshTokenExpirationMs() / 1000)); // convert ms -> sec
         refreshTokenRepository.save(item);
 
-       return LoginDto.LoginResponse.builder()
+        return LoginDto.LoginResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
     }
 
     @Override
+    @Transactional
     public String logout(String refreshToken) {
         var token = refreshTokenRepository.findRefreshTokenByTokenAndIsActive(refreshToken, true);
         if (token.isEmpty()) {

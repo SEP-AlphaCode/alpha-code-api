@@ -10,6 +10,7 @@ import com.alphacode.alphacodeapi.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,6 +45,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @Transactional
     public OrganizationDto create(OrganizationDto dto) {
         var entity = OrganizationMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -54,6 +56,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @Transactional
     public OrganizationDto update(UUID id, OrganizationDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
@@ -70,6 +73,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @Transactional
     public OrganizationDto patchUpdate(UUID id, OrganizationDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
@@ -82,6 +86,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));

@@ -1,29 +1,30 @@
 package com.alphacode.alphacodeapi.service.impl;
 
-import com.alphacode.alphacodeapi.dto.ClassEntityDto;
+import com.alphacode.alphacodeapi.dto.ClassDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.entity.ClassEntity;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.ClassEntityMapper;
-import com.alphacode.alphacodeapi.repository.ClassEntityRepository;
-import com.alphacode.alphacodeapi.service.ClassEntityService;
+import com.alphacode.alphacodeapi.mapper.ClassMapper;
+import com.alphacode.alphacodeapi.repository.ClassRepository;
+import com.alphacode.alphacodeapi.service.ClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ClassEntityEntityServiceImpl implements ClassEntityService {
+public class ClassServiceImpl implements ClassService {
 
-    private final ClassEntityRepository repository;
+    private final ClassRepository repository;
 
     @Override
-    public PagedResult<ClassEntityDto> getAll(int page, int size, Integer status) {
+    public PagedResult<ClassDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<ClassEntity> pageResult;
 
@@ -33,27 +34,29 @@ public class ClassEntityEntityServiceImpl implements ClassEntityService {
             pageResult = repository.findAll(pageable);
         }
 
-        return new PagedResult<>(pageResult.map(ClassEntityMapper::toDto));
+        return new PagedResult<>(pageResult.map(ClassMapper::toDto));
     }
 
     @Override
-    public ClassEntityDto getById(UUID id) {
+    public ClassDto getById(UUID id) {
         ClassEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
-        return ClassEntityMapper.toDto(entity);
+        return ClassMapper.toDto(entity);
     }
 
     @Override
-    public ClassEntityDto create(ClassEntityDto dto) {
-        ClassEntity entity = ClassEntityMapper.toEntity(dto);
+    @Transactional
+    public ClassDto create(ClassDto dto) {
+        ClassEntity entity = ClassMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
         entity.setStatus(1);
         ClassEntity saved = repository.save(entity);
-        return ClassEntityMapper.toDto(saved);
+        return ClassMapper.toDto(saved);
     }
 
     @Override
-    public ClassEntityDto update(UUID id, ClassEntityDto dto) {
+    @Transactional
+    public ClassDto update(UUID id, ClassDto dto) {
         ClassEntity existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
 
@@ -62,11 +65,12 @@ public class ClassEntityEntityServiceImpl implements ClassEntityService {
         existing.setStatus(dto.getStatus());
 
         ClassEntity updated = repository.save(existing);
-        return ClassEntityMapper.toDto(updated);
+        return ClassMapper.toDto(updated);
     }
 
     @Override
-    public ClassEntityDto patchUpdate(UUID id, ClassEntityDto dto) {
+    @Transactional
+    public ClassDto patchUpdate(UUID id, ClassDto dto) {
         ClassEntity existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
 
@@ -79,10 +83,11 @@ public class ClassEntityEntityServiceImpl implements ClassEntityService {
         existing.setLastUpdate(LocalDateTime.now());
 
         ClassEntity updated = repository.save(existing);
-        return ClassEntityMapper.toDto(updated);
+        return ClassMapper.toDto(updated);
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         ClassEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Class not found"));

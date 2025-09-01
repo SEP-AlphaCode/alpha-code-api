@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -46,6 +47,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Transactional
     public MusicDto create(MusicDto dto) {
         Music music = MusicMapper.toEntity(dto);
         music.setCreatedDate(LocalDateTime.now());
@@ -55,6 +57,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Transactional
     public MusicDto update(UUID id, MusicDto dto) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -77,6 +80,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Transactional
     public MusicDto patchUpdate(UUID id, MusicDto dto) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -99,6 +103,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));

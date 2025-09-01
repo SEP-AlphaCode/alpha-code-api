@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
 
     @Override
+    @Transactional
     public LoginDto.LoginResponse login(LoginDto.LoginRequest loginRequest) {
         Optional<Account> accountOptional = repository.findAccountByUsername(loginRequest.getUsername());
         if (accountOptional.isEmpty()) {
@@ -69,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public LoginDto.LoginResponse googleLogin(String request) {
         try {
             FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(request);
