@@ -139,7 +139,7 @@ public class AccountController {
 
     @PostMapping("/reset-password/request")
     @Operation(summary = "Request reset password")
-    public ResponseEntity<String> requestResetPassword(@RequestParam String email) throws MessagingException {
+    public ResponseEntity<String> requestResetPassword(@RequestBody String email) throws MessagingException {
         boolean success = service.requestResetPassword(email);
         return success ? ResponseEntity.ok("Reset password link sent to email")
                 : ResponseEntity.badRequest().body("Email not found or failed to send mail");
