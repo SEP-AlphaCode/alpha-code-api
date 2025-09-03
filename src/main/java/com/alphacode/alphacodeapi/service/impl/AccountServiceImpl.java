@@ -299,13 +299,8 @@ public class AccountServiceImpl implements AccountService {
         ClassPathResource logoImage = new ClassPathResource("static/images/alphacode-logo.png");
         helper.addInline("alphacode-logo", logoImage);
 
-        try {
-            mailSender.send(message);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
+        mailSender.send(message);
+        return true;
     }
 
     @Override
