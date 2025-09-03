@@ -32,7 +32,7 @@ public interface AccountService {
 
     AccountDto findAccountByFullName(String fullName);
 
-    boolean requestResetPassword(String email) throws MessagingException ;
+    boolean requestResetPassword(String email) throws MessagingException;
 
     boolean confirmResetPassword(ResetPassworDto dto);
 }
