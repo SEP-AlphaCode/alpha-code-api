@@ -41,6 +41,12 @@ public class ActivityController {
         return activityService.create(activityDto);
     }
 
+    @GetMapping("get-by-qr-code/{qrCode}")
+    @Operation(summary = "Get activity by QR code")
+    public ActivityDto getByQRCode(@PathVariable String qrCode) {
+        return activityService.getByQRCode(qrCode);
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Update activity by id")
     public ActivityDto update(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {

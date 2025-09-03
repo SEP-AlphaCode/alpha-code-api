@@ -3,7 +3,6 @@ package com.alphacode.alphacodeapi.service;
 import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.ResetPassworDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.mail.MessagingException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +31,7 @@ public interface AccountService {
 
     AccountDto findAccountByFullName(String fullName);
 
-    boolean requestResetPassword(String email) throws MessagingException ;
+    boolean requestResetPassword(String email) throws MessagingException;
 
     boolean confirmResetPassword(ResetPassworDto dto);
 }

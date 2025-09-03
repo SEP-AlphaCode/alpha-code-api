@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "Logout and invalidate the refresh token")
-    public String logout(@RequestParam String refreshToken) {
+    public String logout(@RequestBody String refreshToken) {
         return refreshTokenService.logout(refreshToken);
     }
 }

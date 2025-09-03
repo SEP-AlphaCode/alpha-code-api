@@ -26,11 +26,13 @@ public class Dance {
     )
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
+    @Column(name = "code", nullable = false, length = 100, unique = true)
+    private String code;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 255)
+    @Column(name = "description", nullable = true, length = 255)
     private String description;
 
     @Column(name = "status", nullable = false)

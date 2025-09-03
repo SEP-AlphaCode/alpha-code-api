@@ -19,6 +19,7 @@ import java.util.UUID;
 public class DanceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
+    private String code;
 
     private String name;
 

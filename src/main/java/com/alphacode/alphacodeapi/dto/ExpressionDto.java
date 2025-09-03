@@ -18,8 +18,8 @@ public class ExpressionDto {
     private UUID id;
 
     private String name;
+    private String code;
     private String imageUrl;
-    private String description;
     private Integer status;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

@@ -19,6 +19,7 @@ public class DanceMapper {
 
         DanceDto dto = new DanceDto();
         dto.setId(dance.getId());
+        dto.setCode(dance.getCode());
         dto.setName(dance.getName());
         dto.setDescription(dance.getDescription());
         dto.setStatus(dance.getStatus());
@@ -53,6 +54,7 @@ public class DanceMapper {
         }
         Dance dance = new Dance();
         dance.setId(dto.getId());
+        dance.setCode(dto.getCode());
         dance.setName(dto.getName());
         dance.setDescription(dto.getDescription());
         dance.setStatus(dto.getStatus());

@@ -26,15 +26,13 @@ public class Expression {
     )
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
-
+    @Column(name = "code", nullable = false, length = 100, unique = true)
+    private String code;
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
-
-    @Column(name = "description", length = 255)
-    private String description;
 
     @Column(name = "status", nullable = false)
     private Integer status;

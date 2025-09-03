@@ -288,7 +288,9 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public boolean requestResetPassword(String email) throws MessagingException {
         var account = repository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("Email not found!"));
+
+        System.out.println("Account get = " + account.getId());
 
         MimeMessage message = mailSender.createMimeMessage();
 
@@ -308,13 +310,8 @@ public class AccountServiceImpl implements AccountService {
         ClassPathResource logoImage = new ClassPathResource("static/images/alphacode-logo.png");
         helper.addInline("alphacode-logo", logoImage);
 
-        try {
-            mailSender.send(message);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
+        mailSender.send(message);
+        return true;
     }
 
     @Override

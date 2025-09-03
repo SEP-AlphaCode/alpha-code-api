@@ -1,9 +1,6 @@
 package com.alphacode.alphacodeapi.controller;
 
-import com.alphacode.alphacodeapi.dto.AccountDto;
-import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.dto.QRCodeDto;
-import com.alphacode.alphacodeapi.dto.ResetPassworDto;
+import com.alphacode.alphacodeapi.dto.*;
 import com.alphacode.alphacodeapi.service.AccountService;
 import com.alphacode.alphacodeapi.service.impl.AccountServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -193,14 +190,16 @@ public class AccountController {
 
     @PostMapping("/reset-password/request")
     @Operation(summary = "Request reset password")
-    public ResponseEntity<String> requestResetPassword(@RequestParam String email) throws MessagingException {
-        boolean success = service.requestResetPassword(email);
+    public ResponseEntity<String> requestResetPassword(@RequestBody ResetPasswordRequestDto request) throws MessagingException {
+        System.out.println("Incoming email = " + request.getEmail());
+        boolean success = service.requestResetPassword(request.getEmail());
+        System.out.println("Result from service = " + success);
         return success ? ResponseEntity.ok("Reset password link sent to email")
                 : ResponseEntity.badRequest().body("Email not found or failed to send mail");
     }
 
-    @PostMapping("/reset-password/confirm")
-    @Operation(summary = "Confirm reset password")
+    @PostMapping("/reset-password/reset")
+    @Operation(summary = "Reset the password")
     public ResponseEntity<String> confirmResetPassword(@RequestBody ResetPassworDto dto) {
         boolean success = service.confirmResetPassword(dto);
         return success ? ResponseEntity.ok("Password reset successful")
