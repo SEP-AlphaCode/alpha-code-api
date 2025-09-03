@@ -3,7 +3,6 @@ package com.alphacode.alphacodeapi.service;
 import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.ResetPassworDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.mail.MessagingException;
 import org.springframework.web.multipart.MultipartFile;
 

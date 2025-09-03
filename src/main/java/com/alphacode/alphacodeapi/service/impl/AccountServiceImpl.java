@@ -279,6 +279,8 @@ public class AccountServiceImpl implements AccountService {
         var account = repository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Email not found!"));
 
+        System.out.println("Incoming email = " + account);
+
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
