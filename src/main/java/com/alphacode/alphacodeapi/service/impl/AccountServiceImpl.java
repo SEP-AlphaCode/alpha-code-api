@@ -71,26 +71,25 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public AccountDto create(AccountDto accountDto, MultipartFile avatarFile) {
+        if (repository.existsByUsername(accountDto.getUsername())) {
+            throw new AuthenticationException("Username is already taken");
+        }
+        if (repository.existsByEmail(accountDto.getEmail())) {
+            throw new AuthenticationException("Email is already registered");
+        }
+
+        Account entity = AccountMapper.toEntity(accountDto);
+        entity.setCreatedDate(LocalDateTime.now());
+        entity.setStatus(1);
+        entity.setBannedReason(null);
+        entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+
+        if (accountDto.getRoleId() != null) {
+            Role role = roleRepository.findById(accountDto.getRoleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+            entity.setRole(role);
+        }
         try {
-            if (repository.existsByUsername(accountDto.getUsername())) {
-                throw new AuthenticationException("Username is already taken");
-            }
-            if (repository.existsByEmail(accountDto.getEmail())) {
-                throw new AuthenticationException("Email is already registered");
-            }
-
-            Account entity = AccountMapper.toEntity(accountDto);
-            entity.setCreatedDate(LocalDateTime.now());
-            entity.setStatus(1);
-            entity.setBannedReason(null);
-            entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-
-            if (accountDto.getRoleId() != null) {
-                Role role = roleRepository.findById(accountDto.getRoleId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-                entity.setRole(role);
-            }
-
             if (avatarFile != null && !avatarFile.isEmpty()) {
                 String fileKey = "avatars/" + System.currentTimeMillis() + "_" + avatarFile.getOriginalFilename();
                 String avatarUrl = s3Service.uploadBytes(avatarFile.getBytes(), fileKey, avatarFile.getContentType());
