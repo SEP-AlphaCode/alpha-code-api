@@ -279,7 +279,7 @@ public class AccountServiceImpl implements AccountService {
         var account = repository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Email not found!"));
 
-        System.out.println("Account get = " + account.getPassword());
+        System.out.println("Account get = " + account.getId());
 
         MimeMessage message = mailSender.createMimeMessage();
 
