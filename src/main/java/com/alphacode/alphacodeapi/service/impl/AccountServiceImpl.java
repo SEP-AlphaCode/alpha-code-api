@@ -6,6 +6,7 @@ import com.alphacode.alphacodeapi.dto.ResetPassworDto;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
+import com.alphacode.alphacodeapi.exception.ConflictException;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
@@ -72,10 +73,13 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public AccountDto create(AccountDto accountDto, MultipartFile avatarFile) {
         if (repository.existsByUsername(accountDto.getUsername())) {
-            throw new AuthenticationException("Username is already taken");
+            throw new ConflictException("Username is already taken");
         }
         if (repository.existsByEmail(accountDto.getEmail())) {
-            throw new AuthenticationException("Email is already registered");
+            throw new ConflictException("Email is already registered");
+        }
+        if (repository.existsByPhone(accountDto.getPhone())) {
+            throw new ConflictException("Phone is already used");
         }
 
         Account entity = AccountMapper.toEntity(accountDto);
