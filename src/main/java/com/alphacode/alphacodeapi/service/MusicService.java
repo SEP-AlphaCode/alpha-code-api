@@ -1,7 +1,9 @@
 package com.alphacode.alphacodeapi.service;
 
+import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -10,7 +12,7 @@ public interface MusicService {
 
     MusicDto getById(UUID id);
 
-    MusicDto create(MusicDto dto);
+    MusicDto create(MusicDto dto, MultipartFile urlFile, MultipartFile imageFile);
 
     MusicDto update(UUID id, MusicDto dto);
 

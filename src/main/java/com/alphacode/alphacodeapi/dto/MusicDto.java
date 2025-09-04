@@ -17,6 +17,8 @@ public class MusicDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
     private String name;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     private String url;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
@@ -24,6 +26,7 @@ public class MusicDto {
     private LocalDateTime lastUpdate;
     private Integer duration;
     private Integer status;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID classId;
     private String image;
 

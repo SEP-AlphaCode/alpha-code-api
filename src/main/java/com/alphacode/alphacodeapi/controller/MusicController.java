@@ -5,8 +5,12 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.MusicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -33,10 +37,26 @@ public class MusicController {
         return service.getById(id);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create new music")
-    public MusicDto create(@RequestBody MusicDto dto) {
-        return service.create(dto);
+    public MusicDto create(
+            @NotBlank(message = "Name is required")
+            @RequestParam("name") String name,
+
+            @NotNull(message = "Duration is required")
+            @RequestParam("duration") Integer duration,
+
+            @RequestParam("status") Integer status,
+
+            @RequestPart(value = "musicFile", required = false) MultipartFile musicFile,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+    ) {
+        MusicDto musicDto = new MusicDto();
+        musicDto.setName(name);
+        musicDto.setDuration(duration);
+        musicDto.setStatus(status);
+
+        return service.create(musicDto, musicFile, imageFile);
     }
 
     @PutMapping("/{id}")
