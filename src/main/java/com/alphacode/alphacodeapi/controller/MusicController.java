@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +39,7 @@ public class MusicController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new music")
     public MusicDto create(
             @NotBlank(message = "Name is required")
@@ -60,18 +62,21 @@ public class MusicController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update music")
     public MusicDto update(@PathVariable UUID id, @RequestBody MusicDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update music")
     public MusicDto patchUpdate(@PathVariable UUID id, @RequestBody MusicDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete music (soft delete)")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

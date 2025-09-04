@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -42,6 +43,7 @@ public class QRCodeController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new QR code")
     public QRCodeDto create(@Valid @RequestBody QRCodeDto requestDto) {
 //        QRCodeDto qrCodeDto = new QRCodeDto();
@@ -56,30 +58,35 @@ public class QRCodeController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update QRCode")
     public QRCodeDto update(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException {
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update QRCode")
     public QRCodeDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) {
         return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update QRCode status")
     public QRCodeDto updateStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete QRCode by id")
     public String delete(@PathVariable UUID id) {
         return qrCodeService.delete(id);
     }
 
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Change QRCode status")
     public QRCodeDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);

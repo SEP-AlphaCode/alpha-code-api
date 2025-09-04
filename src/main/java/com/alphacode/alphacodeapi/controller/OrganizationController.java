@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -35,24 +36,28 @@ public class OrganizationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new organization")
     public OrganizationDto create(@Valid @RequestBody OrganizationDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update organization by id")
     public OrganizationDto update(@PathVariable UUID id, @Valid @RequestBody OrganizationDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update organization by id")
     public OrganizationDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody OrganizationDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete organization by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
