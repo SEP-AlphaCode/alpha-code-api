@@ -10,6 +10,8 @@ public class MarkerMapper {
         MarkerDto dto = new MarkerDto();
         dto.setId(marker.getId());
         dto.setName(marker.getName());
+        dto.setBookId(marker.getBookId());
+        dto.setPageId(marker.getPageId());
         dto.setStatus(marker.getStatus());
         dto.setCreatedDate(marker.getCreatedDate());
         dto.setLastEdited(marker.getLastEdited());
@@ -27,6 +29,8 @@ public class MarkerMapper {
         Marker marker = new Marker();
         marker.setId(dto.getId());
         marker.setName(dto.getName());
+        marker.setBookId(dto.getBookId());
+        marker.setPageId(dto.getPageId());
         marker.setStatus(dto.getStatus());
         marker.setCreatedDate(dto.getCreatedDate());
         marker.setLastEdited(dto.getLastEdited());
