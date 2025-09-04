@@ -2,6 +2,8 @@ package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.ClassEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,8 @@ public class ClassDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
+    @NotBlank(message = "Class name is required")
+    @Size(max = 100, message = "Class name must not exceed 100 characters")
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

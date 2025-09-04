@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,20 +42,20 @@ public class ActionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new action")
-    public ActionDto createAction(@RequestBody ActionDto actionDto) {
+    public ActionDto createAction(@Valid @RequestBody ActionDto actionDto) {
         return actionService.createAction(actionDto);
     }
 
     @PutMapping("/{id}")
     
     @Operation(summary = "Update action")
-    public ActionDto updateAction(@PathVariable UUID id, @RequestBody ActionDto actionDto) {
+    public ActionDto updateAction(@PathVariable UUID id, @Valid @RequestBody ActionDto actionDto) {
         return actionService.updateAction(id, actionDto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update action")
-    public ActionDto patchUpdate(@PathVariable UUID id, @RequestBody ActionDto dto) {
+    public ActionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActionDto dto) {
         ActionDto existing = actionService.getActionById(id);
         ActionDto updated = actionService.updateAction(id, dto); // service đã có update
         return updated;

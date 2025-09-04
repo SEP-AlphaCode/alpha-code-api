@@ -91,7 +91,7 @@ public class AccountController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update account by id")
-    public AccountDto update(@Valid @PathVariable UUID id, @RequestBody AccountDto dto) {
+    public AccountDto update(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
         return service.update(id, dto);
     }
 
@@ -209,7 +209,7 @@ public class AccountController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update account by id")
-    public AccountDto patchUpdate(@Valid @PathVariable UUID id, @RequestBody AccountDto dto) {
+    public AccountDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
         return service.patchUpdate(id, dto);
     }
 
@@ -221,13 +221,13 @@ public class AccountController {
 
     @PatchMapping("/{id}/change-password")
     @Operation(summary = "Change password")
-    public AccountDto changePassword(@Valid @PathVariable UUID id, @RequestParam String oldPassword, @RequestParam String newPassword) {
+    public AccountDto changePassword(@PathVariable UUID id, @RequestParam String oldPassword, @RequestParam String newPassword) {
         return service.changePassword(id, oldPassword, newPassword);
     }
 
     @PatchMapping("/{id}/change-status")
     @Operation(summary = "Change account status")
-    public AccountDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
+    public AccountDto changeStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return service.changeStatus(id, status);
     }
 }

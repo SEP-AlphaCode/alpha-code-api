@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ExpressionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,19 +37,19 @@ public class ExpressionController {
 
     @PostMapping
     @Operation(summary = "Create new expression")
-    public ExpressionDto create(@RequestBody ExpressionDto dto) {
+    public ExpressionDto create(@Valid @RequestBody ExpressionDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update expression by id")
-    public ExpressionDto update(@PathVariable UUID id, @RequestBody ExpressionDto dto) {
+    public ExpressionDto update(@PathVariable UUID id, @Valid @RequestBody ExpressionDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update expression by id")
-    public ExpressionDto patchUpdate(@PathVariable UUID id, @RequestBody ExpressionDto dto) {
+    public ExpressionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ExpressionDto dto) {
         return service.patchUpdate(id, dto);
     }
 

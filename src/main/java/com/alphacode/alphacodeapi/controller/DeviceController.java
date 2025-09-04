@@ -6,6 +6,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,13 +44,13 @@ public class DeviceController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update device by id")
-    public DeviceDto update(@PathVariable UUID id, @RequestBody DeviceDto dto) {
+    public DeviceDto update(@PathVariable UUID id, @Valid @RequestBody DeviceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update device by id")
-    public DeviceDto patchUpdate(@PathVariable UUID id, @RequestBody DeviceDto dto) {
+    public DeviceDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody DeviceDto dto) {
         return service.patchUpdate(id, dto);
     }
 

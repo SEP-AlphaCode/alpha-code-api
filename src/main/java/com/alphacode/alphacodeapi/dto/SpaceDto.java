@@ -2,6 +2,8 @@ package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.AccountEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +18,13 @@ public class SpaceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
+    @NotBlank(message = "Space name is required")
+    @Size(max = 100, message = "Space name must not exceed 100 characters")
     private String name;
+
     private String description;
+
+    @Size(max = 255, message = "Description must not exceed 255 characters")
     private UUID organizationId;
     private Integer status;
 

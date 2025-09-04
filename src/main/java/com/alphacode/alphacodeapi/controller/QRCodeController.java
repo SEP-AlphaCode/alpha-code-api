@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class QRCodeController {
 
     @PostMapping()
     @Operation(summary = "Create new QR code")
-    public QRCodeDto create(@RequestBody QRCodeDto requestDto) {
+    public QRCodeDto create(@Valid @RequestBody QRCodeDto requestDto) {
 //        QRCodeDto qrCodeDto = new QRCodeDto();
 //        qrCodeDto.setName(requestDto.getName());
 //        qrCodeDto.setQrCode(requestDto.getQrCode());
@@ -56,19 +57,19 @@ public class QRCodeController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update QRCode")
-    public QRCodeDto update(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException{
+    public QRCodeDto update(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException {
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update QRCode")
-    public QRCodeDto patchUpdate(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) {
+    public QRCodeDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) {
         return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "Update QRCode status")
-    public QRCodeDto updateStatus(@PathVariable UUID id, @RequestParam Integer status) {
+    public QRCodeDto updateStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }
 

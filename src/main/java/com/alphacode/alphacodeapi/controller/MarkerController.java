@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.MarkerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,19 +36,19 @@ public class MarkerController {
 
     @PostMapping()
     @Operation(summary = "Create new marker")
-    public MarkerDto create(@RequestBody MarkerDto dto) {
+    public MarkerDto create(@Valid @RequestBody MarkerDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update marker by id")
-    public MarkerDto update(@PathVariable String id, @RequestBody MarkerDto dto){
+    public MarkerDto update(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
         return service.update(java.util.UUID.fromString(id), dto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update marker by id")
-    public MarkerDto patchUpdate(@PathVariable String id, @RequestBody MarkerDto dto) {
+    public MarkerDto patchUpdate(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
         return service.patchUpdate(java.util.UUID.fromString(id), dto);
     }
 

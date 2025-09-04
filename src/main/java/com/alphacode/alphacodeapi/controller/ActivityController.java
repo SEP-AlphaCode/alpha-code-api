@@ -55,7 +55,7 @@ public class ActivityController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update activity by id")
-    public ActivityDto patchUpdate(@PathVariable UUID id, @RequestBody ActivityDto activityDto) throws JsonProcessingException {
+    public ActivityDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.patchUpdate(id, activityDto);
     }
 

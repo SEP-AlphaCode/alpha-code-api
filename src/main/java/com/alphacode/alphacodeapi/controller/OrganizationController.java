@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,19 +36,19 @@ public class OrganizationController {
 
     @PostMapping
     @Operation(summary = "Create new organization")
-    public OrganizationDto create(@RequestBody OrganizationDto dto) {
+    public OrganizationDto create(@Valid @RequestBody OrganizationDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update organization by id")
-    public OrganizationDto update(@PathVariable UUID id, @RequestBody OrganizationDto dto) {
+    public OrganizationDto update(@PathVariable UUID id, @Valid @RequestBody OrganizationDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update organization by id")
-    public OrganizationDto patchUpdate(@PathVariable UUID id, @RequestBody OrganizationDto dto) {
+    public OrganizationDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody OrganizationDto dto) {
         return service.patchUpdate(id, dto);
     }
 
