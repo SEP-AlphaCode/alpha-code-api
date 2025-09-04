@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class RoleController {
     private final RoleService service;
 
     @GetMapping
+
     @Operation(summary = "Get all roles with pagination")
     public PagedResult<RoleDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -35,23 +37,27 @@ public class RoleController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new role")
     public RoleDto create(@Valid @RequestBody RoleDto roleDto) {
         return service.create(roleDto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public RoleDto update(@PathVariable UUID id, @Valid @RequestBody RoleDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update role")
     public RoleDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody RoleDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete role by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

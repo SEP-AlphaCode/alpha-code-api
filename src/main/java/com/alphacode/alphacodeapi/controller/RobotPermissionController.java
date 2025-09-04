@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -34,24 +35,28 @@ public class RobotPermissionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new robot permission")
     public RobotPermissionDto create(@Valid @RequestBody RobotPermissionDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update robot permission by id")
     public RobotPermissionDto update(@PathVariable UUID id, @Valid @RequestBody RobotPermissionDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update robot permission by id")
     public RobotPermissionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody RobotPermissionDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete robot permission by id (soft delete)")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

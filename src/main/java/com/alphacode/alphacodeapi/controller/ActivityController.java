@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class ActivityController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new activity")
     public ActivityDto create(@Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.create(activityDto);
@@ -48,18 +50,21 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update activity by id")
     public ActivityDto update(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.update(id, activityDto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update activity by id")
     public ActivityDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.patchUpdate(id, activityDto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete activity by id")
     public String delete(@PathVariable UUID id) {
         return activityService.delete(id);
