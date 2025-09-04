@@ -7,6 +7,7 @@ import com.alphacode.alphacodeapi.service.OsmoCardService;
 import com.alphacode.alphacodeapi.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,19 +37,19 @@ public class OsmoCardController {
 
     @PostMapping()
     @Operation(summary = "Create new osmo card")
-    public OsmoCardDto create(@RequestBody OsmoCardDto dto) {
+    public OsmoCardDto create(@Valid @RequestBody OsmoCardDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update osmo card by id")
-    public OsmoCardDto update(@PathVariable UUID id, @RequestBody OsmoCardDto dto){
+    public OsmoCardDto update(@PathVariable UUID id, @Valid @RequestBody OsmoCardDto dto){
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update osmo card by id")
-    public OsmoCardDto patchUpdate(@PathVariable UUID id, @RequestBody OsmoCardDto dto) {
+    public OsmoCardDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody OsmoCardDto dto) {
         return service.patchUpdate(id, dto);
     }
 

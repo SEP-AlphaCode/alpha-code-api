@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.RobotDto;
 import com.alphacode.alphacodeapi.service.RobotService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,19 +36,19 @@ public class RobotController {
 
     @PostMapping()
     @Operation(summary = "Create new robot")
-    public RobotDto create(@RequestBody RobotDto dto) {
+    public RobotDto create(@Valid @RequestBody RobotDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update robot by id")
-    public RobotDto update(@PathVariable UUID id, @RequestBody RobotDto dto) {
+    public RobotDto update(@PathVariable UUID id, @Valid @RequestBody RobotDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update robot by id")
-    public RobotDto patchUpdate(@PathVariable UUID id, @RequestBody RobotDto dto) {
+    public RobotDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody RobotDto dto) {
         return service.patchUpdate(id, dto);
     }
 

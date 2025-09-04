@@ -4,6 +4,7 @@ import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.alphacode.alphacodeapi.enums.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class RoleDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
+    @NotBlank(message = "Role name is required")
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
