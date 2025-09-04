@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,11 +24,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
 
+    private static final String ACTIVITY_NOT_FOUND = "Activity not found";
     private final ActivityRepository repository;
     private final QRCodeRepository qrCodeRepository;
     private final ActivityMapper mapper;
-
-    private static final String ACTIVITY_NOT_FOUND = "Activity not found";
 
     @Override
     public PagedResult<ActivityDto> getAll(int page, int size, Integer status) {

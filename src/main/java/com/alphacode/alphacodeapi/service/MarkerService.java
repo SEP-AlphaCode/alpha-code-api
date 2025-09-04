@@ -1,6 +1,5 @@
 package com.alphacode.alphacodeapi.service;
 
-import com.alphacode.alphacodeapi.dto.DeviceDto;
 import com.alphacode.alphacodeapi.dto.MarkerDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 

@@ -2,9 +2,7 @@ package com.alphacode.alphacodeapi.service;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface QRCodeService {
@@ -14,7 +12,7 @@ public interface QRCodeService {
 
     QRCodeDto create(QRCodeDto qrCodeDto);
 
-    QRCodeDto update(UUID id,QRCodeDto qrCodeDto);
+    QRCodeDto update(UUID id, QRCodeDto qrCodeDto);
 
     QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto);
 

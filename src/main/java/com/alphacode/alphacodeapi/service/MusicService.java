@@ -1,6 +1,5 @@
 package com.alphacode.alphacodeapi.service;
 
-import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import org.springframework.web.multipart.MultipartFile;

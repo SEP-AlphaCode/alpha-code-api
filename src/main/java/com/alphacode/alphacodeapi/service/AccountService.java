@@ -15,7 +15,7 @@ public interface AccountService {
 
     AccountDto create(AccountDto accountDto, MultipartFile avatarFile);
 
-    AccountDto update(UUID id,AccountDto accountDto);
+    AccountDto update(UUID id, AccountDto accountDto);
 
     AccountDto updateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile);
 

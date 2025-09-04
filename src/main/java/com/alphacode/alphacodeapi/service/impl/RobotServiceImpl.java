@@ -1,7 +1,6 @@
 package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.dto.RgbDto;
 import com.alphacode.alphacodeapi.dto.RobotDto;
 import com.alphacode.alphacodeapi.entity.Robot;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;

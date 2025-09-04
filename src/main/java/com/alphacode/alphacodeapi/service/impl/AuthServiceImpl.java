@@ -1,11 +1,9 @@
 package com.alphacode.alphacodeapi.service.impl;
 
-import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.LoginDto;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.RefreshToken;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
-import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RefreshTokenRepository;
 import com.alphacode.alphacodeapi.service.AuthService;
@@ -17,8 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +82,8 @@ public class AuthServiceImpl implements AuthService {
 
             // If no account is found, throw AuthenticationException
             if (account == null) {
-                throw new AuthenticationException("Your account does not have permission to access this application. Please contact the administrator.");
+                throw new AuthenticationException("Your account does not have permission to access this application" +
+                        ". Please contact the administrator.");
             }
 
             String accessToken = jwtUtil.generateAccessToken(account);

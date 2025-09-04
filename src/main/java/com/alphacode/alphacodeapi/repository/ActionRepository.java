@@ -12,6 +12,9 @@ import java.util.UUID;
 
 @Repository
 public interface ActionRepository extends JpaRepository<Action, UUID> {
-    @Query("SELECT a FROM Action a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(a.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) ORDER BY a.createdDate DESC")
+    @Query("SELECT a FROM Action a WHERE LOWER(a.name) " +
+            "LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+            "OR LOWER(a.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+            "ORDER BY a.createdDate DESC")
     Page<Action> findAllByNameOrDescriptionContaining(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

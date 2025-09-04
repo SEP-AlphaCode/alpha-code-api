@@ -1,7 +1,6 @@
 package com.alphacode.alphacodeapi.service;
 
 import com.alphacode.alphacodeapi.dto.DeviceDto;
-import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 
 import java.util.UUID;

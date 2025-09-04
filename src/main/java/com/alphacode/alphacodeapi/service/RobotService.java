@@ -1,7 +1,6 @@
 package com.alphacode.alphacodeapi.service;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.dto.RgbDto;
 import com.alphacode.alphacodeapi.dto.RobotDto;
 
 import java.util.UUID;

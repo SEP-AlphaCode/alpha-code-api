@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +34,7 @@ public class ActionServiceImpl implements ActionService {
         } else {
             pageResult = actionRepository.findAll(pageable);
         }
-        
+
         return new PagedResult<>(pageResult.map(ActionMapper::toDto));
     }
 
@@ -63,10 +61,10 @@ public class ActionServiceImpl implements ActionService {
     public ActionDto updateAction(UUID id, ActionDto actionDto) {
         Action existingAction = actionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Action not found with id: " + id));
-        
+
         ActionMapper.updateEntity(actionDto, existingAction);
         existingAction.setLastUpdate(LocalDateTime.now());
-        
+
         Action updatedAction = actionRepository.save(existingAction);
         return ActionMapper.toDto(updatedAction);
     }

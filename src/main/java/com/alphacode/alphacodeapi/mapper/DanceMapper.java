@@ -1,13 +1,12 @@
 package com.alphacode.alphacodeapi.mapper;
 
+import com.alphacode.alphacodeapi.dto.ActivityStepDto;
 import com.alphacode.alphacodeapi.dto.DanceDto;
 import com.alphacode.alphacodeapi.dto.OsmoCardDto;
-import com.alphacode.alphacodeapi.dto.ActivityStepDto;
+import com.alphacode.alphacodeapi.entity.ActivityStep;
 import com.alphacode.alphacodeapi.entity.Dance;
 import com.alphacode.alphacodeapi.entity.OsmoCard;
-import com.alphacode.alphacodeapi.entity.ActivityStep;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class DanceMapper {

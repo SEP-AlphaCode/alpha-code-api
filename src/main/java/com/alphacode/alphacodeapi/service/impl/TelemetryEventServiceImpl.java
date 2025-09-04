@@ -2,10 +2,8 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.TelemetryEventDto;
-import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.entity.TelemetryEvent;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.RoleMapper;
 import com.alphacode.alphacodeapi.mapper.TelemetryEventMapper;
 import com.alphacode.alphacodeapi.repository.TelemetryEventRepository;
 import com.alphacode.alphacodeapi.service.TelemetryEventService;

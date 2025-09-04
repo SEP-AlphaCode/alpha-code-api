@@ -1,24 +1,19 @@
 package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.LoginDto;
-import com.alphacode.alphacodeapi.dto.RefreshTokenDto;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.RefreshToken;
-import com.alphacode.alphacodeapi.mapper.AccountMapper;
-import com.alphacode.alphacodeapi.mapper.RefreshTokenMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RefreshTokenRepository;
 import com.alphacode.alphacodeapi.service.AccountService;
 import com.alphacode.alphacodeapi.service.RefreshTokenService;
 import com.alphacode.alphacodeapi.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 

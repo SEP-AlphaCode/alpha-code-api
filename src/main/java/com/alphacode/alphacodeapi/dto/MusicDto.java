@@ -1,6 +1,5 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.alphacode.alphacodeapi.enums.MusicEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
