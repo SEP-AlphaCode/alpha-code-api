@@ -12,6 +12,7 @@ import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,7 @@ public class AccountController {
 
     @GetMapping
     @Operation(summary = "Get all accounts with pagination and optional status filter")
+    @PreAuthorize("hasAuthority('ROLE_Teacher')")
     public PagedResult<AccountDto> getAll(@RequestParam(value = "page", defaultValue = "1") int page,
                                           @RequestParam(value = "size", defaultValue = "10") int size,
                                           @RequestParam(value = "status", required = false) Integer status) {
