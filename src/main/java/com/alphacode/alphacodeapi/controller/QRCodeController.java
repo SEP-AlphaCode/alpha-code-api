@@ -43,7 +43,7 @@ public class QRCodeController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new QR code")
     public QRCodeDto create(@Valid @RequestBody QRCodeDto requestDto) {
 //        QRCodeDto qrCodeDto = new QRCodeDto();
@@ -58,35 +58,35 @@ public class QRCodeController {
 
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update QRCode")
     public QRCodeDto update(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException {
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update QRCode")
     public QRCodeDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) {
         return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update QRCode status")
     public QRCodeDto updateStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete QRCode by id")
     public String delete(@PathVariable UUID id) {
         return qrCodeService.delete(id);
     }
 
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Change QRCode status")
     public QRCodeDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);

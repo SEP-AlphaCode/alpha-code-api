@@ -37,7 +37,7 @@ public class ActivityController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new activity")
     public ActivityDto create(@Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.create(activityDto);
@@ -50,14 +50,14 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update activity by id")
     public ActivityDto update(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.update(id, activityDto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update activity by id")
     public ActivityDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.patchUpdate(id, activityDto);

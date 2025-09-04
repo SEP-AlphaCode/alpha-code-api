@@ -36,21 +36,21 @@ public class ActivityStepController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new activity step")
     public ActivityStepDto create(@Valid @RequestBody ActivityStepDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update activity step by id")
     public ActivityStepDto update(@PathVariable UUID id, @Valid @RequestBody ActivityStepDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update activity step by id")
     public ActivityStepDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActivityStepDto dto) {
         return service.patchUpdate(id, dto);

@@ -43,21 +43,21 @@ public class RobotController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update robot by id")
     public RobotDto update(@PathVariable UUID id, @Valid @RequestBody RobotDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update robot by id")
     public RobotDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody RobotDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete robot by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

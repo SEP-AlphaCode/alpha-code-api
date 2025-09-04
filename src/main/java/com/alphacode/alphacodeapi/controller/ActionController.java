@@ -34,7 +34,6 @@ public class ActionController {
     }
 
     @GetMapping("/{id}")
-    
     @Operation(summary = "Get action by id")
     public ActionDto getActionById(@PathVariable UUID id) {
         return actionService.getActionById(id);
