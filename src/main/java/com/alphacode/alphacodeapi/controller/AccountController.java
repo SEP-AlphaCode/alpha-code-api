@@ -30,7 +30,6 @@ public class AccountController {
 
     @GetMapping
     @Operation(summary = "Get all accounts with pagination and optional status filter")
-    @PreAuthorize("hasAuthority('ROLE_Teacher')")
     public PagedResult<AccountDto> getAll(@RequestParam(value = "page", defaultValue = "1") int page,
                                           @RequestParam(value = "size", defaultValue = "10") int size,
                                           @RequestParam(value = "status", required = false) Integer status) {
@@ -51,6 +50,7 @@ public class AccountController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create new account")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public AccountDto create(
             @NotBlank(message = "Username is required")
             @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
