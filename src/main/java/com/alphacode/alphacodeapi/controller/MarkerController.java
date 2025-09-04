@@ -36,21 +36,21 @@ public class MarkerController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new marker")
     public MarkerDto create(@Valid @RequestBody MarkerDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update marker by id")
     public MarkerDto update(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
         return service.update(java.util.UUID.fromString(id), dto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update marker by id")
     public MarkerDto patchUpdate(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
         return service.patchUpdate(java.util.UUID.fromString(id), dto);

@@ -37,28 +37,28 @@ public class SpaceController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new space")
     public SpaceDto create(@Valid @RequestBody SpaceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update space by id")
     public SpaceDto update(@PathVariable UUID id, @Valid @RequestBody SpaceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update space by id")
     public SpaceDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody SpaceDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete space by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

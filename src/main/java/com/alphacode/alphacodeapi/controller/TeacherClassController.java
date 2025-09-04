@@ -35,28 +35,28 @@ public class TeacherClassController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new teacher-class assignment")
     public TeacherClassDto create(@Valid @RequestBody TeacherClassDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update teacher-class assignment by id")
     public TeacherClassDto update(@PathVariable UUID id, @Valid @RequestBody TeacherClassDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update teacher-class assignment by id")
     public TeacherClassDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody TeacherClassDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete teacher-class assignment by id (soft delete)")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
