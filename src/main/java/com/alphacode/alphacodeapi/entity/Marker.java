@@ -30,6 +30,12 @@ public class Marker {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
+    @Column(name = "book_id", nullable = false, columnDefinition = "uuid")
+    private UUID bookId;
+
+    @Column(name = "page_id", nullable = false)
+    private Integer pageId;
+
     @Column(name = "status", nullable = false)
     private Integer status;
 

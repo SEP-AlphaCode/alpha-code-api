@@ -13,32 +13,32 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class AlphaCodeApiApplication {
 
-	@Autowired
-	private Environment environment;
+    @Autowired
+    private Environment environment;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		Dotenv dotenv = Dotenv.configure()
-				.filename(".env")
-				.ignoreIfMalformed()
-				.ignoreIfMissing()
-				.load();
+        Dotenv dotenv = Dotenv.configure()
+                .filename(".env")
+                .ignoreIfMalformed()
+                .ignoreIfMissing()
+                .load();
 
-		dotenv.entries().forEach(entry ->
-				System.setProperty(entry.getKey(), entry.getValue())
-		);
-		SpringApplication.run(AlphaCodeApiApplication.class, args);
-	}
+        dotenv.entries().forEach(entry ->
+                System.setProperty(entry.getKey(), entry.getValue())
+        );
+        SpringApplication.run(AlphaCodeApiApplication.class, args);
+    }
 
-	@EventListener(ApplicationReadyEvent.class)
-	public void logApplicationPort() {
-		String port = environment.getProperty("local.server.port");
-		String address = environment.getProperty("server.address", "localhost"); // mặc định localhost
+    @EventListener(ApplicationReadyEvent.class)
+    public void logApplicationPort() {
+        String port = environment.getProperty("local.server.port");
+        String address = environment.getProperty("server.address", "localhost"); // mặc định localhost
 
-		String contextPath = environment.getProperty("server.servlet.context-path", "");
+        String contextPath = environment.getProperty("server.servlet.context-path", "");
 
-		String url = "http://" + address + ":" + port + contextPath + "/swagger";
-		System.out.println("🚀 Application started at: " + url);
-	}
+        String url = "http://" + address + ":" + port + contextPath + "/swagger";
+        System.out.println("🚀 Application started at: " + url);
+    }
 
 }

@@ -1,8 +1,11 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.alphacode.alphacodeapi.enums.OrganizationEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,17 +19,35 @@ import java.util.UUID;
 public class OrganizationDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
+
+    @NotBlank(message = "Organization name is required")
+    @Size(max = 150, message = "Organization name must not exceed 150 characters")
     private String name;
+
+    @NotBlank(message = "Location is required")
+    @Size(max = 255, message = "Location must not exceed 255 characters")
     private String location;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
+
     private Integer status;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
     private String email;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(
+            regexp = "^[0-9]{9,15}$",
+            message = "Phone number must contain 9–15 digits"
+    )
     private String phone;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return OrganizationEnum.fromCode(this.status);
     }

@@ -35,6 +35,9 @@ public class ActionDto {
     @NotBlank(message = "Name is required")
     private String name;
 
+    @NotBlank(message = "Code is required")
+    private String code;
+
     private String description;
 
     @NotNull(message = "Duration is required")
@@ -47,7 +50,7 @@ public class ActionDto {
     @NotNull(message = "Can interrupt flag is required")
     private Boolean canInterrupt;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return ActionEnum.fromCode(this.status);
     }

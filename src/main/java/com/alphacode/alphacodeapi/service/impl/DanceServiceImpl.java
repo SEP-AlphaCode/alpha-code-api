@@ -8,11 +8,11 @@ import com.alphacode.alphacodeapi.mapper.DanceMapper;
 import com.alphacode.alphacodeapi.repository.DanceRepository;
 import com.alphacode.alphacodeapi.service.DanceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -43,6 +43,7 @@ public class DanceServiceImpl implements DanceService {
     }
 
     @Override
+    @Transactional
     public DanceDto create(DanceDto dto) {
         var entity = DanceMapper.toEntity(dto);
         entity.setId(null);
@@ -53,6 +54,7 @@ public class DanceServiceImpl implements DanceService {
     }
 
     @Override
+    @Transactional
     public DanceDto update(UUID id, DanceDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
@@ -68,6 +70,7 @@ public class DanceServiceImpl implements DanceService {
     }
 
     @Override
+    @Transactional
     public DanceDto patchUpdate(UUID id, DanceDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
@@ -83,6 +86,7 @@ public class DanceServiceImpl implements DanceService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));

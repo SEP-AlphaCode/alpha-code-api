@@ -2,7 +2,6 @@ package com.alphacode.alphacodeapi.mapper;
 
 import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.entity.Account;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AccountMapper {
     public static AccountDto toDto(Account account) {

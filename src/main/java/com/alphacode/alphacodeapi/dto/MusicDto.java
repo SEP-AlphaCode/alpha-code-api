@@ -1,6 +1,5 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.alphacode.alphacodeapi.enums.MusicEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -17,6 +16,8 @@ public class MusicDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
     private String name;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     private String url;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
@@ -24,10 +25,11 @@ public class MusicDto {
     private LocalDateTime lastUpdate;
     private Integer duration;
     private Integer status;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID classId;
     private String image;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return MusicEnum.fromCode(this.status);
     }

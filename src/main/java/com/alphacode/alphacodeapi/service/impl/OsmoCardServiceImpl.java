@@ -2,20 +2,17 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.OsmoCardDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.OsmoCard;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.mapper.OsmoCardMapper;
-import com.alphacode.alphacodeapi.mapper.RoleMapper;
 import com.alphacode.alphacodeapi.repository.OsmoCardRepository;
 import com.alphacode.alphacodeapi.service.OsmoCardService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -47,6 +44,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public OsmoCardDto create(OsmoCardDto dto) {
         var entity = OsmoCardMapper.toEntity(dto);
         if (entity.getActionId() == null && entity.getDanceId() == null && entity.getExpressionId() == null) {
@@ -80,6 +78,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public OsmoCardDto update(UUID id, OsmoCardDto dto) {
         if (dto.getActionId() == null && dto.getDanceId() == null && dto.getExpressionId() == null) {
             throw new IllegalArgumentException("Osmo Card must have at least one of Action ID, Dance ID, or Expression ID set");
@@ -110,6 +109,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public OsmoCardDto patchUpdate(UUID id, OsmoCardDto dto) {
         if (dto.getActionId() != null && dto.getDanceId() != null && dto.getExpressionId() != null) {
             throw new IllegalArgumentException("Osmo Card cannot have all Action ID, Dance ID, and Expression ID set at the same time");
@@ -149,6 +149,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             var existing = repository.findById(id)

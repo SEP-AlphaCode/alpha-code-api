@@ -24,7 +24,7 @@ public class TelemetryEventController {
             @RequestParam(value = "robotId", required = false) UUID robotId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
-            ) {
+    ) {
         return service.getAll(robotId, page, size);
     }
 
@@ -42,7 +42,7 @@ public class TelemetryEventController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update telemetry event by id")
-    public TelemetryEventDto update(@PathVariable UUID id, @RequestBody TelemetryEventDto dto){
+    public TelemetryEventDto update(@PathVariable UUID id, @RequestBody TelemetryEventDto dto) {
         return service.update(id, dto);
     }
 

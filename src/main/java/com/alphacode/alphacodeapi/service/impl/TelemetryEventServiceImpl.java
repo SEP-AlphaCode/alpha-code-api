@@ -2,10 +2,8 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.TelemetryEventDto;
-import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.entity.TelemetryEvent;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.RoleMapper;
 import com.alphacode.alphacodeapi.mapper.TelemetryEventMapper;
 import com.alphacode.alphacodeapi.repository.TelemetryEventRepository;
 import com.alphacode.alphacodeapi.service.TelemetryEventService;
@@ -14,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -47,6 +46,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     }
 
     @Override
+    @Transactional
     public TelemetryEventDto create(TelemetryEventDto dto) {
 
         var telemetryEvent = TelemetryEventMapper.toEntity(dto);
@@ -57,6 +57,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     }
 
     @Override
+    @Transactional
     public TelemetryEventDto update(UUID id, TelemetryEventDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
@@ -71,6 +72,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     }
 
     @Override
+    @Transactional
     public TelemetryEventDto patchUpdate(UUID id, TelemetryEventDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
@@ -93,6 +95,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             var telemetryEvent = repository.findById(id)

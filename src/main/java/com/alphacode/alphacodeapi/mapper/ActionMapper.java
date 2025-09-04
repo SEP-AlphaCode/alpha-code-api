@@ -11,6 +11,7 @@ public class ActionMapper {
         }
         return ActionDto.builder()
                 .id(action.getId())
+                .code(action.getCode())
                 .name(action.getName())
                 .description(action.getDescription())
                 .duration(action.getDuration())
@@ -27,6 +28,7 @@ public class ActionMapper {
         }
         return Action.builder()
                 .id(dto.getId())
+                .code(dto.getCode())
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .duration(dto.getDuration())
@@ -41,6 +43,7 @@ public class ActionMapper {
         if (dto == null || entity == null) {
             return;
         }
+        entity.setCode(dto.getCode());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setDuration(dto.getDuration());

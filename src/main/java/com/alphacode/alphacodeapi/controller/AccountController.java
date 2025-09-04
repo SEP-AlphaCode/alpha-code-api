@@ -2,17 +2,19 @@ package com.alphacode.alphacodeapi.controller;
 
 import com.alphacode.alphacodeapi.dto.AccountDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.dto.ResetPassworDto;
+import com.alphacode.alphacodeapi.dto.ResetPasswordRequestDto;
 import com.alphacode.alphacodeapi.service.AccountService;
-import com.alphacode.alphacodeapi.service.impl.AccountServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 @Tag(name = "Accounts")
+@Validated
 public class AccountController {
 
     private final AccountService service;
@@ -48,14 +51,33 @@ public class AccountController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create new account")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public AccountDto create(
+            @NotBlank(message = "Username is required")
+            @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
             @RequestParam("username") String username,
+
+            @NotBlank(message = "Password is required")
+            @Size(min = 6, message = "Password must be at least 6 characters long")
             @RequestParam("password") String password,
+
+            @NotBlank(message = "Full name is required")
             @RequestParam("fullName") String fullName,
+
+            @Pattern(regexp = "^(\\+84|0)[0-9]{9,10}$", message = "Invalid phone number format")
             @RequestParam("phone") String phone,
+
+            @NotBlank(message = "Email is required")
+            @Email(message = "Email should be valid")
             @RequestParam("email") String email,
+
+            @Min(value = 0, message = "Gender invalid (0=Unknown, 1=Male, 2=Female)")
+            @Max(value = 2, message = "Gender invalid (0=Unknown, 1=Male, 2=Female)")
             @RequestParam("gender") Integer gender,
+
+            @NotNull(message = "Role ID is required")
             @RequestParam("roleId") UUID roleId,
+
             @RequestPart(value = "avatarFile") MultipartFile avatarFile) {
 
         AccountDto accountDto = new AccountDto();
@@ -72,7 +94,7 @@ public class AccountController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update account by id")
-    public AccountDto update(@PathVariable UUID id, @RequestBody AccountDto dto) {
+    public AccountDto update(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
         return service.update(id, dto);
     }
 
@@ -80,12 +102,30 @@ public class AccountController {
     @Operation(summary = "Update account profile")
     public AccountDto updateProfile(
             @PathVariable UUID id,
+
+            @NotBlank(message = "Username is required")
+            @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
             @RequestParam("username") String username,
+
+            @NotBlank(message = "Password is required")
+            @Size(min = 6, message = "Password must be at least 6 characters long")
             @RequestParam("password") String password,
+
+            @NotBlank(message = "Full name is required")
             @RequestParam("fullName") String fullName,
+
+            @Pattern(regexp = "^(\\+84|0)[0-9]{9,10}$", message = "Invalid phone number format")
             @RequestParam("phone") String phone,
+
+            @NotBlank(message = "Email is required")
+            @Email(message = "Email should be valid")
             @RequestParam("email") String email,
+
+            @Min(value = 0, message = "Gender invalid (0=Unknown, 1=Male, 2=Female)")
+            @Max(value = 2, message = "Gender invalid (0=Unknown, 1=Male, 2=Female)")
             @RequestParam("gender") Integer gender,
+
+            @NotNull(message = "Role ID is required")
             @RequestParam("roleId") UUID roleId,
             @RequestPart(value = "avatarFile") MultipartFile avatarFile) {
         AccountDto accountDto = new AccountDto();
@@ -104,13 +144,27 @@ public class AccountController {
     @Operation(summary = "Patch update account profile")
     public AccountDto patchUpdateProfile(
             @PathVariable UUID id,
+
+            @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
             @RequestParam(value = "username", required = false) String username,
+
+            @Size(min = 6, message = "Password must be at least 6 characters long")
             @RequestParam(value = "password", required = false) String password,
+
             @RequestParam(value = "fullName", required = false) String fullName,
+
+            @Pattern(regexp = "^(\\+84|0)[0-9]{9,10}$", message = "Invalid phone number format")
             @RequestParam(value = "phone", required = false) String phone,
+
+            @Email(message = "Email should be valid")
             @RequestParam(value = "email", required = false) String email,
+
+            @Min(value = 0, message = "Gender invalid (0=Unknown, 1=Male, 2=Female)")
+            @Max(value = 2, message = "Gender invalid (0=Unknown, 1=Male, 2=Female)")
             @RequestParam(value = "gender", required = false) Integer gender,
+
             @RequestParam(value = "roleId", required = false) UUID roleId,
+
             @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
         AccountDto accountDto = new AccountDto();
         if (username != null) {
@@ -139,14 +193,16 @@ public class AccountController {
 
     @PostMapping("/reset-password/request")
     @Operation(summary = "Request reset password")
-    public ResponseEntity<String> requestResetPassword(@RequestParam String email) throws MessagingException {
-        boolean success = service.requestResetPassword(email);
+    public ResponseEntity<String> requestResetPassword(@RequestBody ResetPasswordRequestDto request) throws MessagingException {
+        System.out.println("Incoming email = " + request.getEmail());
+        boolean success = service.requestResetPassword(request.getEmail());
+        System.out.println("Result from service = " + success);
         return success ? ResponseEntity.ok("Reset password link sent to email")
                 : ResponseEntity.badRequest().body("Email not found or failed to send mail");
     }
 
-    @PostMapping("/reset-password/confirm")
-    @Operation(summary = "Confirm reset password")
+    @PostMapping("/reset-password/reset")
+    @Operation(summary = "Reset the password")
     public ResponseEntity<String> confirmResetPassword(@RequestBody ResetPassworDto dto) {
         boolean success = service.confirmResetPassword(dto);
         return success ? ResponseEntity.ok("Password reset successful")
@@ -156,7 +212,7 @@ public class AccountController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update account by id")
-    public AccountDto patchUpdate(@PathVariable UUID id, @RequestBody AccountDto dto) {
+    public AccountDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
         return service.patchUpdate(id, dto);
     }
 
@@ -168,13 +224,15 @@ public class AccountController {
 
     @PatchMapping("/{id}/change-password")
     @Operation(summary = "Change password")
-    public AccountDto changePassword(@PathVariable UUID id, @RequestParam String oldPassword, @RequestParam String newPassword) {
+    public AccountDto changePassword(@PathVariable UUID id,
+                                     @RequestParam String oldPassword,
+                                     @RequestParam String newPassword) {
         return service.changePassword(id, oldPassword, newPassword);
     }
 
     @PatchMapping("/{id}/change-status")
     @Operation(summary = "Change account status")
-    public AccountDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
+    public AccountDto changeStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return service.changeStatus(id, status);
     }
 }

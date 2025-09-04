@@ -3,9 +3,11 @@ package com.alphacode.alphacodeapi.service.impl;
 import com.alphacode.alphacodeapi.dto.ActivityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.entity.Activity;
+import com.alphacode.alphacodeapi.entity.QRCode;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.ActivityMapper;
 import com.alphacode.alphacodeapi.repository.ActivityRepository;
+import com.alphacode.alphacodeapi.repository.QRCodeRepository;
 import com.alphacode.alphacodeapi.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,17 +17,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
 
-    private final ActivityRepository repository;
-    private final ActivityMapper mapper;
-
     private static final String ACTIVITY_NOT_FOUND = "Activity not found";
+    private final ActivityRepository repository;
+    private final QRCodeRepository qrCodeRepository;
+    private final ActivityMapper mapper;
 
     @Override
     public PagedResult<ActivityDto> getAll(int page, int size, Integer status) {
@@ -91,5 +93,17 @@ public class ActivityServiceImpl implements ActivityService {
         existing.setLastUpdate(LocalDateTime.now());
         repository.save(existing);
         return "Deleted successfully";
+    }
+
+    @Override
+    public ActivityDto getByQRCode(String qrCode) {
+        Optional<QRCode> code = qrCodeRepository.findQRCodeByQrCode(qrCode);
+        if (code.isPresent()) {
+            UUID activityId = code.get().getActivityId();
+            Activity activity = repository.findById(activityId)
+                    .orElseThrow(() -> new ResourceNotFoundException(ACTIVITY_NOT_FOUND));
+            return mapper.toDto(activity);
+        }
+        return null;
     }
 }

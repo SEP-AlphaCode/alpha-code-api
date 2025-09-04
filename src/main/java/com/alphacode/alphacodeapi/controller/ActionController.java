@@ -5,10 +5,10 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class ActionController {
     private final ActionService actionService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+
     @Operation(summary = "Get all actions")
     public PagedResult<ActionDto> getAllActions(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -32,36 +32,37 @@ public class ActionController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get action by id")
     public ActionDto getActionById(@PathVariable UUID id) {
         return actionService.getActionById(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new action")
-    public ActionDto createAction(@RequestBody ActionDto actionDto) {
+    public ActionDto createAction(@Valid @RequestBody ActionDto actionDto) {
         return actionService.createAction(actionDto);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update action")
-    public ActionDto updateAction(@PathVariable UUID id, @RequestBody ActionDto actionDto) {
+    public ActionDto updateAction(@PathVariable UUID id, @Valid @RequestBody ActionDto actionDto) {
         return actionService.updateAction(id, actionDto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update action")
-    public ActionDto patchUpdate(@PathVariable UUID id, @RequestBody ActionDto dto) {
+    public ActionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActionDto dto) {
         ActionDto existing = actionService.getActionById(id);
         ActionDto updated = actionService.updateAction(id, dto); // service đã có update
         return updated;
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete action")
     public void deleteAction(@PathVariable UUID id) {
         actionService.deleteAction(id);

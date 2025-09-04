@@ -4,13 +4,13 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -41,8 +41,9 @@ public class QRCodeController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new QR code")
-    public QRCodeDto create(@RequestBody QRCodeDto requestDto) {
+    public QRCodeDto create(@Valid @RequestBody QRCodeDto requestDto) {
 //        QRCodeDto qrCodeDto = new QRCodeDto();
 //        qrCodeDto.setName(requestDto.getName());
 //        qrCodeDto.setQrCode(requestDto.getQrCode());
@@ -55,30 +56,35 @@ public class QRCodeController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update QRCode")
-    public QRCodeDto update(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException{
+    public QRCodeDto update(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException {
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update QRCode")
-    public QRCodeDto patchUpdate(@PathVariable UUID id, @RequestBody QRCodeDto qrCodeDto) {
+    public QRCodeDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) {
         return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update QRCode status")
-    public QRCodeDto updateStatus(@PathVariable UUID id, @RequestParam Integer status) {
+    public QRCodeDto updateStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete QRCode by id")
     public String delete(@PathVariable UUID id) {
         return qrCodeService.delete(id);
     }
 
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Change QRCode status")
     public QRCodeDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);

@@ -1,23 +1,19 @@
 package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.LoginDto;
-import com.alphacode.alphacodeapi.dto.RefreshTokenDto;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.RefreshToken;
-import com.alphacode.alphacodeapi.mapper.AccountMapper;
-import com.alphacode.alphacodeapi.mapper.RefreshTokenMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RefreshTokenRepository;
 import com.alphacode.alphacodeapi.service.AccountService;
 import com.alphacode.alphacodeapi.service.RefreshTokenService;
 import com.alphacode.alphacodeapi.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +30,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private long refreshTokenExpirationMs;
 
     @Override
+    @Transactional
     public RefreshToken createRefreshToken(Account account) {
         // Tạo token string bằng JwtUtil
         String token = jwtUtil.generateRefreshToken(account);
@@ -50,6 +47,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
+    @Transactional
     public Optional<RefreshToken> findByTokenAndIsActive(String token, Boolean isActive) {
         return refreshTokenRepository.findRefreshTokenByTokenAndIsActive(token, isActive);
     }
@@ -79,13 +77,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         item.setExpiredAt(LocalDateTime.now().plusSeconds(jwtUtil.getRefreshTokenExpirationMs() / 1000)); // convert ms -> sec
         refreshTokenRepository.save(item);
 
-       return LoginDto.LoginResponse.builder()
+        return LoginDto.LoginResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
     }
 
     @Override
+    @Transactional
     public String logout(String refreshToken) {
         var token = refreshTokenRepository.findRefreshTokenByTokenAndIsActive(refreshToken, true);
         if (token.isEmpty()) {

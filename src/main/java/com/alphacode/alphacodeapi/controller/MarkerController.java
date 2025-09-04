@@ -5,7 +5,9 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.MarkerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -34,24 +36,28 @@ public class MarkerController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new marker")
-    public MarkerDto create(@RequestBody MarkerDto dto) {
+    public MarkerDto create(@Valid @RequestBody MarkerDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update marker by id")
-    public MarkerDto update(@PathVariable String id, @RequestBody MarkerDto dto){
+    public MarkerDto update(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
         return service.update(java.util.UUID.fromString(id), dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update marker by id")
-    public MarkerDto patchUpdate(@PathVariable String id, @RequestBody MarkerDto dto) {
+    public MarkerDto patchUpdate(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
         return service.patchUpdate(java.util.UUID.fromString(id), dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete marker by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

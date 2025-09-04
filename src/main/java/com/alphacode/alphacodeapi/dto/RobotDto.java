@@ -1,13 +1,11 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.entity.Organization;
-import com.alphacode.alphacodeapi.enums.OsmoCardEnum;
 import com.alphacode.alphacodeapi.enums.RobotEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +20,23 @@ public class RobotDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
+    @NotBlank(message = "Robot name is required")
+    @Size(max = 100, message = "Robot name must not exceed 100 characters")
     private String name;
 
+    @NotBlank(message = "IP address is required")
+    @Pattern(
+            regexp = "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$",
+            message = "Invalid IP address format"
+    )
     private String ip;
 
+    @NotBlank(message = "Robot code is required")
+    @Size(max = 50, message = "Robot code must not exceed 50 characters")
     private String code;
 
+    @NotBlank(message = "Type is required")
+    @Size(max = 50, message = "Type must not exceed 50 characters")
     private String type;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -38,11 +47,13 @@ public class RobotDto {
 
     private Integer status;
 
+    @NotNull(message = "Organization ID is required")
     private UUID organizationId;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String organizationName;
 
-    @JsonProperty("statusText")
+    @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
         return RobotEnum.fromCode(this.status);
     }

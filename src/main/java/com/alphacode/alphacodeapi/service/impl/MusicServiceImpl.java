@@ -8,11 +8,14 @@ import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.MusicMapper;
 import com.alphacode.alphacodeapi.repository.MusicRepository;
 import com.alphacode.alphacodeapi.service.MusicService;
+import com.alphacode.alphacodeapi.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,8 +24,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MusicServiceImpl implements MusicService {
 
-    private final MusicRepository repository;
     private static final String MUSIC_NOT_FOUND = "Music not found";
+    private final S3Service s3Service;
+    private final MusicRepository repository;
 
     @Override
     public PagedResult<MusicDto> getAll(int page, int size, Integer status) {
@@ -46,15 +50,37 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
-    public MusicDto create(MusicDto dto) {
+    @Transactional
+    public MusicDto create(MusicDto dto, MultipartFile urlFile, MultipartFile imageFile) {
         Music music = MusicMapper.toEntity(dto);
         music.setCreatedDate(LocalDateTime.now());
         music.setLastUpdate(LocalDateTime.now());
-        Music saved = repository.save(music);
-        return MusicMapper.toDto(saved);
+
+        try {
+            // Xử lý upload file nhạc
+            if (urlFile != null && !urlFile.isEmpty()) {
+                String fileKey = "music/" + System.currentTimeMillis() + "_" + urlFile.getOriginalFilename();
+                String musicUrl = s3Service.uploadBytes(urlFile.getBytes(), fileKey, urlFile.getContentType());
+                music.setUrl(musicUrl); // field trong entity Music
+            }
+
+            // Xử lý upload file ảnh
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String fileKey = "images/" + System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+                String imageUrl = s3Service.uploadBytes(imageFile.getBytes(), fileKey, imageFile.getContentType());
+                music.setImage(imageUrl); // field trong entity Music
+            }
+
+            Music saved = repository.save(music);
+            return MusicMapper.toDto(saved);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi tạo Music", e);
+        }
     }
 
     @Override
+    @Transactional
     public MusicDto update(UUID id, MusicDto dto) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -77,6 +103,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Transactional
     public MusicDto patchUpdate(UUID id, MusicDto dto) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -99,6 +126,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));

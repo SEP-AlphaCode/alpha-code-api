@@ -1,19 +1,19 @@
 package com.alphacode.alphacodeapi.mapper;
 
-import com.alphacode.alphacodeapi.dto.ClassEntityDto;
+import com.alphacode.alphacodeapi.dto.ClassDto;
 import com.alphacode.alphacodeapi.dto.TeacherClassDto;
 import com.alphacode.alphacodeapi.entity.ClassEntity;
 import com.alphacode.alphacodeapi.entity.TeacherClass;
 
 import java.util.stream.Collectors;
 
-public class ClassEntityMapper {
-    public static ClassEntityDto toDto(ClassEntity classEntity) {
+public class ClassMapper {
+    public static ClassDto toDto(ClassEntity classEntity) {
         if (classEntity == null) {
             return null;
         }
 
-        ClassEntityDto dto = new ClassEntityDto();
+        ClassDto dto = new ClassDto();
         dto.setId(classEntity.getId());
         dto.setName(classEntity.getName());
         dto.setCreatedDate(classEntity.getCreatedDate());
@@ -24,7 +24,7 @@ public class ClassEntityMapper {
         if (classEntity.getTeacherClasses() != null) {
             dto.setTeachers(
                     classEntity.getTeacherClasses().stream()
-                            .map(ClassEntityMapper::toTeacherClassDto)
+                            .map(ClassMapper::toTeacherClassDto)
                             .collect(Collectors.toList())
             );
         }
@@ -32,7 +32,7 @@ public class ClassEntityMapper {
         return dto;
     }
 
-    public static ClassEntity toEntity(ClassEntityDto dto) {
+    public static ClassEntity toEntity(ClassDto dto) {
         if (dto == null) {
             return null;
         }

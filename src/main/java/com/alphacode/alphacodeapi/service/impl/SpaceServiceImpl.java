@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
+    @Transactional
     public SpaceDto create(SpaceDto dto) {
         Space entity = SpaceMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -53,6 +55,7 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
+    @Transactional
     public SpaceDto update(UUID id, SpaceDto dto) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
@@ -68,6 +71,7 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
+    @Transactional
     public SpaceDto patchUpdate(UUID id, SpaceDto dto) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
@@ -84,6 +88,7 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));

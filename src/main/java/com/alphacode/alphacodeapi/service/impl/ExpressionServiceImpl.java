@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public ExpressionDto create(ExpressionDto dto) {
         Expression entity = ExpressionMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -53,13 +55,13 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public ExpressionDto update(UUID id, ExpressionDto dto) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
 
         entity.setName(dto.getName());
         entity.setImageUrl(dto.getImageUrl());
-        entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
         entity.setLastUpdate(LocalDateTime.now());
 
@@ -68,13 +70,13 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public ExpressionDto patchUpdate(UUID id, ExpressionDto dto) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
 
         if (dto.getName() != null) entity.setName(dto.getName());
         if (dto.getImageUrl() != null) entity.setImageUrl(dto.getImageUrl());
-        if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
         if (dto.getStatus() != null) entity.setStatus(dto.getStatus());
 
         entity.setLastUpdate(LocalDateTime.now());
@@ -84,6 +86,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));

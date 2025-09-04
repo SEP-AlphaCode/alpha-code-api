@@ -1,13 +1,12 @@
 package com.alphacode.alphacodeapi.mapper;
 
+import com.alphacode.alphacodeapi.dto.ActivityStepDto;
 import com.alphacode.alphacodeapi.dto.DanceDto;
 import com.alphacode.alphacodeapi.dto.OsmoCardDto;
-import com.alphacode.alphacodeapi.dto.ActivityStepDto;
+import com.alphacode.alphacodeapi.entity.ActivityStep;
 import com.alphacode.alphacodeapi.entity.Dance;
 import com.alphacode.alphacodeapi.entity.OsmoCard;
-import com.alphacode.alphacodeapi.entity.ActivityStep;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class DanceMapper {
@@ -19,6 +18,7 @@ public class DanceMapper {
 
         DanceDto dto = new DanceDto();
         dto.setId(dance.getId());
+        dto.setCode(dance.getCode());
         dto.setName(dance.getName());
         dto.setDescription(dance.getDescription());
         dto.setStatus(dance.getStatus());
@@ -53,6 +53,7 @@ public class DanceMapper {
         }
         Dance dance = new Dance();
         dance.setId(dto.getId());
+        dance.setCode(dto.getCode());
         dance.setName(dto.getName());
         dance.setDescription(dto.getDescription());
         dance.setStatus(dto.getStatus());

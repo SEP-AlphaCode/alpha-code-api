@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
     }
 
     @Override
+    @Transactional
     public ActivityStepDto create(ActivityStepDto dto) {
         ActivityStep entity = ActivityStepMapper.toEntity(dto);
         ActivityStep saved = repository.save(entity);
@@ -47,6 +49,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
     }
 
     @Override
+    @Transactional
     public ActivityStepDto update(UUID id, ActivityStepDto dto) {
         ActivityStep existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));
@@ -60,6 +63,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
     }
 
     @Override
+    @Transactional
     public ActivityStepDto patchUpdate(UUID id, ActivityStepDto dto) {
         ActivityStep existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));
@@ -79,6 +83,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         ActivityStep existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));

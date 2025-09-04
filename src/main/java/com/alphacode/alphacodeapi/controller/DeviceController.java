@@ -1,12 +1,13 @@
 package com.alphacode.alphacodeapi.controller;
 
 import com.alphacode.alphacodeapi.dto.DeviceDto;
-import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -36,24 +37,28 @@ public class DeviceController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new device")
     public DeviceDto create(@RequestBody DeviceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update device by id")
-    public DeviceDto update(@PathVariable UUID id, @RequestBody DeviceDto dto) {
+    public DeviceDto update(@PathVariable UUID id, @Valid @RequestBody DeviceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update device by id")
-    public DeviceDto patchUpdate(@PathVariable UUID id, @RequestBody DeviceDto dto) {
+    public DeviceDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody DeviceDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete device by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

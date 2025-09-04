@@ -6,11 +6,13 @@ import com.alphacode.alphacodeapi.dto.ResetPassworDto;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.Role;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
+import com.alphacode.alphacodeapi.exception.ConflictException;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.repository.RoleRepository;
 import com.alphacode.alphacodeapi.service.AccountService;
+import com.alphacode.alphacodeapi.service.S3Service;
 import com.alphacode.alphacodeapi.util.EmailBody;
 import com.alphacode.alphacodeapi.util.JwtUtil;
 import jakarta.mail.MessagingException;
@@ -26,8 +28,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -38,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository repository;
     private final RoleRepository roleRepository;
-    private final S3ServiceImpl s3Service;
+    private final S3Service s3Service;
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
     @Value("${web-base-url}")
@@ -67,27 +69,30 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto create(AccountDto accountDto, MultipartFile avatarFile) {
+        if (repository.existsByUsername(accountDto.getUsername())) {
+            throw new ConflictException("Username is already taken");
+        }
+        if (repository.existsByEmail(accountDto.getEmail())) {
+            throw new ConflictException("Email is already registered");
+        }
+        if (repository.existsByPhone(accountDto.getPhone())) {
+            throw new ConflictException("Phone is already used");
+        }
+
+        Account entity = AccountMapper.toEntity(accountDto);
+        entity.setCreatedDate(LocalDateTime.now());
+        entity.setStatus(1);
+        entity.setBannedReason(null);
+        entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+
+        if (accountDto.getRoleId() != null) {
+            Role role = roleRepository.findById(accountDto.getRoleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+            entity.setRole(role);
+        }
         try {
-            if (repository.existsByUsername(accountDto.getUsername())) {
-                throw new AuthenticationException("Username is already taken");
-            }
-            if (repository.existsByEmail(accountDto.getEmail())) {
-                throw new AuthenticationException("Email is already registered");
-            }
-
-            Account entity = AccountMapper.toEntity(accountDto);
-            entity.setCreatedDate(LocalDateTime.now());
-            entity.setStatus(1);
-            entity.setBannedReason(null);
-            entity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-
-            if (accountDto.getRoleId() != null) {
-                Role role = roleRepository.findById(accountDto.getRoleId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-                entity.setRole(role);
-            }
-
             if (avatarFile != null && !avatarFile.isEmpty()) {
                 String fileKey = "avatars/" + System.currentTimeMillis() + "_" + avatarFile.getOriginalFilename();
                 String avatarUrl = s3Service.uploadBytes(avatarFile.getBytes(), fileKey, avatarFile.getContentType());
@@ -102,6 +107,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto update(UUID id, AccountDto accountDto) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -120,6 +126,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto updateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -147,6 +154,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto patchUpdate(UUID id, AccountDto accountDto) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -180,6 +188,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto patchUpdateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -226,6 +235,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto changePassword(UUID id, String oldPassword, String newPassword) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -241,6 +251,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDto changeStatus(UUID id, Integer status) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -252,6 +263,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
         try {
             Account account = repository.findById(id)
@@ -275,9 +287,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public boolean requestResetPassword(String email) throws MessagingException {
         var account = repository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("Email not found!"));
+
+        System.out.println("Account get = " + account.getId());
 
         MimeMessage message = mailSender.createMimeMessage();
 
@@ -297,16 +312,12 @@ public class AccountServiceImpl implements AccountService {
         ClassPathResource logoImage = new ClassPathResource("static/images/alphacode-logo.png");
         helper.addInline("alphacode-logo", logoImage);
 
-        try {
-            mailSender.send(message);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
+        mailSender.send(message);
+        return true;
     }
 
     @Override
+    @Transactional
     public boolean confirmResetPassword(ResetPassworDto dto) {
         String email = jwtUtil.extractEmail(dto.getResetToken());
 

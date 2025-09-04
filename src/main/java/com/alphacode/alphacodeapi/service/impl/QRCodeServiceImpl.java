@@ -7,7 +7,7 @@ import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.QRCodeRepository;
 import com.alphacode.alphacodeapi.service.QRCodeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.alphacode.alphacodeapi.service.S3Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -19,14 +19,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -34,7 +31,7 @@ import java.util.UUID;
 public class QRCodeServiceImpl implements QRCodeService {
 
     private final QRCodeRepository repository;
-    private final S3ServiceImpl s3Service;
+    private final S3Service s3Service;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -58,6 +55,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Transactional
     public QRCodeDto create(QRCodeDto qrCodeDto) {
         if (qrCodeDto == null || qrCodeDto.getQrCode() == null) {
             throw new IllegalArgumentException("QRCodeDto và các trường không được null");
@@ -93,7 +91,6 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
 
-
 //    @Override
 //    public QRCodeDto update(UUID id, QRCodeDto qrCodeDto) throws JsonProcessingException {
 //        var existed = repository.findById(id)
@@ -112,6 +109,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 //    }
 
     @Override
+    @Transactional
     public QRCodeDto update(UUID id, QRCodeDto qrCodeDto) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
@@ -135,6 +133,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Transactional
     public QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto) {
         QRCode existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found with id " + id));
@@ -181,8 +180,9 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Transactional
     public String delete(UUID id) {
-        try{
+        try {
             var existed = repository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 //        repository.deleteById(id);
@@ -190,8 +190,7 @@ public class QRCodeServiceImpl implements QRCodeService {
             existed.setLastEdited(LocalDateTime.now());
             repository.save(existed);
             return "Deleted QRCode with ID: " + id;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error deleting QRCode", e);
         }
 
@@ -205,6 +204,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Transactional
     public QRCodeDto changeStatus(UUID id, Integer status) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
@@ -234,7 +234,6 @@ public class QRCodeServiceImpl implements QRCodeService {
             return s3Service.uploadBytes(pngData, "qrcodes/" + fileName, "image/png");
         }
     }
-
 
 
 }

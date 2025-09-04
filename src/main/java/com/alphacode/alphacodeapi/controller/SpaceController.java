@@ -5,7 +5,9 @@ import com.alphacode.alphacodeapi.dto.SpaceDto;
 import com.alphacode.alphacodeapi.service.SpaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -35,24 +37,28 @@ public class SpaceController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new space")
-    public SpaceDto create(@RequestBody SpaceDto dto) {
+    public SpaceDto create(@Valid @RequestBody SpaceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update space by id")
-    public SpaceDto update(@PathVariable UUID id, @RequestBody SpaceDto dto) {
+    public SpaceDto update(@PathVariable UUID id, @Valid @RequestBody SpaceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update space by id")
-    public SpaceDto patchUpdate(@PathVariable UUID id, @RequestBody SpaceDto dto) {
+    public SpaceDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody SpaceDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete space by id")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);

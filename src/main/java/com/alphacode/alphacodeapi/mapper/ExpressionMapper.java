@@ -9,9 +9,9 @@ public class ExpressionMapper {
 
         ExpressionDto dto = new ExpressionDto();
         dto.setId(entity.getId());
+        dto.setCode(entity.getCode());
         dto.setName(entity.getName());
         dto.setImageUrl(entity.getImageUrl());
-        dto.setDescription(entity.getDescription());
         dto.setStatus(entity.getStatus());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setLastUpdate(entity.getLastUpdate());
@@ -24,9 +24,9 @@ public class ExpressionMapper {
 
         Expression entity = new Expression();
         entity.setId(dto.getId());
+        entity.setCode(dto.getCode());
         entity.setName(dto.getName());
         entity.setImageUrl(dto.getImageUrl());
-        entity.setDescription(dto.getDescription());
         entity.setStatus(dto.getStatus());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setLastUpdate(dto.getLastUpdate());
