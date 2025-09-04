@@ -1,16 +1,15 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.alphacode.alphacodeapi.enums.QRCodeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Data

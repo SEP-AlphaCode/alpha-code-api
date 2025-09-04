@@ -1,9 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.alphacode.alphacodeapi.enums.OsmoCardEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

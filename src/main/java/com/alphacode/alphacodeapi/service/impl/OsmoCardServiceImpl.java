@@ -2,15 +2,11 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.OsmoCardDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.OsmoCard;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.mapper.OsmoCardMapper;
-import com.alphacode.alphacodeapi.mapper.RoleMapper;
 import com.alphacode.alphacodeapi.repository.OsmoCardRepository;
 import com.alphacode.alphacodeapi.service.OsmoCardService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

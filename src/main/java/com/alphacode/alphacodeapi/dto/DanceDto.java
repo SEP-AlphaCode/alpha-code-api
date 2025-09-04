@@ -1,6 +1,5 @@
 package com.alphacode.alphacodeapi.dto;
 
-import com.alphacode.alphacodeapi.enums.AccountEnum;
 import com.alphacode.alphacodeapi.enums.DanceEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

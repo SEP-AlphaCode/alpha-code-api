@@ -23,15 +23,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/api/auth/forgot-password",
-                                "/api/auth/reset-password"
-                        ).permitAll()
+                                .requestMatchers(
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html",
+                                        "/swagger-ui/**",
+                                        "/api/auth/forgot-password",
+                                        "/api/auth/reset-password"
+                                ).permitAll()
 //                        .anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                                .anyRequest().permitAll()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint())
@@ -53,8 +53,8 @@ public class SecurityConfig {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
             response.getWriter().write("""
-            {"success":false,"error":"Unauthorized","message":"Invalid or missing token"}
-        """);
+                        {"success":false,"error":"Unauthorized","message":"Invalid or missing token"}
+                    """);
         };
     }
 
@@ -64,8 +64,8 @@ public class SecurityConfig {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
             response.getWriter().write("""
-            {"success":false,"error":"Forbidden","message":"Access Denied"}
-        """);
+                        {"success":false,"error":"Forbidden","message":"Access Denied"}
+                    """);
         };
     }
 }

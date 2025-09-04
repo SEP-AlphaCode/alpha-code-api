@@ -1,5 +1,6 @@
 package com.alphacode.alphacodeapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
@@ -8,20 +9,25 @@ import java.util.List;
 @Data
 public class PagedResult<T> {
     private List<T> data;
-    private long total_count;
+    @JsonProperty("total_count")
+    private long totalCount;
     private int page;
-    private int per_page;
-    private int total_pages;
-    private boolean has_next;
-    private boolean has_previous;
+    @JsonProperty("per_page")
+    private int perPage;
+    @JsonProperty("total_pages")
+    private int totalPages;
+    @JsonProperty("has_next")
+    private boolean hasNext;
+    @JsonProperty("has_previous")
+    private boolean hasPrevious;
 
     public PagedResult(Page<T> pageData) {
         this.data = pageData.getContent();
-        this.total_count = pageData.getTotalElements();
+        this.totalCount = pageData.getTotalElements();
         this.page = pageData.getNumber() + 1;
-        this.per_page = pageData.getSize();
-        this.total_pages = pageData.getTotalPages();
-        this.has_next = pageData.hasNext();
-        this.has_previous = pageData.hasPrevious();
+        this.perPage = pageData.getSize();
+        this.totalPages = pageData.getTotalPages();
+        this.hasNext = pageData.hasNext();
+        this.hasPrevious = pageData.hasPrevious();
     }
 }

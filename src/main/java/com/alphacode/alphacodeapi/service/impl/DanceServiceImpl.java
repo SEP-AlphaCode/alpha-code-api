@@ -8,7 +8,6 @@ import com.alphacode.alphacodeapi.mapper.DanceMapper;
 import com.alphacode.alphacodeapi.repository.DanceRepository;
 import com.alphacode.alphacodeapi.service.DanceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

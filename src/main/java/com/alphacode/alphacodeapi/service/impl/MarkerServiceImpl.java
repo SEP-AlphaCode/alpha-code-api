@@ -1,12 +1,9 @@
 package com.alphacode.alphacodeapi.service.impl;
 
-import com.alphacode.alphacodeapi.dto.DeviceDto;
 import com.alphacode.alphacodeapi.dto.MarkerDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.entity.Device;
 import com.alphacode.alphacodeapi.entity.Marker;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.DeviceMapper;
 import com.alphacode.alphacodeapi.mapper.MarkerMapper;
 import com.alphacode.alphacodeapi.repository.MarkerRepository;
 import com.alphacode.alphacodeapi.service.MarkerService;

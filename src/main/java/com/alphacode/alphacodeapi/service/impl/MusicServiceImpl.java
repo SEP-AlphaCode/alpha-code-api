@@ -2,11 +2,9 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.entity.ClassEntity;
 import com.alphacode.alphacodeapi.entity.Music;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
-import com.alphacode.alphacodeapi.mapper.AccountMapper;
 import com.alphacode.alphacodeapi.mapper.MusicMapper;
 import com.alphacode.alphacodeapi.repository.MusicRepository;
 import com.alphacode.alphacodeapi.service.MusicService;
@@ -26,9 +24,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MusicServiceImpl implements MusicService {
 
+    private static final String MUSIC_NOT_FOUND = "Music not found";
     private final S3Service s3Service;
     private final MusicRepository repository;
-    private static final String MUSIC_NOT_FOUND = "Music not found";
 
     @Override
     public PagedResult<MusicDto> getAll(int page, int size, Integer status) {

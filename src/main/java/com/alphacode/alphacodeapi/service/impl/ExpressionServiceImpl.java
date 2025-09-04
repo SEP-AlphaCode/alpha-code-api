@@ -78,7 +78,7 @@ public class ExpressionServiceImpl implements ExpressionService {
         if (dto.getName() != null) entity.setName(dto.getName());
         if (dto.getImageUrl() != null) entity.setImageUrl(dto.getImageUrl());
         if (dto.getStatus() != null) entity.setStatus(dto.getStatus());
-        
+
         entity.setLastUpdate(LocalDateTime.now());
 
         Expression updated = repository.save(entity);

@@ -8,7 +8,6 @@ import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.QRCodeRepository;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.alphacode.alphacodeapi.service.S3Service;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -24,11 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -94,7 +89,6 @@ public class QRCodeServiceImpl implements QRCodeService {
             throw new RuntimeException("Lỗi khi tạo hoặc tải QR code", e);
         }
     }
-
 
 
 //    @Override
@@ -188,7 +182,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     @Override
     @Transactional
     public String delete(UUID id) {
-        try{
+        try {
             var existed = repository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
 //        repository.deleteById(id);
@@ -196,8 +190,7 @@ public class QRCodeServiceImpl implements QRCodeService {
             existed.setLastEdited(LocalDateTime.now());
             repository.save(existed);
             return "Deleted QRCode with ID: " + id;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error deleting QRCode", e);
         }
 
@@ -241,7 +234,6 @@ public class QRCodeServiceImpl implements QRCodeService {
             return s3Service.uploadBytes(pngData, "qrcodes/" + fileName, "image/png");
         }
     }
-
 
 
 }

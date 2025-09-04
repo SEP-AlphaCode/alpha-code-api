@@ -2,15 +2,22 @@ package com.alphacode.alphacodeapi.controller;
 
 import com.alphacode.alphacodeapi.dto.OsmoCardDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
-import com.alphacode.alphacodeapi.dto.RoleDto;
 import com.alphacode.alphacodeapi.service.OsmoCardService;
-import com.alphacode.alphacodeapi.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -46,7 +53,7 @@ public class OsmoCardController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update osmo card by id")
-    public OsmoCardDto update(@PathVariable UUID id, @Valid @RequestBody OsmoCardDto dto){
+    public OsmoCardDto update(@PathVariable UUID id, @Valid @RequestBody OsmoCardDto dto) {
         return service.update(id, dto);
     }
 
