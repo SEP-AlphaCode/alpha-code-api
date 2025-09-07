@@ -2,30 +2,35 @@ package com.alphacode.alphacodeapi.service.impl;
 
 import com.alphacode.alphacodeapi.dto.LoginDto;
 import com.alphacode.alphacodeapi.entity.Account;
-import com.alphacode.alphacodeapi.entity.RefreshToken;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
-import com.alphacode.alphacodeapi.repository.RefreshTokenRepository;
 import com.alphacode.alphacodeapi.service.AuthService;
+import com.alphacode.alphacodeapi.service.RedisRefreshTokenService;
 import com.alphacode.alphacodeapi.util.JwtUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository repository;
-    private final RefreshTokenRepository refreshTokenRepository;
+//    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisRefreshTokenService redisRefreshTokenService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    @Value("${jwt.refresh-expiration-ms}")
+    private long refreshTokenExpirationMs;
 
     @Override
     @Transactional
@@ -54,13 +59,13 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtUtil.generateAccessToken(account);
         String refreshToken = jwtUtil.generateRefreshToken(account);
 
-        RefreshToken item = new RefreshToken();
-        item.setToken(refreshToken);
-        item.setAccountId(account.getId());
-        item.setIsActive(true);
-        item.setCreatedDate(LocalDateTime.now());
-        item.setExpiredAt(LocalDateTime.now().plusSeconds(jwtUtil.getRefreshTokenExpirationMs() / 1000)); // convert ms -> sec
-        refreshTokenRepository.save(item);
+        // Lưu refresh token vào Redis
+        redisRefreshTokenService.save(
+                account.getId(),
+                refreshToken,
+                refreshTokenExpirationMs,
+                TimeUnit.MILLISECONDS
+        );
 
         return LoginDto.LoginResponse.builder()
                 .accessToken(accessToken)
@@ -88,6 +93,14 @@ public class AuthServiceImpl implements AuthService {
 
             String accessToken = jwtUtil.generateAccessToken(account);
             String refreshToken = jwtUtil.generateRefreshToken(account);
+
+            // Lưu refresh token vào Redis
+            redisRefreshTokenService.save(
+                    account.getId(),
+                    refreshToken,
+                    refreshTokenExpirationMs,
+                    TimeUnit.MILLISECONDS
+            );
 
             return LoginDto.LoginResponse.builder()
                     .accessToken(accessToken)
