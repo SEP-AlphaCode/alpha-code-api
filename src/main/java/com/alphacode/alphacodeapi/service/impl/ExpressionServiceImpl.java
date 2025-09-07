@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.ExpressionMapper;
 import com.alphacode.alphacodeapi.repository.ExpressionRepository;
 import com.alphacode.alphacodeapi.service.ExpressionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     private final ExpressionRepository repository;
 
     @Override
+    @Cacheable(value = "expressions_list", key = "{#page, #size, #status}")
     public PagedResult<ExpressionDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Expression> pageResult;
@@ -38,6 +42,7 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
+    @Cacheable(value = "expressions", key = "#id")
     public ExpressionDto getById(UUID id) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
@@ -46,6 +51,7 @@ public class ExpressionServiceImpl implements ExpressionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"expressions_list", "expressions"}, allEntries = true)
     public ExpressionDto create(ExpressionDto dto) {
         Expression entity = ExpressionMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -56,6 +62,8 @@ public class ExpressionServiceImpl implements ExpressionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"expressions_list"}, allEntries = true)
+    @CachePut(value = "expressions", key = "#id")
     public ExpressionDto update(UUID id, ExpressionDto dto) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
@@ -71,6 +79,8 @@ public class ExpressionServiceImpl implements ExpressionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"expressions_list"}, allEntries = true)
+    @CachePut(value = "expressions", key = "#id")
     public ExpressionDto patchUpdate(UUID id, ExpressionDto dto) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
@@ -87,10 +97,24 @@ public class ExpressionServiceImpl implements ExpressionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"expressions", "expressions_list"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         Expression entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
         repository.delete(entity);
         return "Deleted successfully";
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"expressions_list"}, allEntries = true)
+    @CachePut(value = "expressions", key = "#id")
+    public ExpressionDto changeExpressionStatus(UUID id, Integer status) {
+        Expression entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+        Expression updated = repository.save(entity);
+        return ExpressionMapper.toDto(updated);
     }
 }

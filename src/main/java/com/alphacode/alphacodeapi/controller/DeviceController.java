@@ -57,6 +57,13 @@ public class DeviceController {
         return service.patchUpdate(id, dto);
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
+    @Operation(summary = "Change device status by id")
+    public DeviceDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return service.changeDeviceStatus(id, status);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Delete device by id")

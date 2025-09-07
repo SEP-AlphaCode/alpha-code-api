@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.DeviceMapper;
 import com.alphacode.alphacodeapi.repository.DeviceRepository;
 import com.alphacode.alphacodeapi.service.DeviceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceRepository repository;
 
     @Override
+    @Cacheable(value = "devices_list", key = "{#spaceId, #page, #size, #status}")
     public PagedResult<DeviceDto> getAll(UUID spaceId, int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Device> pageResult;
@@ -40,6 +44,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Cacheable(value = "devices", key = "#id")
     public DeviceDto getById(UUID id) {
         Device entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
@@ -48,6 +53,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"devices_list", "devices"}, allEntries = true)
     public DeviceDto create(DeviceDto dto) {
         Device entity = DeviceMapper.toEntity(dto);
 
@@ -59,6 +65,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"devices_list"}, allEntries = true)
+    @CachePut(value = "devices", key = "#id")
     public DeviceDto update(UUID id, DeviceDto dto) {
         Device existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
@@ -75,6 +83,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"devices_list"}, allEntries = true)
+    @CachePut(value = "devices", key = "#id")
     public DeviceDto patchUpdate(UUID id, DeviceDto dto) {
         Device existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
@@ -99,6 +109,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"devices_list", "devices"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         Device existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
@@ -109,5 +120,18 @@ public class DeviceServiceImpl implements DeviceService {
         repository.save(existing);
 
         return "Deleted Device with ID: " + id;
+    }
+
+    @Override
+    @Transactional
+    @CachePut(value = "devices", key = "#id")
+    @CacheEvict(value = {"devices_list"}, allEntries = true)
+    public DeviceDto changeDeviceStatus(UUID id, Integer status) {
+        Device existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
+        existing.setStatus(status);
+        existing.setLastUpdate(LocalDateTime.now());
+        Device updated = repository.save(existing);
+        return DeviceMapper.toDto(updated);
     }
 }

@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class PagedResult<T> {
+public class PagedResult<T> implements Serializable {
     private List<T> data;
     @JsonProperty("total_count")
     private long totalCount;

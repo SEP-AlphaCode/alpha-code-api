@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.DanceMapper;
 import com.alphacode.alphacodeapi.repository.DanceRepository;
 import com.alphacode.alphacodeapi.service.DanceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class DanceServiceImpl implements DanceService {
     private final DanceRepository repository;
 
     @Override
+    @Cacheable(value = "dances_list", key = "{#page, #size, #search}")
     public PagedResult<DanceDto> getPagedDances(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Dance> pageResult;
@@ -36,6 +40,7 @@ public class DanceServiceImpl implements DanceService {
     }
 
     @Override
+    @Cacheable(value = "dances", key = "#id")
     public DanceDto getById(UUID id) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
@@ -44,6 +49,7 @@ public class DanceServiceImpl implements DanceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dances_list", "dances"}, allEntries = true)
     public DanceDto create(DanceDto dto) {
         var entity = DanceMapper.toEntity(dto);
         entity.setId(null);
@@ -55,6 +61,8 @@ public class DanceServiceImpl implements DanceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dances_list"}, allEntries = true)
+    @CachePut(value = "dances", key = "#id")
     public DanceDto update(UUID id, DanceDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
@@ -71,6 +79,8 @@ public class DanceServiceImpl implements DanceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dances_list"}, allEntries = true)
+    @CachePut(value = "dances", key = "#id")
     public DanceDto patchUpdate(UUID id, DanceDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
@@ -87,6 +97,20 @@ public class DanceServiceImpl implements DanceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dances_list"}, allEntries = true)
+    @CachePut(value = "dances", key = "#id")
+    public DanceDto changeDanceStatus(UUID id, Integer status) {
+        Dance existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
+        existing.setStatus(status);
+        existing.setLastUpdate(LocalDateTime.now());
+        Dance updated = repository.save(existing);
+        return DanceMapper.toDto(updated);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"dances_list", "dances"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));

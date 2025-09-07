@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.OsmoCardMapper;
 import com.alphacode.alphacodeapi.repository.OsmoCardRepository;
 import com.alphacode.alphacodeapi.service.OsmoCardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     private final OsmoCardRepository repository;
 
     @Override
+    @Cacheable(value = "osmo_cards_list", key = "{#page, #size, #status}")
     public PagedResult<OsmoCardDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<OsmoCard> pageResult;
@@ -37,6 +41,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
     }
 
     @Override
+    @Cacheable(value = "osmo_cards", key = "#id")
     public OsmoCardDto getById(UUID id) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OsmoCard not found"));
@@ -45,6 +50,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"osmo_cards_list", "osmo_cards"}, allEntries = true)
     public OsmoCardDto create(OsmoCardDto dto) {
         var entity = OsmoCardMapper.toEntity(dto);
         if (entity.getActionId() == null && entity.getDanceId() == null && entity.getExpressionId() == null) {
@@ -79,6 +85,8 @@ public class OsmoCardServiceImpl implements OsmoCardService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"osmo_cards_list"}, allEntries = true)
+    @CachePut(value = "osmo_cards", key = "#id")
     public OsmoCardDto update(UUID id, OsmoCardDto dto) {
         if (dto.getActionId() == null && dto.getDanceId() == null && dto.getExpressionId() == null) {
             throw new IllegalArgumentException("Osmo Card must have at least one of Action ID, Dance ID, or Expression ID set");
@@ -110,6 +118,8 @@ public class OsmoCardServiceImpl implements OsmoCardService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"osmo_cards_list"}, allEntries = true)
+    @CachePut(value = "osmo_cards", key = "#id")
     public OsmoCardDto patchUpdate(UUID id, OsmoCardDto dto) {
         if (dto.getActionId() != null && dto.getDanceId() != null && dto.getExpressionId() != null) {
             throw new IllegalArgumentException("Osmo Card cannot have all Action ID, Dance ID, and Expression ID set at the same time");
@@ -150,6 +160,7 @@ public class OsmoCardServiceImpl implements OsmoCardService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"osmo_cards", "osmo_cards_list"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         try {
             var existing = repository.findById(id)
@@ -162,5 +173,20 @@ public class OsmoCardServiceImpl implements OsmoCardService {
             throw new RuntimeException("Error deleting OsmoCard", e);
         }
 
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = { "osmo_cards_list"},  allEntries = true)
+    @CachePut(value = "osmo_cards", key = "#id")
+    public OsmoCardDto changeStatus(UUID id, Integer status) {
+        OsmoCard entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OsmoCard not found"));
+
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+
+        OsmoCard updated = repository.save(entity);
+        return OsmoCardMapper.toDto(updated);
     }
 }

@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.RobotPermissionMapper;
 import com.alphacode.alphacodeapi.repository.RobotPermissionRepository;
 import com.alphacode.alphacodeapi.service.RobotPermissionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
     private final RobotPermissionRepository repository;
 
     @Override
+    @Cacheable(value = "robot_permissions_list", key = "#page + #size + #status")
     public PagedResult<RobotPermissionDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<RobotPermission> pageResult;
@@ -38,6 +42,7 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
     }
 
     @Override
+    @Cacheable(value = "robot_permissions", key = "#id")
     public RobotPermissionDto getById(UUID id) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("RobotPermission not found"));
@@ -46,6 +51,7 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_permissions_list", "robot_permissions"}, allEntries = true)
     public RobotPermissionDto create(RobotPermissionDto dto) {
         var entity = RobotPermissionMapper.toEntity(dto);
 
@@ -58,6 +64,8 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_permissions_list"}, allEntries = true)
+    @CachePut(value = "robot_permissions", key = "#id")
     public RobotPermissionDto update(UUID id, RobotPermissionDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("RobotPermission not found"));
@@ -73,6 +81,8 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_permissions_list"}, allEntries = true)
+    @CachePut(value = "robot_permissions", key = "#id")
     public RobotPermissionDto patchUpdate(UUID id, RobotPermissionDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("RobotPermission not found"));
@@ -89,6 +99,7 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_permissions_list", "robot_permissions"}, allEntries = true)
     public String delete(UUID id) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("RobotPermission not found"));
@@ -96,5 +107,20 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
         existing.setStatus(0); // Soft delete
         repository.save(existing);
         return "Deleted RobotPermission with ID: " + id;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"robot_permissions_list"}, allEntries = true)
+    @CachePut(value = "robot_permissions", key = "#id")
+    public RobotPermissionDto changeStatus(UUID id, Integer status) {
+        RobotPermission entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("RobotPermission not found"));
+
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+
+        RobotPermission updated = repository.save(entity);
+        return RobotPermissionMapper.toDto(updated);
     }
 }

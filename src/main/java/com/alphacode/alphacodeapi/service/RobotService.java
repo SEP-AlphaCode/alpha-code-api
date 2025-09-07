@@ -17,4 +17,6 @@ public interface RobotService {
     RobotDto patchUpdate(UUID id, RobotDto dto);
 
     String delete(UUID id);
+
+    RobotDto changeStatus(UUID id, Integer status);
 }

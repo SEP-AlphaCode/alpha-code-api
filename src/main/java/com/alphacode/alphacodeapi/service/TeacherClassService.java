@@ -17,4 +17,6 @@ public interface TeacherClassService {
     TeacherClassDto patchUpdate(UUID id, TeacherClassDto dto);
 
     String delete(UUID id);
+
+    TeacherClassDto changeStatus(UUID id, Integer status);
 }

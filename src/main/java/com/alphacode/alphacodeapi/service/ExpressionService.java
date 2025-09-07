@@ -17,4 +17,6 @@ public interface ExpressionService {
     ExpressionDto patchUpdate(UUID id, ExpressionDto dto);
 
     String delete(UUID id);
+
+    ExpressionDto changeExpressionStatus(UUID id, Integer status);
 }

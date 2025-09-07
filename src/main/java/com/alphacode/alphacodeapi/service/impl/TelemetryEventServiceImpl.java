@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.TelemetryEventMapper;
 import com.alphacode.alphacodeapi.repository.TelemetryEventRepository;
 import com.alphacode.alphacodeapi.service.TelemetryEventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     private final TelemetryEventRepository repository;
 
     @Override
+    @Cacheable(value = "telemetry_event_list", key = "#robotId + #page + #size")
     public PagedResult<TelemetryEventDto> getAll(UUID robotId, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TelemetryEvent> pageResult;
@@ -39,6 +43,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     }
 
     @Override
+    @Cacheable(value = "telemetry_event", key = "#id")
     public TelemetryEventDto getById(UUID id) {
         var telemetryEvent = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
@@ -47,6 +52,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"telemetry_event_list", "telemetry_event"}, allEntries = true)
     public TelemetryEventDto create(TelemetryEventDto dto) {
 
         var telemetryEvent = TelemetryEventMapper.toEntity(dto);
@@ -58,6 +64,8 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"telemetry_event_list"}, allEntries = true)
+    @CachePut(value = "telemetry_event", key = "#id")
     public TelemetryEventDto update(UUID id, TelemetryEventDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
@@ -73,6 +81,8 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"telemetry_event_list"}, allEntries = true)
+    @CachePut(value = "telemetry_event", key = "#id")
     public TelemetryEventDto patchUpdate(UUID id, TelemetryEventDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Telemetry Event not found"));
@@ -96,6 +106,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"telemetry_event_list", "telemetry_event"}, allEntries = true)
     public String delete(UUID id) {
         try {
             var telemetryEvent = repository.findById(id)

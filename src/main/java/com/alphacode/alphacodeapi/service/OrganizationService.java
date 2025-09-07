@@ -17,4 +17,6 @@ public interface OrganizationService {
     OrganizationDto patchUpdate(UUID id, OrganizationDto dto);
 
     String delete(UUID id);
+
+    OrganizationDto changeStatus(UUID id, Integer status);
 }

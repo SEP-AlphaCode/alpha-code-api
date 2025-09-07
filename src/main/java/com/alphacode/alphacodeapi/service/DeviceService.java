@@ -17,4 +17,6 @@ public interface DeviceService {
     DeviceDto patchUpdate(UUID id, DeviceDto dto);
 
     String delete(UUID id);
+
+    DeviceDto changeDeviceStatus(UUID id, Integer status);
 }
