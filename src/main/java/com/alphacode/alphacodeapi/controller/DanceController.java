@@ -57,6 +57,13 @@ public class DanceController {
         return service.patchUpdate(id, dto);
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @Operation(summary = "Change dance status by id")
+    public DanceDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return service.changeDanceStatus(id, status);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete dance by id")

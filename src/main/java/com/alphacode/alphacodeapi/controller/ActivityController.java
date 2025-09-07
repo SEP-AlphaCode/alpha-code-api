@@ -63,6 +63,13 @@ public class ActivityController {
         return activityService.patchUpdate(id, activityDto);
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
+    @Operation(summary = "Change activity status by id")
+    public ActivityDto changeActivityStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return activityService.changeActivityStatus(id, status);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete activity by id")

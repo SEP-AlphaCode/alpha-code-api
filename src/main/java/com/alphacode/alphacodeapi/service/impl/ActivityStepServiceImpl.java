@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.ActivityStepMapper;
 import com.alphacode.alphacodeapi.repository.ActivityStepRepository;
 import com.alphacode.alphacodeapi.service.ActivityStepService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
     private final ActivityStepRepository repository;
 
     @Override
+    @Cacheable(value = "activity_steps_list", key = "{#page, #size, #activityId}")
     public PagedResult<ActivityStepDto> getAll(int page, int size, UUID activityId) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("startTime").ascending());
         Page<ActivityStep> pageResult = (activityId != null)
@@ -34,6 +38,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
     }
 
     @Override
+    @Cacheable(value = "activity_step", key = "#id")
     public ActivityStepDto getById(UUID id) {
         ActivityStep entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));
@@ -42,6 +47,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"activity_steps_list", "activity_step"}, key = "#dto.id", allEntries = true)
     public ActivityStepDto create(ActivityStepDto dto) {
         ActivityStep entity = ActivityStepMapper.toEntity(dto);
         ActivityStep saved = repository.save(entity);
@@ -50,6 +56,8 @@ public class ActivityStepServiceImpl implements ActivityStepService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"activity_steps_list"}, allEntries = true)
+    @CachePut(value = "activity_step", key = "#id")
     public ActivityStepDto update(UUID id, ActivityStepDto dto) {
         ActivityStep existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));
@@ -64,6 +72,8 @@ public class ActivityStepServiceImpl implements ActivityStepService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"activity_steps_list"}, allEntries = true)
+    @CachePut(value = "activity_step", key = "#id")
     public ActivityStepDto patchUpdate(UUID id, ActivityStepDto dto) {
         ActivityStep existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));
@@ -84,6 +94,7 @@ public class ActivityStepServiceImpl implements ActivityStepService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"activity_steps_list", "activity_step"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         ActivityStep existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ActivityStep not found"));

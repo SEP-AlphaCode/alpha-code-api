@@ -20,6 +20,9 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +52,7 @@ public class AccountServiceImpl implements AccountService {
     private JavaMailSender mailSender;
 
     @Override
+    @Cacheable(value = "accounts_list", key = "{#page, #size, #status}")
     public PagedResult<AccountDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Account> pageResult;
@@ -62,6 +66,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Cacheable(value = "accounts", key = "#id")
     public AccountDto getById(UUID id) {
         var account = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -70,6 +75,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto create(AccountDto accountDto, MultipartFile avatarFile) {
         if (repository.existsByUsername(accountDto.getUsername())) {
             throw new ConflictException("Username is already taken");
@@ -108,6 +114,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CachePut(value = "accounts", key = "#id")
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto update(UUID id, AccountDto accountDto) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -127,6 +135,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CachePut(value = "accounts", key = "#id")
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto updateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -155,6 +165,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CachePut(value = "accounts", key = "#id")
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto patchUpdate(UUID id, AccountDto accountDto) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -189,6 +201,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CachePut(value = "accounts", key = "#id")
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto patchUpdateProfile(UUID id, AccountDto accountDto, MultipartFile avatarFile) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -236,6 +250,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CachePut(value = "accounts", key = "#id")
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto changePassword(UUID id, String oldPassword, String newPassword) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -252,6 +268,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CachePut(value = "accounts", key = "#id")
+    @CacheEvict(value = {"accounts_list"}, allEntries = true)
     public AccountDto changeStatus(UUID id, Integer status) {
         Account existingAccount = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -264,6 +282,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"accounts", "accounts_list"}, allEntries = true)
     public String delete(UUID id) {
         try {
             Account account = repository.findById(id)

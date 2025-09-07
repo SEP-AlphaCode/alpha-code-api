@@ -94,12 +94,14 @@ public class AccountController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update account by id")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public AccountDto update(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
         return service.update(id, dto);
     }
 
     @PutMapping(value = "/{id}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Update account profile")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     public AccountDto updateProfile(
             @PathVariable UUID id,
 
@@ -142,6 +144,7 @@ public class AccountController {
 
     @PatchMapping(value = "/{id}/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Patch update account profile")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     public AccountDto patchUpdateProfile(
             @PathVariable UUID id,
 
@@ -212,12 +215,14 @@ public class AccountController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update account by id")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public AccountDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
         return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete account by id")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
     }
@@ -232,6 +237,7 @@ public class AccountController {
 
     @PatchMapping("/{id}/change-status")
     @Operation(summary = "Change account status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public AccountDto changeStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
         return service.changeStatus(id, status);
     }

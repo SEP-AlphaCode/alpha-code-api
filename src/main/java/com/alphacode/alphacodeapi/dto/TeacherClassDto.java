@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TeacherClassDto {
+public class TeacherClassDto implements Serializable {
     private UUID teacherId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String teacherName;

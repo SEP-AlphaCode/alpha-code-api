@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.RoleMapper;
 import com.alphacode.alphacodeapi.repository.RoleRepository;
 import com.alphacode.alphacodeapi.service.RoleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository repository;
 
     @Override
+    @Cacheable(value = "roles_list", key = "#page + #size + #status")
     public PagedResult<RoleDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Role> pageResult;
@@ -37,6 +41,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(value = "roles", key = "#id")
     public RoleDto getById(UUID id) {
         var role = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
@@ -45,6 +50,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"roles_list", "roles"}, allEntries = true)
     public RoleDto create(RoleDto roleDto) {
         if (repository.findByName(roleDto.getName()) != null) {
             throw new IllegalArgumentException("Role with this name already exists");
@@ -59,6 +65,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"roles_list"}, allEntries = true)
+    @CachePut(value = "roles", key = "#id")
     public RoleDto update(UUID id, RoleDto roleDto) {
         var existingRole = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
@@ -76,6 +84,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"roles_list"}, allEntries = true)
+    @CachePut(value = "roles", key = "#id")
     public RoleDto patchUpdate(UUID id, RoleDto roleDto) {
         var existingRole = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
@@ -94,6 +104,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"roles_list", "roles"}, allEntries = true)
     public String delete(UUID id) {
         try {
             var role = repository.findById(id)
@@ -111,5 +122,19 @@ public class RoleServiceImpl implements RoleService {
             throw new RuntimeException("Error deleting role", e);
         }
 
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"roles_list"}, allEntries = true)
+    @CachePut(value = "roles", key = "#id")
+    public RoleDto changeStatus(UUID id, Integer status) {
+        Role entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+        entity.setStatus(status);
+
+        Role updated = repository.save(entity);
+        return RoleMapper.toDto(updated);
     }
 }

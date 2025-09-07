@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -76,6 +77,11 @@ public class JwtUtil {
 
     public String getUsernameFromJwt(String token) {
         return getAllClaims(token).getSubject();
+    }
+
+    public UUID getUserIdFromToken(String token) {
+        String idStr = getAllClaims(token).get("id", String.class);
+        return UUID.fromString(idStr);
     }
 
     public boolean validateJwtToken(String token) {

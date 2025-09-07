@@ -9,13 +9,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ActivityStepDto {
+public class ActivityStepDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 

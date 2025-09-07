@@ -77,9 +77,6 @@ public class Account {
     private Organization organization;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<RefreshToken> refreshTokens;
-
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<QRCode> qrCodes;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

@@ -17,4 +17,6 @@ public interface SpaceService {
     SpaceDto patchUpdate(UUID id, SpaceDto dto);
 
     String delete(UUID id);
+
+    SpaceDto changeStatus(UUID id, Integer status);
 }

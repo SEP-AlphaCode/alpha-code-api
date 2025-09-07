@@ -17,4 +17,6 @@ public interface RobotPermissionService {
     RobotPermissionDto patchUpdate(UUID id, RobotPermissionDto dto);
 
     String delete(UUID id);
+
+    RobotPermissionDto changeStatus(UUID id, Integer status);
 }

@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.OrganizationMapper;
 import com.alphacode.alphacodeapi.repository.OrganizationRepository;
 import com.alphacode.alphacodeapi.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository repository;
 
     @Override
+    @Cacheable(value = "organizations_list", key = "{#page, #size, #status}")
     public PagedResult<OrganizationDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Organization> pageResult;
@@ -38,6 +42,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    @Cacheable(value = "organizations", key = "#id")
     public OrganizationDto getById(UUID id) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
@@ -46,6 +51,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"organizations_list", "organizations"}, allEntries = true)
     public OrganizationDto create(OrganizationDto dto) {
         var entity = OrganizationMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -57,6 +63,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"organizations_list"}, allEntries = true)
+    @CachePut(value = "organizations", key = "#id")
     public OrganizationDto update(UUID id, OrganizationDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
@@ -74,6 +82,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"organizations_list"}, allEntries = true)
+    @CachePut(value = "organizations", key = "#id")
     public OrganizationDto patchUpdate(UUID id, OrganizationDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
@@ -87,6 +97,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"organizations_list", "organizations"}, allEntries = true)
     public String delete(UUID id) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
@@ -96,5 +107,20 @@ public class OrganizationServiceImpl implements OrganizationService {
         repository.save(existing);
 
         return "Deleted Organization with ID: " + id;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"organizations_list"}, allEntries = true)
+    @CachePut(value = "organizations", key = "#id")
+    public OrganizationDto changeStatus(UUID id, Integer status) {
+        Organization entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
+
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+
+        Organization updated = repository.save(entity);
+        return OrganizationMapper.toDto(updated);
     }
 }

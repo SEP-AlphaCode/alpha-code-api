@@ -16,5 +16,7 @@ public interface DanceService {
 
     DanceDto patchUpdate(UUID id, DanceDto dto);
 
+    DanceDto changeDanceStatus(UUID id, Integer status);
+
     String delete(UUID id);
 }

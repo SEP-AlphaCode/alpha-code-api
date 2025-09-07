@@ -41,4 +41,9 @@ public interface ClassService {
      * Soft delete class (chỉ đổi status = 0)
      */
     String delete(UUID id);
+
+    /**
+     * Thay đổi trạng thái class
+     */
+    ClassDto changeClassStatus(UUID id, Integer status);
 }

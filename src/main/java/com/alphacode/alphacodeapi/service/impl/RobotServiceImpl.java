@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.RobotMapper;
 import com.alphacode.alphacodeapi.repository.RobotRepository;
 import com.alphacode.alphacodeapi.service.RobotService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class RobotServiceImpl implements RobotService {
     private final RobotRepository repository;
 
     @Override
+    @Cacheable(value = "robot_list", key = "#page + #size + #organizationId + #status")
     public PagedResult<RobotDto> getAll(int page, int size, UUID organizationId, Integer status) {
         Pageable pageable = Pageable.ofSize(size).withPage(page - 1);
         Page<Robot> pageResult;
@@ -41,6 +45,7 @@ public class RobotServiceImpl implements RobotService {
     }
 
     @Override
+    @Cacheable(value = "robots", key = "#id")
     public RobotDto getById(UUID id) {
         var robot = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Robot not found"));
@@ -49,6 +54,7 @@ public class RobotServiceImpl implements RobotService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_list", "robots"}, allEntries = true)
     public RobotDto create(RobotDto dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Robot data must not be null");
@@ -66,6 +72,8 @@ public class RobotServiceImpl implements RobotService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_list"}, allEntries = true)
+    @CachePut(value = "robots", key = "#id")
     public RobotDto update(UUID id, RobotDto dto) {
         var existingRobot = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Robot not found"));
@@ -83,6 +91,8 @@ public class RobotServiceImpl implements RobotService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_list"}, allEntries = true)
+    @CachePut(value = "robots", key = "#id")
     public RobotDto patchUpdate(UUID id, RobotDto dto) {
         var existingRobot = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Robot not found"));
@@ -113,6 +123,7 @@ public class RobotServiceImpl implements RobotService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"robot_list", "robots"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         try {
             var robot = repository.findById(id)
@@ -124,5 +135,20 @@ public class RobotServiceImpl implements RobotService {
         } catch (Exception e) {
             throw new RuntimeException("Error deleting robot", e);
         }
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"robot_list"}, allEntries = true)
+    @CachePut(value = "robots", key = "#id")
+    public RobotDto changeStatus(UUID id, Integer status) {
+        Robot entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Robot not found"));
+
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+
+        Robot updated = repository.save(entity);
+        return RobotMapper.toDto(updated);
     }
 }

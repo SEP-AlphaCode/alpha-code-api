@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.RgbMapper;
 import com.alphacode.alphacodeapi.repository.RgbRepository;
 import com.alphacode.alphacodeapi.service.RgbService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,7 @@ public class RgbServiceImpl implements RgbService {
     private final RgbRepository repository;
 
     @Override
+    @Cacheable(value = "rgb_list", key = "#page + #size")
     public PagedResult<RgbDto> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Rgb> pageResult;
@@ -33,6 +37,7 @@ public class RgbServiceImpl implements RgbService {
     }
 
     @Override
+    @Cacheable(value = "rgb", key = "#id")
     public RgbDto getById(UUID id) {
         var rgb = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rgb not found"));
@@ -41,6 +46,7 @@ public class RgbServiceImpl implements RgbService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"rgb_list", "rgb"}, allEntries = true)
     public RgbDto create(RgbDto dto) {
         var entity = RgbMapper.toEntity(dto);
 
@@ -50,6 +56,8 @@ public class RgbServiceImpl implements RgbService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"rgb_list"}, allEntries = true)
+    @CachePut(value = "rgb", key = "#id")
     public RgbDto update(UUID id, RgbDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rgb not found"));
@@ -64,6 +72,8 @@ public class RgbServiceImpl implements RgbService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"rgb_list"}, allEntries = true)
+    @CachePut(value = "rgb", key = "#id")
     public RgbDto patchUpdate(UUID id, RgbDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rgb not found"));
@@ -84,6 +94,7 @@ public class RgbServiceImpl implements RgbService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"rgb_list", "rgb"}, allEntries = true)
     public String delete(UUID id) {
         try {
             var existing = repository.findById(id)

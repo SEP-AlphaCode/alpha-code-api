@@ -17,4 +17,6 @@ public interface OsmoCardService {
     OsmoCardDto patchUpdate(UUID id, OsmoCardDto dto);
 
     String delete(UUID id);
+
+    OsmoCardDto changeStatus(UUID id, Integer status);
 }

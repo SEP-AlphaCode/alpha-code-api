@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.ActionMapper;
 import com.alphacode.alphacodeapi.repository.ActionRepository;
 import com.alphacode.alphacodeapi.service.ActionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +28,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "actions_list", key = "{#page, #size, #status}")
     public PagedResult<ActionDto> getAllActions(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Action> pageResult;
@@ -40,6 +44,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "actions", key = "#id")
     public ActionDto getActionById(UUID id) {
         Action action = actionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Action not found with id: " + id));
@@ -48,6 +53,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"actions_list"}, allEntries = true)
     public ActionDto createAction(ActionDto actionDto) {
         Action action = ActionMapper.toEntity(actionDto);
         action.setCreatedDate(LocalDateTime.now());
@@ -58,6 +64,8 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional
+    @CachePut(value = "actions", key = "#id")
+    @CacheEvict(value = {"actions_list"}, allEntries = true)
     public ActionDto updateAction(UUID id, ActionDto actionDto) {
         Action existingAction = actionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Action not found with id: " + id));
@@ -70,7 +78,48 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
+    public ActionDto patchUpdateAction(UUID id, ActionDto actionDto) {
+        Action existingAction = actionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Action not found with id: " + id));
+
+        if (actionDto.getName() != null) {
+            existingAction.setName(actionDto.getName());
+        }
+        if (actionDto.getDescription() != null) {
+            existingAction.setDescription(actionDto.getDescription());
+        }
+        if (actionDto.getStatus() != null) {
+            existingAction.setStatus(actionDto.getStatus());
+        }
+        if (actionDto.getDuration() != null) {
+            existingAction.setDuration(actionDto.getDuration());
+        }
+        if (actionDto.getCanInterrupt() != null) {
+            existingAction.setCanInterrupt(actionDto.getCanInterrupt());
+        }
+        existingAction.setLastUpdate(LocalDateTime.now());
+
+        Action updatedAction = actionRepository.save(existingAction);
+        return ActionMapper.toDto(updatedAction);
+
+    }
+
+    @Override
     @Transactional
+    @CachePut(value = "actions", key = "#id")
+    @CacheEvict(value = {"actions_list"}, allEntries = true)
+    public ActionDto changeActionStatus(UUID id, Integer status) {
+        Action existingAction = actionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Action not found with id: " + id));
+        existingAction.setStatus(status);
+        existingAction.setLastUpdate(LocalDateTime.now());
+        Action updatedAction = actionRepository.save(existingAction);
+        return ActionMapper.toDto(updatedAction);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"actions", "actions_list"}, key = "#id", allEntries = true)
     public void deleteAction(UUID id) {
         if (!actionRepository.existsById(id)) {
             throw new ResourceNotFoundException("Action not found with id: " + id);

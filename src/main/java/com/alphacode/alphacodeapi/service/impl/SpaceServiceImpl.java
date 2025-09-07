@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.SpaceMapper;
 import com.alphacode.alphacodeapi.repository.SpaceRepository;
 import com.alphacode.alphacodeapi.service.SpaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class SpaceServiceImpl implements SpaceService {
     private final SpaceRepository repository;
 
     @Override
+    @Cacheable(value = "spaces_list", key = "#page + #size + #status")
     public PagedResult<SpaceDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Space> pageResult;
@@ -38,6 +42,7 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
+    @Cacheable(value = "spaces", key = "#id")
     public SpaceDto getById(UUID id) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
@@ -46,6 +51,7 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"spaces_list", "spaces"}, allEntries = true)
     public SpaceDto create(SpaceDto dto) {
         Space entity = SpaceMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
@@ -56,6 +62,8 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"spaces_list"}, allEntries = true)
+    @CachePut(value = "spaces", key = "#id")
     public SpaceDto update(UUID id, SpaceDto dto) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
@@ -72,6 +80,8 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"spaces_list"}, allEntries = true)
+    @CachePut(value = "spaces", key = "#id")
     public SpaceDto patchUpdate(UUID id, SpaceDto dto) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
@@ -89,10 +99,26 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"spaces_list", "spaces"}, allEntries = true)
     public String delete(UUID id) {
         Space entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
         repository.delete(entity);
         return "Deleted successfully";
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"spaces_list"}, allEntries = true)
+    @CachePut(value = "spaces", key = "#id")
+    public SpaceDto changeStatus(UUID id, Integer status) {
+        Space entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Space not found with id " + id));
+
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+
+        Space updated = repository.save(entity);
+        return SpaceMapper.toDto(updated);
     }
 }

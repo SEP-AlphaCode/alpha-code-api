@@ -9,6 +9,9 @@ import com.alphacode.alphacodeapi.repository.TeacherClassRepository;
 import com.alphacode.alphacodeapi.service.TeacherClassService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
     private final TeacherClassRepository repository;
 
     @Override
+    @Cacheable(value = "teacher_class_list", key = "#page + #size + #status")
     public PagedResult<TeacherClassDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TeacherClass> pageResult;
@@ -38,6 +42,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
     }
 
     @Override
+    @Cacheable(value = "teacher_class", key = "#id")
     public TeacherClassDto getById(UUID id) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TeacherClass not found"));
@@ -46,6 +51,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"teacher_class_list", "teacher_class"}, allEntries = true)
     public TeacherClassDto create(TeacherClassDto dto) {
         var entity = TeacherClassMapper.toEntity(dto);
 
@@ -58,6 +64,8 @@ public class TeacherClassServiceImpl implements TeacherClassService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"teacher_class_list"}, allEntries = true)
+    @CachePut(value = "teacher_class", key = "#id")
     public TeacherClassDto update(UUID id, TeacherClassDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TeacherClass not found"));
@@ -73,6 +81,8 @@ public class TeacherClassServiceImpl implements TeacherClassService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"teacher_class_list"}, allEntries = true)
+    @CachePut(value = "teacher_class", key = "#id")
     public TeacherClassDto patchUpdate(UUID id, TeacherClassDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TeacherClass not found"));
@@ -89,6 +99,8 @@ public class TeacherClassServiceImpl implements TeacherClassService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"teacher_class_list"}, allEntries = true)
+    @CachePut(value = "teacher_class", key = "#id")
     public String delete(UUID id) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TeacherClass not found"));
@@ -97,5 +109,20 @@ public class TeacherClassServiceImpl implements TeacherClassService {
         existing.setLastUpdate(LocalDateTime.now());
         repository.save(existing);
         return "Deleted TeacherClass with ID: " + id;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"teacher_class_list"}, allEntries = true)
+    @CachePut(value = "teacher_class", key = "#id")
+    public TeacherClassDto changeStatus(UUID id, Integer status) {
+        TeacherClass entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TeacherClass not found"));
+
+        entity.setStatus(status);
+        entity.setLastUpdate(LocalDateTime.now());
+
+        TeacherClass updated = repository.save(entity);
+        return TeacherClassMapper.toDto(updated);
     }
 }

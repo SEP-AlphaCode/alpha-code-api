@@ -56,9 +56,14 @@ public class ActionController {
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update action")
     public ActionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActionDto dto) {
-        ActionDto existing = actionService.getActionById(id);
-        ActionDto updated = actionService.updateAction(id, dto); // service đã có update
-        return updated;
+        return actionService.patchUpdateAction(id, dto);
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @Operation(summary = "Change action status")
+    public ActionDto changeActionStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return actionService.changeActionStatus(id, status);
     }
 
     @DeleteMapping("/{id}")
