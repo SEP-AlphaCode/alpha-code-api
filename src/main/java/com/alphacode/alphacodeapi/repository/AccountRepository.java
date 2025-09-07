@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,4 +23,8 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String phone);
+
+    long countByRoleId(UUID roleId);
+
+    long countByRoleIdAndCreatedDateBetween(UUID roleId, LocalDateTime start, LocalDateTime end);
 }

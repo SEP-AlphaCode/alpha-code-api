@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
 import com.alphacode.alphacodeapi.service.AuthService;
+import com.alphacode.alphacodeapi.service.DashboardService;
 import com.alphacode.alphacodeapi.service.RedisRefreshTokenService;
 import com.alphacode.alphacodeapi.util.JwtUtil;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final RedisRefreshTokenService redisRefreshTokenService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final DashboardService dashboardService;
 
     @Value("${jwt.refresh-expiration-ms}")
     private long refreshTokenExpirationMs;
@@ -67,6 +69,8 @@ public class AuthServiceImpl implements AuthService {
                 TimeUnit.MILLISECONDS
         );
 
+        dashboardService.addOnlineUser(account.getId());
+
         return LoginDto.LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -101,6 +105,8 @@ public class AuthServiceImpl implements AuthService {
                     refreshTokenExpirationMs,
                     TimeUnit.MILLISECONDS
             );
+
+            dashboardService.addOnlineUser(account.getId());
 
             return LoginDto.LoginResponse.builder()
                     .accessToken(accessToken)

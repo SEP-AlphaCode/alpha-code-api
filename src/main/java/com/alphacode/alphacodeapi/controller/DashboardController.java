@@ -1,0 +1,40 @@
+package com.alphacode.alphacodeapi.controller;
+
+import com.alphacode.alphacodeapi.service.DanceService;
+import com.alphacode.alphacodeapi.service.DashboardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/v1/dashboard")
+@RequiredArgsConstructor
+@Tag(name = "Dashboard")
+public class DashboardController {
+
+    private final DashboardService service;
+
+    @GetMapping("/online-users")
+    @Operation(summary = "Get count of online users")
+    public Long countOnlineUsers() {
+        return service.countOnlineUsers();
+    }
+
+    @GetMapping("/stats/{roleName}")
+    @Operation(summary = "Get user stats by role (Teacher, Admin, etc.)")
+    public Map<String, Object> getStatsByRole(@PathVariable String roleName) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("role", roleName);
+        result.put("total", service.countUsersByRole(roleName));
+        result.put("newThisMonth", service.countNewUsersByRoleThisMonth(roleName));
+        result.put("growthRate", service.calculateGrowthRateByRole(roleName));
+        return result;
+    }
+}

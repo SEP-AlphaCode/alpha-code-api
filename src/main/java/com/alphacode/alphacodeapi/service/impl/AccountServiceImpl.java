@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,6 +51,9 @@ public class AccountServiceImpl implements AccountService {
     private String webBaseUrl;
     @Autowired
     private JavaMailSender mailSender;
+
+    private static final String DEFAULT_ROLE = "Teacher";
+
 
     @Override
     @Cacheable(value = "accounts_list", key = "{#page, #size, #status}")
@@ -97,6 +101,19 @@ public class AccountServiceImpl implements AccountService {
             Role role = roleRepository.findById(accountDto.getRoleId())
                     .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
             entity.setRole(role);
+        } else {
+            Optional<Role> roleOpt = roleRepository.findByNameIgnoreCase(DEFAULT_ROLE);
+            Role role;
+            if (roleOpt.isEmpty()) {
+                role = new Role();
+                role.setName(DEFAULT_ROLE);
+                role.setStatus(1);
+                roleRepository.save(role);
+            } else {
+                role = roleOpt.get();
+            }
+            entity.setRole(role);
+            entity.setRoleId(role.getId());
         }
         try {
             if (avatarFile != null && !avatarFile.isEmpty()) {
