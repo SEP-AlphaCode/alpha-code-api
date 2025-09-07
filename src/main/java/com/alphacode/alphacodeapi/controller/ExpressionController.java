@@ -57,6 +57,13 @@ public class ExpressionController {
         return service.patchUpdate(id, dto);
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @Operation(summary = "Patch update expression status by id")
+    public ExpressionDto changeStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return service.changeExpressionStatus(id, status);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete expression by id")

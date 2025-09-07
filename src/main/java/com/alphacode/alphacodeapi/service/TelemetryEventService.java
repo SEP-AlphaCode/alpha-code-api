@@ -17,4 +17,6 @@ public interface TelemetryEventService {
     TelemetryEventDto patchUpdate(UUID id, TelemetryEventDto dto);
 
     String delete(UUID id);
+
+
 }

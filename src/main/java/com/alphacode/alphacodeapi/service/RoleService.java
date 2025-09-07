@@ -17,4 +17,6 @@ public interface RoleService {
     RoleDto patchUpdate(UUID id, RoleDto roleDto);
 
     String delete(UUID id);
+
+    RoleDto changeStatus(UUID id, Integer status);
 }

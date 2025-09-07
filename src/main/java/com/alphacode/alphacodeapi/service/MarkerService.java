@@ -17,4 +17,6 @@ public interface MarkerService {
     MarkerDto patchUpdate(UUID id, MarkerDto dto);
 
     String delete(UUID id);
+
+    MarkerDto changeMarkerStatus(UUID id, Integer status);
 }
