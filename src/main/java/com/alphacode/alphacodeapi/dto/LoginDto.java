@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class LoginDto {
+import java.io.Serializable;
+
+public class LoginDto implements Serializable {
 
     @Data
     @NoArgsConstructor

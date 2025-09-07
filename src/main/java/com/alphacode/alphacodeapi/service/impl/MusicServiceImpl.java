@@ -10,6 +10,9 @@ import com.alphacode.alphacodeapi.repository.MusicRepository;
 import com.alphacode.alphacodeapi.service.MusicService;
 import com.alphacode.alphacodeapi.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +32,7 @@ public class MusicServiceImpl implements MusicService {
     private final MusicRepository repository;
 
     @Override
+    @Cacheable(value = "musics_list", key = "{#page, #size, #status}")
     public PagedResult<MusicDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Music> pageResult;
@@ -43,6 +47,7 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    @Cacheable(value = "musics", key = "#id")
     public MusicDto getById(UUID id) {
         Music music = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -51,6 +56,7 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"musics_list", "musics"}, allEntries = true)
     public MusicDto create(MusicDto dto, MultipartFile urlFile, MultipartFile imageFile) {
         Music music = MusicMapper.toEntity(dto);
         music.setCreatedDate(LocalDateTime.now());
@@ -81,6 +87,8 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"musics_list"}, allEntries = true)
+    @CachePut(value = "musics", key = "#id")
     public MusicDto update(UUID id, MusicDto dto) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -104,6 +112,8 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"musics_list"}, allEntries = true)
+    @CachePut(value = "musics", key = "#id")
     public MusicDto patchUpdate(UUID id, MusicDto dto) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -127,6 +137,7 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"musics", "musics_list"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         Music existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
@@ -137,5 +148,20 @@ public class MusicServiceImpl implements MusicService {
         repository.save(existing);
 
         return "Deleted Music with ID: " + id;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"musics_list"}, allEntries = true)
+    @CachePut(value = "musics", key = "#id")
+    public MusicDto changeMusicStatus(UUID id, Integer status) {
+        Music music = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
+
+        music.setStatus(status);
+        music.setLastUpdate(LocalDateTime.now());
+
+        Music updated = repository.save(music);
+        return MusicMapper.toDto(updated);
     }
 }

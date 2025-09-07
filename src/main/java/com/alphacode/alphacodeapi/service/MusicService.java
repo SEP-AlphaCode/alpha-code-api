@@ -18,4 +18,6 @@ public interface MusicService {
     MusicDto patchUpdate(UUID id, MusicDto dto);
 
     String delete(UUID id);
+
+    MusicDto changeMusicStatus(UUID id, Integer status);
 }

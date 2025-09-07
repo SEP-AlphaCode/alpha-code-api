@@ -15,6 +15,9 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +38,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     private final ObjectMapper objectMapper;
 
     @Override
+    @Cacheable(value = "qr_codes_list", key = "{#page, #size, #status}")
     public PagedResult<QRCodeDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<QRCode> pageResult;
@@ -48,6 +52,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Cacheable(value = "qr_codes", key = "#id")
     public QRCodeDto getById(UUID id) {
         var qrCode = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
@@ -56,6 +61,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"qr_codes_list", "qr_codes"}, allEntries = true)
     public QRCodeDto create(QRCodeDto qrCodeDto) {
         if (qrCodeDto == null || qrCodeDto.getQrCode() == null) {
             throw new IllegalArgumentException("QRCodeDto và các trường không được null");
@@ -110,6 +116,8 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"qr_codes_list"}, allEntries = true)
+    @CachePut(value = "qr_codes", key = "#id")
     public QRCodeDto update(UUID id, QRCodeDto qrCodeDto) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
@@ -134,6 +142,8 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"qr_codes_list"}, allEntries = true)
+    @CachePut(value = "qr_codes", key = "#id")
     public QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto) {
         QRCode existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found with id " + id));
@@ -181,6 +191,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"qr_codes_list", "qr_codes"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         try {
             var existed = repository.findById(id)
@@ -197,6 +208,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Cacheable(value = "qr_codes", key = "#code")
     public QRCodeDto getByCode(String code) {
         return repository.findQRCodeByQrCode(code)
                 .map(QRCodeMapper::toDto)
@@ -205,6 +217,8 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"qr_codes_list"}, allEntries = true)
+    @CachePut(value = "qr_codes", key = "#id")
     public QRCodeDto changeStatus(UUID id, Integer status) {
         var existed = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));

@@ -56,6 +56,13 @@ public class ClassController {
         return service.patchUpdate(id, dto);
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('ROLE_Admin')")
+    @Operation(summary = "Change class status by id")
+    public ClassDto changeClassStatus(@PathVariable UUID id, @RequestParam Integer status) {
+        return service.changeClassStatus(id, status);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Delete class by id")

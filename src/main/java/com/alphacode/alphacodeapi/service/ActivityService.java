@@ -19,4 +19,5 @@ public interface ActivityService {
     String delete(UUID id);
 
     ActivityDto getByQRCode(String qrCode);
+    ActivityDto changeActivityStatus(UUID id, Integer status);
 }

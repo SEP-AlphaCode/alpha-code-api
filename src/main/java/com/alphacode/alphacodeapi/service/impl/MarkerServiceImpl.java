@@ -8,6 +8,9 @@ import com.alphacode.alphacodeapi.mapper.MarkerMapper;
 import com.alphacode.alphacodeapi.repository.MarkerRepository;
 import com.alphacode.alphacodeapi.service.MarkerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,7 @@ public class MarkerServiceImpl implements MarkerService {
     private final MarkerRepository repository;
 
     @Override
+    @Cacheable(value = "markers_list", key = "{#page, #size, #status}")
     public PagedResult<MarkerDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Marker> pageResult;
@@ -37,6 +41,7 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
+    @Cacheable(value = "markers", key = "#id")
     public MarkerDto getById(UUID id) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Marker not found"));
@@ -45,6 +50,7 @@ public class MarkerServiceImpl implements MarkerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"markers_list", "markers"}, allEntries = true)
     public MarkerDto create(MarkerDto dto) {
         var entity = MarkerMapper.toEntity(dto);
 
@@ -56,6 +62,8 @@ public class MarkerServiceImpl implements MarkerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"markers_list"}, allEntries = true)
+    @CachePut(value = "markers", key = "#id")
     public MarkerDto update(UUID id, MarkerDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Marker not found"));
@@ -69,6 +77,8 @@ public class MarkerServiceImpl implements MarkerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"markers_list"}, allEntries = true)
+    @CachePut(value = "markers", key = "#id")
     public MarkerDto patchUpdate(UUID id, MarkerDto dto) {
         var existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Marker not found"));
@@ -91,6 +101,7 @@ public class MarkerServiceImpl implements MarkerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"markers", "markers_list"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
         try {
             var existing = repository.findById(id)
@@ -102,6 +113,21 @@ public class MarkerServiceImpl implements MarkerService {
         } catch (Exception e) {
             throw new RuntimeException("Error deleting rgb", e);
         }
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"markers_list"}, allEntries = true)
+    @CachePut(value = "markers", key = "#id")
+    public MarkerDto changeMarkerStatus(UUID id, Integer status) {
+        Marker entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Marker not found"));
+
+        entity.setStatus(status);
+        entity.setLastEdited(LocalDateTime.now());
+
+        Marker updated = repository.save(entity);
+        return MarkerMapper.toDto(updated);
     }
 
 }

@@ -14,5 +14,9 @@ public interface ActionService {
 
     ActionDto updateAction(UUID id, ActionDto actionDto);
 
+    ActionDto patchUpdateAction(UUID id, ActionDto actionDto);
+
+    ActionDto changeActionStatus(UUID id, Integer status);
+
     void deleteAction(UUID id);
 }
