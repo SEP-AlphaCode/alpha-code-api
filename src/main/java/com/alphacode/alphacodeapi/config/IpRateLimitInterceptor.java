@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.net.InetAddress;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +30,8 @@ public class IpRateLimitInterceptor implements HandlerInterceptor {
         String ip = extractClientIp(request);
         String key = "rate-limit:" + ip;
 
-        // tăng counter trong Redis
         Long count = redisTemplate.opsForValue().increment(key);
-
         if (count != null && count == 1) {
-            // lần đầu set TTL cho key
             redisTemplate.expire(key, Duration.ofSeconds(WINDOW_SECONDS));
         }
 
@@ -51,21 +49,25 @@ public class IpRateLimitInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        return true; // cho phép request
+        return true;
     }
 
-    /**
-     * Lấy IP client thật, hỗ trợ proxy
-     */
     private String extractClientIp(HttpServletRequest request) {
+        // 1️⃣ X-Forwarded-For (proxy / Docker / Prod)
         String ip = request.getHeader("X-Forwarded-For");
         if (ip != null && !ip.isEmpty()) {
-            // nếu có nhiều IP, lấy IP đầu tiên
             ip = ip.split(",")[0].trim();
-        } else {
-            ip = request.getRemoteAddr();
+            return ip;
         }
-        return ip;
+
+        // 2️⃣ Local dev → lấy IP máy thật
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception ignored) {
+        }
+
+        // 3️⃣ Fallback → IP mạng / remote
+        return request.getRemoteAddr();
     }
 }
 
