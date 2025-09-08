@@ -195,6 +195,8 @@ public class AccountController {
     }
 
 
+
+
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update account by id")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
