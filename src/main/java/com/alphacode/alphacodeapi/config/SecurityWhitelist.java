@@ -14,7 +14,7 @@ public class SecurityWhitelist {
             "/docs",
             "/",
             "/api/v1/auth/**",
-            "/api/v1/accounts/reset-password/**"
+//            "/api/v1/accounts/reset-password/**"
     };
 
     // Permit GET only
