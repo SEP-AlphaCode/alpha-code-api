@@ -11,6 +11,8 @@ public class SecurityWhitelist {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/swagger",
+            "/docs",
+            "/",
             "/api/v1/auth/**"
     };
 
