@@ -6,6 +6,7 @@ open:
     serverUrl: ${OPEN_API_SERVERURL:http://localhost:8081}
 
 springdoc:
+  writer-with-order-by-keys: true
   api-docs:
     server:
       url: ${OPEN_API_SERVERURL:http://localhost:8081}
