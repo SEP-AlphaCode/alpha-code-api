@@ -26,7 +26,7 @@ public class RgbServiceImpl implements RgbService {
     private final RgbRepository repository;
 
     @Override
-    @Cacheable(value = "rgb_list", key = "#page + #size")
+    @Cacheable(value = "rgb_list", key = "{#page, #size}")
     public PagedResult<RgbDto> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Rgb> pageResult;

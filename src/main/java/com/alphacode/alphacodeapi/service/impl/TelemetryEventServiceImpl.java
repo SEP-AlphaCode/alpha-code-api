@@ -27,7 +27,7 @@ public class TelemetryEventServiceImpl implements TelemetryEventService {
     private final TelemetryEventRepository repository;
 
     @Override
-    @Cacheable(value = "telemetry_event_list", key = "#robotId + #page + #size")
+    @Cacheable(value = "telemetry_event_list", key = "{#robotId, #page, #size}")
     public PagedResult<TelemetryEventDto> getAll(UUID robotId, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TelemetryEvent> pageResult;

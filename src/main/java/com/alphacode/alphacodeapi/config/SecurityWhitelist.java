@@ -19,6 +19,6 @@ public class SecurityWhitelist {
 
     // Permit GET only
     public static final String[] GET_WHITELIST = {
-            "/api/v1/*"
+            "/api/v1/**"
     };
 }
