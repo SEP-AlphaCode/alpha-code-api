@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.service.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,5 +37,11 @@ public class DashboardController {
         result.put("newThisMonth", service.countNewUsersByRoleThisMonth(roleName));
         result.put("growthRate", service.calculateGrowthRateByRole(roleName));
         return result;
+    }
+
+    @GetMapping("/summary")
+    @Operation(summary = "Get summary stats")
+    public ResponseEntity<Map<String, Long>> getSummaryStats() {
+        return ResponseEntity.ok(service.getSummaryStats());
     }
 }

@@ -1,14 +1,16 @@
 package com.alphacode.alphacodeapi.service.impl;
 
-import com.alphacode.alphacodeapi.repository.AccountRepository;
-import com.alphacode.alphacodeapi.repository.RoleRepository;
+import com.alphacode.alphacodeapi.repository.*;
 import com.alphacode.alphacodeapi.service.DashboardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +21,9 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final AccountRepository accountRepository;
+    private final ActivityRepository activityRepository;
+    private final RobotRepository robotRepository;
+    private final OrganizationRepository organizationRepository;
     private final RoleRepository roleRepository;
     private static final String ONLINE_KEY_PREFIX = "online:user:";
 
@@ -75,6 +80,17 @@ public class DashboardServiceImpl implements DashboardService {
         }
 
         return ((double) (newThisMonth - newLastMonth) / newLastMonth) * 100.0;
+    }
+
+    @Override
+    @Cacheable(value = "dashboardSummary", key = "'summary'")
+    public Map<String, Long> getSummaryStats() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalAccounts", accountRepository.count());
+        stats.put("totalActivities", activityRepository.count());
+        stats.put("totalRobots", robotRepository.count());
+        stats.put("totalOrganizations", organizationRepository.count());
+        return stats;
     }
 
     private UUID getRoleIdByName(String roleName) {

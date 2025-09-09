@@ -1,5 +1,6 @@
 package com.alphacode.alphacodeapi.service;
 
+import java.util.Map;
 import java.util.UUID;
 
 public interface DashboardService {
@@ -14,4 +15,6 @@ public interface DashboardService {
     long countNewUsersByRoleThisMonth(String roleName);
 
     double calculateGrowthRateByRole(String roleName);
+
+    Map<String, Long> getSummaryStats();
 }
