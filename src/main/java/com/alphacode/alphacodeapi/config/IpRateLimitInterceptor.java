@@ -53,7 +53,6 @@ public class IpRateLimitInterceptor implements HandlerInterceptor {
     }
 
     private String extractClientIp(HttpServletRequest request) {
-        // 3️. Fallback → IP mạng / remote
         return request.getRemoteAddr();
     }
 }
