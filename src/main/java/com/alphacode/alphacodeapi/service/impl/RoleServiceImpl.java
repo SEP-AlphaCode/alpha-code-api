@@ -26,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository repository;
 
     @Override
-    @Cacheable(value = "roles_list", key = "#page + #size + #status")
+    @Cacheable(value = "roles_list", key = "{#page, #size, #status}")
     public PagedResult<RoleDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Role> pageResult;

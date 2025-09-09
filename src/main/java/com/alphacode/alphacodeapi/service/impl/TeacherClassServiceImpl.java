@@ -27,7 +27,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
     private final TeacherClassRepository repository;
 
     @Override
-    @Cacheable(value = "teacher_class_list", key = "#page + #size + #status")
+    @Cacheable(value = "teacher_class_list", key = "{#page, #size, #status}")
     public PagedResult<TeacherClassDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<TeacherClass> pageResult;
