@@ -56,6 +56,8 @@ public class IpRateLimitInterceptor implements HandlerInterceptor {
         // 1. X-Forwarded-For
         String ip = request.getHeader("X-Forwarded-For");
         System.out.println("X-Forwarded-For: " + ip);
+        System.out.println("X-Remote Address: " + request.getRemoteAddr());
+
         if (ip != null && !ip.isEmpty()) {
             return ip.split(",")[0].trim();
         }
