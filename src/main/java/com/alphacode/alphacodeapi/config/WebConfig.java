@@ -9,10 +9,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private IpRateLimitInterceptor ipRateLimitInterceptor;
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "/swagger");
         registry.addRedirectViewController("/docs", "/swagger");
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(ipRateLimitInterceptor)
+                .addPathPatterns("/api/**");
+    }
 }
