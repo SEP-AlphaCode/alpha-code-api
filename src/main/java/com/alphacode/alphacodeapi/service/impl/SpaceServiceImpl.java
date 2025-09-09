@@ -27,7 +27,7 @@ public class SpaceServiceImpl implements SpaceService {
     private final SpaceRepository repository;
 
     @Override
-    @Cacheable(value = "spaces_list", key = "#page + #size + #status")
+    @Cacheable(value = "spaces_list", key = "{#page, #size, #status}")
     public PagedResult<SpaceDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Space> pageResult;

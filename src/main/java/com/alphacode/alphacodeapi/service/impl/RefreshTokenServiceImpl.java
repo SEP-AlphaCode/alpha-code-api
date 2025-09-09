@@ -4,6 +4,7 @@ import com.alphacode.alphacodeapi.dto.LoginDto;
 import com.alphacode.alphacodeapi.entity.Account;
 import com.alphacode.alphacodeapi.exception.AuthenticationException;
 import com.alphacode.alphacodeapi.repository.AccountRepository;
+import com.alphacode.alphacodeapi.service.DashboardService;
 import com.alphacode.alphacodeapi.service.RedisRefreshTokenService;
 import com.alphacode.alphacodeapi.service.RefreshTokenService;
 import com.alphacode.alphacodeapi.util.JwtUtil;
@@ -21,6 +22,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RedisRefreshTokenService redisService;
     private final JwtUtil jwtUtil;
     private final AccountRepository accountRepository;
+    private final DashboardService dashboardService;
 
     @Value("${jwt.refresh-expiration-ms}")
     private Long refreshTokenDurationMs;
@@ -83,6 +85,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         }
 
         redisService.delete(userId);
+        dashboardService.removeOnlineUser(userId);
         return "Logged out successfully";
     }
 }

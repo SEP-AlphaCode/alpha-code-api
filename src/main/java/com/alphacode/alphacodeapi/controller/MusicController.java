@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/musics")
 @RequiredArgsConstructor
-@Tag(name = "Musics", description = "APIs for managing music")
+@Tag(name = "Musics")
 public class MusicController {
 
     private final MusicService service;

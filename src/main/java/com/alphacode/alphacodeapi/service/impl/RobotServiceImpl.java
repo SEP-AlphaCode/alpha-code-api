@@ -26,7 +26,7 @@ public class RobotServiceImpl implements RobotService {
     private final RobotRepository repository;
 
     @Override
-    @Cacheable(value = "robot_list", key = "#page + #size + #organizationId + #status")
+    @Cacheable(value = "robot_list", key = "{#page, #size, #organizationId, #status}")
     public PagedResult<RobotDto> getAll(int page, int size, UUID organizationId, Integer status) {
         Pageable pageable = Pageable.ofSize(size).withPage(page - 1);
         Page<Robot> pageResult;

@@ -30,8 +30,4 @@ public interface AccountService {
     String delete(UUID id);
 
     AccountDto findAccountByFullName(String fullName);
-
-    boolean requestResetPassword(String email) throws MessagingException;
-
-    boolean confirmResetPassword(ResetPassworDto dto);
 }

@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -44,12 +45,11 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
     private final RoleRepository roleRepository;
     private final S3Service s3Service;
-    private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
-    @Value("${web-base-url}")
-    private String webBaseUrl;
-    @Autowired
-    private JavaMailSender mailSender;
+
+
+    private static final String DEFAULT_ROLE = "Teacher";
+
 
     @Override
     @Cacheable(value = "accounts_list", key = "{#page, #size, #status}")
@@ -97,6 +97,19 @@ public class AccountServiceImpl implements AccountService {
             Role role = roleRepository.findById(accountDto.getRoleId())
                     .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
             entity.setRole(role);
+        } else {
+            Optional<Role> roleOpt = roleRepository.findByNameIgnoreCase(DEFAULT_ROLE);
+            Role role;
+            if (roleOpt.isEmpty()) {
+                role = new Role();
+                role.setName(DEFAULT_ROLE);
+                role.setStatus(1);
+                roleRepository.save(role);
+            } else {
+                role = roleOpt.get();
+            }
+            entity.setRole(role);
+            entity.setRoleId(role.getId());
         }
         try {
             if (avatarFile != null && !avatarFile.isEmpty()) {
@@ -303,56 +316,5 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto findAccountByFullName(String fullName) {
         var account = repository.findAccountByFullName(fullName);
         return AccountMapper.toDto(account);
-    }
-
-    @Override
-    @Transactional
-    public boolean requestResetPassword(String email) throws MessagingException {
-        var account = repository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email not found!"));
-
-        System.out.println("Account get = " + account.getId());
-
-        MimeMessage message = mailSender.createMimeMessage();
-
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        helper.setTo(email);
-        helper.setSubject("Đặt lại mật khẩu - AlphaCode");
-
-        var resetToken = jwtUtil.generateResetPasswordToken(account);
-        var resetLink = webBaseUrl + "/reset-password/reset?token=" + resetToken;
-
-        var emailBody = EmailBody.getResetPasswordEmailBody(account.getFullName(), resetLink);
-
-        helper.setText(emailBody, true);
-
-        // Put logo picture (inline image với cid:alphacode-logo)
-        ClassPathResource logoImage = new ClassPathResource("static/images/alphacode-logo.png");
-        helper.addInline("alphacode-logo", logoImage);
-
-        mailSender.send(message);
-        return true;
-    }
-
-    @Override
-    @Transactional
-    public boolean confirmResetPassword(ResetPassworDto dto) {
-        String email = jwtUtil.extractEmail(dto.getResetToken());
-
-        Account account = repository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid reset token"));
-
-        // 2. Check token is valid or not
-        if (!jwtUtil.validateJwtToken(dto.getResetToken())) {
-            throw new IllegalArgumentException("Reset token is invalid or expired");
-        }
-
-        // 3. Hash new password
-        account.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-
-        // 4. Save new password to db
-        repository.save(account);
-        return true;
     }
 }

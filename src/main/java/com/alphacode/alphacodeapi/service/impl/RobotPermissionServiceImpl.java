@@ -27,7 +27,7 @@ public class RobotPermissionServiceImpl implements RobotPermissionService {
     private final RobotPermissionRepository repository;
 
     @Override
-    @Cacheable(value = "robot_permissions_list", key = "#page + #size + #status")
+    @Cacheable(value = "robot_permissions_list", key = "{#page, #size, #status}")
     public PagedResult<RobotPermissionDto> getAll(int page, int size, Integer status) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<RobotPermission> pageResult;
