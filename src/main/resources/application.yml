@@ -30,3 +30,6 @@ spring:
       port: ${SPRING_REDIS_PORT:6379}
       password: ${SPRING_REDIS_PASSWORD:}
 
+server:
+  forward-headers-strategy: native
+
