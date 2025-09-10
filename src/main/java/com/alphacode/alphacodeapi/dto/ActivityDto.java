@@ -42,7 +42,7 @@ public class ActivityDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
-    @NotEmpty(message = "OrganizationId is required")
+    @NotNull(message = "OrganizationId is required")
     private UUID organizationId;
 
     private String description;
