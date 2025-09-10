@@ -1,5 +1,8 @@
 package com.alphacode.alphacodeapi.service;
 
+import com.alphacode.alphacodeapi.dto.ActivityDto;
+
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,4 +20,12 @@ public interface DashboardService {
     double calculateGrowthRateByRole(String roleName);
 
     Map<String, Long> getSummaryStats();
+
+    Map<String, Long> getExtensionStats();
+
+    List<ActivityDto> getTopActivitiesToday(int topN);
+
+    List<ActivityDto> getTopActivitiesThisWeek(int topN);
+
+    List<ActivityDto> getTopActivitiesThisMonth(int topN);
 }
