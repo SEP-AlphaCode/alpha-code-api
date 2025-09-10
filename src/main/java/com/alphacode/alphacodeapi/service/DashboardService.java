@@ -19,6 +19,8 @@ public interface DashboardService {
 
     double calculateGrowthRateByRole(String roleName);
 
+    Map<String, Object> getUserStats();
+
     Map<String, Long> getSummaryStats();
 
     Map<String, Long> getExtensionStats();
