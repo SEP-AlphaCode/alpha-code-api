@@ -16,10 +16,15 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +36,25 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepository repository;
     private final QRCodeRepository qrCodeRepository;
     private final ActivityMapper mapper;
+    private final StringRedisTemplate redisTemplate;
+
+    private void increaseUsage(UUID activityId) {
+        String activityKey = activityId.toString();
+
+        // Key theo ngày
+        String keyDay = "activities:day:" + LocalDate.now();
+        redisTemplate.opsForZSet().incrementScore(keyDay, activityKey, 1);
+
+        // Key theo tuần
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int weekNumber = LocalDate.now().get(weekFields.weekOfWeekBasedYear());
+        String keyWeek = "activities:week:" + LocalDate.now().getYear() + "-" + weekNumber;
+        redisTemplate.opsForZSet().incrementScore(keyWeek, activityKey, 1);
+
+        // Key theo tháng
+        String keyMonth = "activities:month:" + YearMonth.now();
+        redisTemplate.opsForZSet().incrementScore(keyMonth, activityKey, 1);
+    }
 
     @Override
     @Cacheable(value = "activities_list", key = "{#page, #size, #status}")
@@ -48,6 +72,8 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityDto getById(UUID id) {
         Activity entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ACTIVITY_NOT_FOUND));
+
+        increaseUsage(entity.getId());
         return mapper.toDto(entity);
     }
 
