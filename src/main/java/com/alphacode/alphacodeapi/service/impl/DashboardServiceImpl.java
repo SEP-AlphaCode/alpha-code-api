@@ -1,16 +1,20 @@
 package com.alphacode.alphacodeapi.service.impl;
 
-import com.alphacode.alphacodeapi.repository.AccountRepository;
-import com.alphacode.alphacodeapi.repository.RoleRepository;
+import com.alphacode.alphacodeapi.dto.ActivityDto;
+import com.alphacode.alphacodeapi.mapper.ActivityMapper;
+import com.alphacode.alphacodeapi.repository.*;
 import com.alphacode.alphacodeapi.service.DashboardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
+import java.time.YearMonth;
+import java.time.temporal.WeekFields;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -19,7 +23,14 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final AccountRepository accountRepository;
+    private final ActivityRepository activityRepository;
+    private final RobotRepository robotRepository;
+    private final OrganizationRepository organizationRepository;
     private final RoleRepository roleRepository;
+    private final QRCodeRepository qrCodeRepository;
+    private final OsmoCardRepository osmoCardRepository;
+    private final MarkerRepository markerRepository;
+    private final ActivityMapper activityMapper;
     private static final String ONLINE_KEY_PREFIX = "online:user:";
 
     @Override
@@ -77,9 +88,99 @@ public class DashboardServiceImpl implements DashboardService {
         return ((double) (newThisMonth - newLastMonth) / newLastMonth) * 100.0;
     }
 
+    @Override
+    public Map<String, Object> getUserStats() {
+        LocalDate now = LocalDate.now();
+
+        // tháng này
+        LocalDateTime startOfMonth = now.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endOfMonth = now.plusMonths(1).withDayOfMonth(1).atStartOfDay();
+
+        // tháng trước
+        LocalDateTime startOfLastMonth = now.minusMonths(1).withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endOfLastMonth = startOfMonth;
+
+        long newUsersThisMonth = accountRepository.countByCreatedDateBetween(startOfMonth, endOfMonth);
+        long newUsersLastMonth = accountRepository.countByCreatedDateBetween(startOfLastMonth, endOfLastMonth);
+        double newThisMonth;
+
+        if (newUsersLastMonth == 0) {
+            newThisMonth = newUsersLastMonth > 0 ? 100.0 : 0.0;
+        } else {
+            newThisMonth = ((double) (newUsersThisMonth - newUsersLastMonth) / newUsersLastMonth) * 100.0;
+        }
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalAccounts", accountRepository.count());
+        stats.put("newUsersThisMonth", newUsersThisMonth);
+        stats.put("newUsersLastMonth", newUsersLastMonth);
+        stats.put("growthRate", newThisMonth);
+
+        return stats;
+
+    }
+
+    @Override
+    @Cacheable(value = "dashboardSummary", key = "'summary'")
+    public Map<String, Long> getSummaryStats() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalAccounts", accountRepository.count());
+        stats.put("totalActivities", activityRepository.count());
+        stats.put("totalRobots", robotRepository.count());
+        stats.put("totalOrganizations", organizationRepository.count());
+        return stats;
+    }
+
+    @Override
+    @Cacheable(value = "dashboardExtension", key = "'extension'")
+    public Map<String, Long> getExtensionStats() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalQRCodes", qrCodeRepository.count());
+        stats.put("totalOsmoCards", osmoCardRepository.count());
+        stats.put("totalMarkers", markerRepository.count());
+        stats.put("totalActivities", activityRepository.count());
+
+        return stats;
+    }
+
     private UUID getRoleIdByName(String roleName) {
         return roleRepository.findByNameIgnoreCase(roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found: " + roleName))
                 .getId();
+    }
+
+    private List<ActivityDto> getTopActivities(String key, int topN) {
+        Set<ZSetOperations.TypedTuple<String>> results =
+                redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, topN - 1);
+
+        if (results == null) return List.of();
+
+        return results.stream()
+                .map(tuple -> {
+                    UUID id = UUID.fromString(tuple.getValue());
+                    return activityRepository.findById(id).map(activityMapper::toDto).orElse(null);
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    public List<ActivityDto> getTopActivitiesToday(int topN) {
+        String keyDay = "activities:day:" + LocalDate.now();
+        return getTopActivities(keyDay, topN);
+    }
+
+    @Override
+    public List<ActivityDto> getTopActivitiesThisWeek(int topN) {
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int weekNumber = LocalDate.now().get(weekFields.weekOfWeekBasedYear());
+        String keyWeek = "activities:week:" + LocalDate.now().getYear() + "-" + weekNumber;
+        return getTopActivities(keyWeek, topN);
+    }
+
+    @Override
+    public List<ActivityDto> getTopActivitiesThisMonth(int topN) {
+        String keyMonth = "activities:month:" + YearMonth.now();
+        return getTopActivities(keyMonth, topN);
     }
 }

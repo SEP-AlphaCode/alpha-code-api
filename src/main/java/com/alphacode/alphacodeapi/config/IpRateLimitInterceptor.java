@@ -53,20 +53,6 @@ public class IpRateLimitInterceptor implements HandlerInterceptor {
     }
 
     private String extractClientIp(HttpServletRequest request) {
-        // 1. X-Forwarded-For
-        String ip = request.getHeader("X-Forwarded-For");
-        System.out.println("X-Forwarded-For: " + ip);
-        if (ip != null && !ip.isEmpty()) {
-            return ip.split(",")[0].trim();
-        }
-
-        // 2️. X-Real-IP
-        ip = request.getHeader("X-Real-IP");
-        if (ip != null && !ip.isEmpty()) {
-            return ip;
-        }
-
-        // 3️. Fallback → IP mạng / remote
         return request.getRemoteAddr();
     }
 }

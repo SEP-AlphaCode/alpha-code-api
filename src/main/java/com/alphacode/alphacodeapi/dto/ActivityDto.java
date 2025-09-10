@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class ActivityDto implements Serializable {
     private String type;
 
     @Type(JsonType.class)
-    @NotEmpty(message = "Data is required")
+    @NotNull(message = "Data is required")
     private JsonNode data;
 
     private Integer status;
@@ -41,7 +42,7 @@ public class ActivityDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
-    @NotEmpty(message = "OrganizationId is required")
+    @NotNull(message = "OrganizationId is required")
     private UUID organizationId;
 
     private String description;

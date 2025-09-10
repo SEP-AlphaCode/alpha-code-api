@@ -47,7 +47,7 @@ public class AuthController {
 
     @PostMapping("/refresh-new-token")
     @Operation(summary = "Refresh new access token using refresh token")
-    public LoginDto.LoginResponse refreshNewToken(@RequestParam String refreshToken) {
+    public LoginDto.LoginResponse refreshNewToken(@RequestBody String refreshToken) {
         return refreshTokenService.refreshNewToken(refreshToken);
     }
 
