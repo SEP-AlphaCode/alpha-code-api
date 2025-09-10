@@ -89,6 +89,38 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
+    public Map<String, Object> getUserStats() {
+        LocalDate now = LocalDate.now();
+
+        // tháng này
+        LocalDateTime startOfMonth = now.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endOfMonth = now.plusMonths(1).withDayOfMonth(1).atStartOfDay();
+
+        // tháng trước
+        LocalDateTime startOfLastMonth = now.minusMonths(1).withDayOfMonth(1).atStartOfDay();
+        LocalDateTime endOfLastMonth = startOfMonth;
+
+        long newUsersThisMonth = accountRepository.countByCreatedDateBetween(startOfMonth, endOfMonth);
+        long newUsersLastMonth = accountRepository.countByCreatedDateBetween(startOfLastMonth, endOfLastMonth);
+        double newThisMonth;
+
+        if (newUsersLastMonth == 0) {
+            newThisMonth = newUsersLastMonth > 0 ? 100.0 : 0.0;
+        } else {
+            newThisMonth = ((double) (newUsersThisMonth - newUsersLastMonth) / newUsersLastMonth) * 100.0;
+        }
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalAccounts", accountRepository.count());
+        stats.put("newUsersThisMonth", newUsersThisMonth);
+        stats.put("newUsersLastMonth", newUsersLastMonth);
+        stats.put("growthRate", newThisMonth);
+
+        return stats;
+
+    }
+
+    @Override
     @Cacheable(value = "dashboardSummary", key = "'summary'")
     public Map<String, Long> getSummaryStats() {
         Map<String, Long> stats = new HashMap<>();
