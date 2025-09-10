@@ -36,7 +36,7 @@ public class ActionServiceImpl implements ActionService {
         if (search != null) {
             pageResult = actionRepository.findAllByNameOrDescriptionContaining(search, pageable);
         } else {
-            pageResult = actionRepository.findAll(pageable);
+            pageResult = actionRepository.findAllActiveActions(pageable);
         }
 
         return new PagedResult<>(pageResult.map(ActionMapper::toDto));
@@ -124,6 +124,6 @@ public class ActionServiceImpl implements ActionService {
         if (!actionRepository.existsById(id)) {
             throw new ResourceNotFoundException("Action not found with id: " + id);
         }
-        actionRepository.deleteById(id);
+        actionRepository.softDeleteById(id);
     }
 }

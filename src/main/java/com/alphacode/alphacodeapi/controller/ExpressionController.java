@@ -21,13 +21,13 @@ public class ExpressionController {
     private final ExpressionService service;
 
     @GetMapping
-    @Operation(summary = "Get all expressions with pagination and optional status filter")
+    @Operation(summary = "Get all expressions with pagination and search")
     public PagedResult<ExpressionDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "status", required = false) Integer status
+            @RequestParam(value = "search", required = false) String search
     ) {
-        return service.getAll(page, size, status);
+        return service.getAll(page, size, search);
     }
 
     @GetMapping("/{id}")

@@ -31,10 +31,10 @@ public class DanceServiceImpl implements DanceService {
     public PagedResult<DanceDto> getPagedDances(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Dance> pageResult;
-        if (search != null) {
-            pageResult = repository.findPagedDances(search, pageable);
+        if (search != null && !search.trim().isEmpty()) {
+            pageResult = repository.findPagedDances(search.trim(), pageable);
         } else {
-            pageResult = repository.findAll(pageable);
+            pageResult = repository.findAllActiveDances(pageable);
         }
         return new PagedResult<>(pageResult.map(DanceMapper::toDto));
     }
@@ -112,10 +112,10 @@ public class DanceServiceImpl implements DanceService {
     @Transactional
     @CacheEvict(value = {"dances_list", "dances"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
-        var existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Dance not found"));
-        existing.setStatus(0);
-        repository.save(existing);
-        return "Deleted Dance with ID: " + id;
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Dance not found with id: " + id);
+        }
+        repository.softDeleteById(id);
+        return "Deleted successfully";
     }
 }

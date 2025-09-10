@@ -6,7 +6,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import java.util.UUID;
 
 public interface ExpressionService {
-    PagedResult<ExpressionDto> getAll(int page, int size, Integer status);
+    PagedResult<ExpressionDto> getAll(int page, int size, String search);
 
     ExpressionDto getById(UUID id);
 
