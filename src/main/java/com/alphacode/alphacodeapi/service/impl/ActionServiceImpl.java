@@ -28,7 +28,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "actions_list", key = "{#page, #size, #status}")
+    @Cacheable(value = "actions_list", key = "{#page, #size, #search}")
     public PagedResult<ActionDto> getAllActions(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Action> pageResult;

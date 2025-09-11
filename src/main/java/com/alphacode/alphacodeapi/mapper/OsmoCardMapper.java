@@ -18,14 +18,17 @@ public class OsmoCardMapper {
         dto.setExpressionId(osmoCard.getExpressionId());
         if (osmoCard.getExpression() != null) {
             dto.setExpressionName(osmoCard.getExpression().getName());
+            dto.setExpressionCode(osmoCard.getExpression().getCode());
         }
         dto.setActionId(osmoCard.getActionId());
         if (osmoCard.getAction() != null) {
             dto.setActionName(osmoCard.getAction().getName());
+            dto.setActionCode(osmoCard.getAction().getCode());
         }
         dto.setDanceId(osmoCard.getDanceId());
         if (osmoCard.getDance() != null) {
             dto.setDanceName(osmoCard.getDance().getName());
+            dto.setDanceCode(osmoCard.getDance().getCode());
         }
         return dto;
     }

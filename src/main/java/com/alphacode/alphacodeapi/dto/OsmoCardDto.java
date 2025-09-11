@@ -39,16 +39,22 @@ public class OsmoCardDto implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String expressionName;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String expressionCode;
 
     private UUID actionId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String actionName;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String actionCode;
 
     private UUID danceId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String danceName;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String danceCode;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {
