@@ -26,24 +26,6 @@ public class DanceMapper {
         dto.setCreatedDate(dance.getCreatedDate());
         dto.setDuration(dance.getDuration());
 
-        // Map osmoCards
-        if (dance.getOsmoCards() != null) {
-            dto.setOsmoCards(
-                    dance.getOsmoCards().stream()
-                            .map(DanceMapper::toOsmoCardDto)
-                            .collect(Collectors.toList())
-            );
-        }
-
-        // Map activitySteps
-        if (dance.getActivitySteps() != null) {
-            dto.setActivitySteps(
-                    dance.getActivitySteps().stream()
-                            .map(DanceMapper::toActivityStepDto)
-                            .collect(Collectors.toList())
-            );
-        }
-
         return dto;
     }
 
