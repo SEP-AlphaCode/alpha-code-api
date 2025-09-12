@@ -3,6 +3,7 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.MusicDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.MusicService;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,8 +52,8 @@ public class MusicController {
 
             @RequestParam("status") Integer status,
 
-            @RequestPart(value = "musicFile", required = false) MultipartFile musicFile,
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+            @RequestPart(value = "musicFile") MultipartFile musicFile,
+            @RequestPart(value = "imageFile") MultipartFile imageFile
     ) {
         MusicDto musicDto = new MusicDto();
         musicDto.setName(name);
@@ -64,14 +66,14 @@ public class MusicController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update music")
-    public MusicDto update(@PathVariable UUID id, @RequestBody MusicDto dto) {
+    public MusicDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody MusicDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update music")
-    public MusicDto patchUpdate(@PathVariable UUID id, @RequestBody MusicDto dto) {
+    public MusicDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody MusicDto dto) {
         return service.patchUpdate(id, dto);
     }
 

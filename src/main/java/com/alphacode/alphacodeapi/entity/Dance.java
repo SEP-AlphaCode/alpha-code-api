@@ -47,9 +47,6 @@ public class Dance {
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
-    // ---- Quan hệ ----
-    @OneToMany(mappedBy = "dance", fetch = FetchType.LAZY)
-    private List<ActivityStep> activitySteps;
 
     @OneToMany(mappedBy = "dance", fetch = FetchType.LAZY)
     private List<OsmoCard> osmoCards;

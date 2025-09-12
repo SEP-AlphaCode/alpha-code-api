@@ -2,6 +2,7 @@ package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.AccountEnum;
 import com.alphacode.alphacodeapi.enums.GenderEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -19,22 +20,22 @@ public class AccountDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Username is required", groups = {OnCreate.class})
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password is required", groups = {OnCreate.class})
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
-    @NotBlank(message = "Full name is required")
+    @NotBlank(message = "Full name is required", groups = {OnCreate.class})
     private String fullName;
 
     @Pattern(regexp = "^(\\+84|0)[0-9]{9,10}$", message = "Invalid phone number format")
     private String phone;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Email is required", groups = {OnCreate.class})
     @Email(message = "Email should be valid")
     private String email;
 
@@ -57,7 +58,7 @@ public class AccountDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String bannedReason;
 
-    @NotNull(message = "Role ID is required")
+    @NotNull(message = "Role ID is required", groups = {OnCreate.class})
     private UUID roleId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

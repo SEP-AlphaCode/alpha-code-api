@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.MarkerEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,16 +21,16 @@ public class MarkerDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Marker name is required")
+    @NotBlank(message = "Marker name is required", groups = {OnCreate.class})
     @Size(max = 100, message = "Marker name must not exceed 100 characters")
     private String name;
 
     private Integer status;
 
-    @NotNull(message = "Book ID is required")
+    @NotNull(message = "Book ID is required", groups = {OnCreate.class})
     private UUID bookId;
 
-    @NotNull(message = "Page ID is required")
+    @NotNull(message = "Page ID is required", groups = {OnCreate.class})
     private Integer pageId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -38,7 +39,7 @@ public class MarkerDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastEdited;
 
-    @NotNull(message = "Activity ID is required")
+    @NotNull(message = "Activity ID is required", groups = {OnCreate.class})
     private UUID activityId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

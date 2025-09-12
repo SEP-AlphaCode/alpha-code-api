@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.ExpressionEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,11 +20,11 @@ public class ExpressionDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Expression name is required")
+    @NotBlank(message = "Expression name is required", groups = {OnCreate.class})
     @Size(max = 100, message = "Expression name must not exceed 100 characters")
     private String name;
 
-    @NotBlank(message = "Expression code is required")
+    @NotBlank(message = "Expression code is required", groups = {OnCreate.class})
     @Size(max = 50, message = "Expression code must not exceed 50 characters")
     private String code;
 

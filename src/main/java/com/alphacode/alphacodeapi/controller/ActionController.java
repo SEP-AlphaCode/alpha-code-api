@@ -3,12 +3,15 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.ActionDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActionService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -41,21 +44,21 @@ public class ActionController {
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new action")
-    public ActionDto createAction(@Valid @RequestBody ActionDto actionDto) {
+    public ActionDto createAction(@Validated(OnCreate.class) @RequestBody ActionDto actionDto) {
         return actionService.createAction(actionDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update action")
-    public ActionDto updateAction(@PathVariable UUID id, @Valid @RequestBody ActionDto actionDto) {
+    public ActionDto updateAction(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody ActionDto actionDto) {
         return actionService.updateAction(id, actionDto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update action")
-    public ActionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActionDto dto) {
+    public ActionDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody ActionDto dto) {
         return actionService.patchUpdateAction(id, dto);
     }
 

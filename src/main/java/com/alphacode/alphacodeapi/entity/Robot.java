@@ -59,6 +59,4 @@ public class Robot {
     @OneToMany(mappedBy = "robot", fetch = FetchType.LAZY)
     private List<RobotPermission> permissions;
 
-    @OneToMany(mappedBy = "robot", fetch = FetchType.LAZY)
-    private List<TelemetryEvent> telemetryEvents;
 }

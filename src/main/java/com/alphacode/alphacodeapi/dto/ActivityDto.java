@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.ActivityEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -24,14 +25,14 @@ public class ActivityDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotEmpty(message = "Name is required")
+    @NotEmpty(message = "Name is required", groups = {OnCreate.class})
     private String name;
 
-    @NotEmpty(message = "Type is required")
+    @NotEmpty(message = "Type is required", groups = {OnCreate.class})
     private String type;
 
     @Type(JsonType.class)
-    @NotNull(message = "Data is required")
+    @NotNull(message = "Data is required", groups = {OnCreate.class})
     private JsonNode data;
 
     private Integer status;
@@ -42,7 +43,7 @@ public class ActivityDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 
-    @NotNull(message = "OrganizationId is required")
+    @NotNull(message = "OrganizationId is required", groups = {OnCreate.class})
     private UUID organizationId;
 
     private String description;

@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.QRCodeEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,15 +21,15 @@ public class QRCodeDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name is required", groups = {OnCreate.class})
     @Size(max = 100, message = "Name must not exceed 100 characters")
     private String name;
 
-    @NotBlank(message = "Color is required")
+    @NotBlank(message = "Color is required", groups = {OnCreate.class})
     @Size(max = 50, message = "Color must not exceed 50 characters")
     private String color;
 
-    @NotBlank(message = "QR Code content is required")
+    @NotBlank(message = "QR Code content is required", groups = {OnCreate.class})
     @Size(max = 255, message = "QR Code must not exceed 255 characters")
     private String qrCode;
 
@@ -46,10 +47,10 @@ public class QRCodeDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String activityName;
 
-    @NotNull(message = "ActivityId is required")
+    @NotNull(message = "ActivityId is required", groups = {OnCreate.class})
     private UUID activityId;
 
-    @NotNull(message = "AccountId is required")
+    @NotNull(message = "AccountId is required", groups = {OnCreate.class})
     private UUID accountId;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
