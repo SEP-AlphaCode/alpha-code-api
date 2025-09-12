@@ -51,7 +51,7 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
             set -e
-            cd /home/norman/SEP
+            cd /home/ferr_/Documents/SEP
             docker compose pull alpha-api
             docker compose up -d alpha-api
           EOF
