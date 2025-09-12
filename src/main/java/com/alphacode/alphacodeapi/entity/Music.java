@@ -40,7 +40,7 @@ public class Music {
     private LocalDateTime lastUpdate;
 
     @Column(name = "duration", nullable = false)
-    private Integer duration;
+    private Double duration;
 
     @Column(name = "status", nullable = false)
     private Integer status;
@@ -48,9 +48,12 @@ public class Music {
     @Column(name = "image", nullable = false, length = 255)
     private String image;
 
+    @Column(name = "class_id",  nullable = false, columnDefinition = "uuid")
+    private UUID classId;
+
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id", nullable = false)
+    @JoinColumn(name = "class_id", insertable = false, updatable = false)
     private ClassEntity classEntity;
 
     @OneToMany(mappedBy = "music", fetch = FetchType.LAZY)
