@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.MarkerDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.MarkerService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -31,29 +34,29 @@ public class MarkerController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get marker by id")
-    public MarkerDto getById(@PathVariable String id) {
-        return service.getById(java.util.UUID.fromString(id));
+    public MarkerDto getById(@PathVariable UUID id) {
+        return service.getById(id);
     }
 
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new marker")
-    public MarkerDto create(@Valid @RequestBody MarkerDto dto) {
+    public MarkerDto create(@Validated(OnCreate.class) @RequestBody MarkerDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update marker by id")
-    public MarkerDto update(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
-        return service.update(java.util.UUID.fromString(id), dto);
+    public MarkerDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody MarkerDto dto) {
+        return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update marker by id")
-    public MarkerDto patchUpdate(@PathVariable String id, @Valid @RequestBody MarkerDto dto) {
-        return service.patchUpdate(java.util.UUID.fromString(id), dto);
+    public MarkerDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody MarkerDto dto) {
+        return service.patchUpdate(id, dto);
     }
 
     @DeleteMapping("/{id}")

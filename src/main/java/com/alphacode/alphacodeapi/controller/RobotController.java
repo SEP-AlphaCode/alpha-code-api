@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.RobotDto;
 import com.alphacode.alphacodeapi.service.RobotService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -38,21 +41,21 @@ public class RobotController {
     @PostMapping()
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new robot")
-    public RobotDto create(@Valid @RequestBody RobotDto dto) {
+    public RobotDto create(@Validated(OnCreate.class) @RequestBody RobotDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update robot by id")
-    public RobotDto update(@PathVariable UUID id, @Valid @RequestBody RobotDto dto) {
+    public RobotDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody RobotDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update robot by id")
-    public RobotDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody RobotDto dto) {
+    public RobotDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody RobotDto dto) {
         return service.patchUpdate(id, dto);
     }
 

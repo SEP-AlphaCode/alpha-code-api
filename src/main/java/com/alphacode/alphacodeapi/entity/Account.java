@@ -79,6 +79,4 @@ public class Account {
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<QRCode> qrCodes;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<AuditLogs> auditLogs;
 }

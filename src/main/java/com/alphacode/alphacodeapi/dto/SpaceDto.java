@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.AccountEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,7 @@ public class SpaceDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Space name is required")
+    @NotBlank(message = "Space name is required", groups = {OnCreate.class})
     @Size(max = 100, message = "Space name must not exceed 100 characters")
     private String name;
 

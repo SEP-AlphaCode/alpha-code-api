@@ -24,10 +24,12 @@ public class MusicDto implements Serializable {
     private LocalDateTime createdDate;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
-    private Integer duration;
+    private Double duration;
     private Integer status;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID classId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String className;
     private String image;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)

@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.DanceEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,11 +25,11 @@ public class DanceDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Dance code is required")
+    @NotBlank(message = "Dance code is required", groups = {OnCreate.class})
     @Size(max = 50, message = "Dance code must not exceed 50 characters")
     private String code;
 
-    @NotBlank(message = "Dance name is required")
+    @NotBlank(message = "Dance name is required", groups = {OnCreate.class})
     @Size(max = 100, message = "Dance name must not exceed 100 characters")
     private String name;
 
@@ -42,14 +43,12 @@ public class DanceDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
 
-    @NotNull(message = "Duration is required")
+    @NotNull(message = "Duration is required", groups = {OnCreate.class})
     @Positive(message = "Duration must be greater than 0")
     private Integer duration;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<OsmoCardDto> osmoCards;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<ActivityStepDto> activitySteps;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {

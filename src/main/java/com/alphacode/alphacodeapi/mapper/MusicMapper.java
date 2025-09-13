@@ -17,12 +17,9 @@ public class MusicMapper {
         dto.setLastUpdate(music.getLastUpdate());
         dto.setDuration(music.getDuration());
         dto.setStatus(music.getStatus());
-
-        // map classId từ classEntity
+        dto.setClassId(music.getClassId());
         if (music.getClassEntity() != null) {
-            dto.setClassId(music.getClassEntity().getId());
-            // Nếu muốn map thêm tên class
-            // dto.setClassName(music.getClassEntity().getName());
+            dto.setClassName(music.getClassEntity().getName());
         }
 
         dto.setImage(music.getImage());
@@ -40,13 +37,7 @@ public class MusicMapper {
         music.setLastUpdate(dto.getLastUpdate());
         music.setDuration(dto.getDuration());
         music.setStatus(dto.getStatus());
-
-        // map classEntity từ classId
-        if (dto.getClassId() != null) {
-            ClassEntity classEntity = new ClassEntity();
-            classEntity.setId(dto.getClassId());
-            music.setClassEntity(classEntity);
-        }
+        music.setClassId(dto.getClassId());
 
         music.setImage(dto.getImage());
         return music;

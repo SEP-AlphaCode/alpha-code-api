@@ -50,10 +50,6 @@ public class Action {
     @Column(name = "can_interrupt", nullable = false)
     private Boolean canInterrupt;
 
-    // Quan hệ ngược với ActivityStep
-    @OneToMany(mappedBy = "action", fetch = FetchType.LAZY)
-    private List<ActivityStep> activitySteps;
-
     // Quan hệ ngược với OsmoCard
     @OneToMany(mappedBy = "action", fetch = FetchType.LAZY)
     private List<OsmoCard> osmoCards;

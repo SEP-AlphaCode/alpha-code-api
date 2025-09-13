@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.OsmoCardEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,11 +20,11 @@ public class OsmoCardDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Color is required")
+    @NotBlank(message = "Color is required", groups = {OnCreate.class})
     @Size(max = 50, message = "Color must not exceed 50 characters")
     private String color;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name is required", groups = {OnCreate.class})
     @Size(max = 100, message = "Name must not exceed 100 characters")
     private String name;
 

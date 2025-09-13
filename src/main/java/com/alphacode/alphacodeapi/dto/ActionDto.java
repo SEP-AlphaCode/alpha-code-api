@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.ActionEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,22 +34,22 @@ public class ActionDto implements Serializable {
     private LocalDateTime lastUpdate;
 
     // Request fields
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name is required", groups = {OnCreate.class})
     private String name;
 
-    @NotBlank(message = "Code is required")
+    @NotBlank(message = "Code is required", groups = {OnCreate.class})
     private String code;
 
     private String description;
 
-    @NotNull(message = "Duration is required")
+    @NotNull(message = "Duration is required", groups = {OnCreate.class})
     @Positive(message = "Duration must be positive")
     private Integer duration;
 
-    @NotNull(message = "Status is required")
+    @NotNull(message = "Status is required", groups = {OnCreate.class})
     private Integer status;
 
-    @NotNull(message = "Can interrupt flag is required")
+    @NotNull(message = "Can interrupt flag is required", groups = {OnCreate.class})
     private Boolean canInterrupt;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
