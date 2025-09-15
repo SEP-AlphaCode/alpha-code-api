@@ -31,7 +31,7 @@ public class OsmoCardMapper {
             dto.setDanceCode(osmoCard.getDance().getCode());
         }
         return dto;
-    }
+    } 
 
     public static OsmoCard toEntity(OsmoCardDto osmoCardDto) {
         if (osmoCardDto == null) {
