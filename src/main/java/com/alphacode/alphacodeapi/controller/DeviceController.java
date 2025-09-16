@@ -73,4 +73,11 @@ public class DeviceController {
     public String delete(@PathVariable UUID id) {
         return service.delete(id);
     }
+
+    @PutMapping("/devices/{id}/state")
+    @Operation(summary = "Control devices in a space through MQTT")
+    public DeviceDto updateDeviceState(@PathVariable UUID id, @RequestBody Boolean powerState) {
+        return service.updateDeviceState(id, powerState);
+    }
+
 }
