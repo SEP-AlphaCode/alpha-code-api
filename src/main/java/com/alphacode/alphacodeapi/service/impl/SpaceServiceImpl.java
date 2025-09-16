@@ -53,9 +53,11 @@ public class SpaceServiceImpl implements SpaceService {
     @Transactional
     @CacheEvict(value = {"spaces_list", "spaces"}, allEntries = true)
     public SpaceDto create(SpaceDto dto) {
+        if (dto.getOrganizationId() == null) {
+            throw new IllegalArgumentException("OrganizationId must not be null");
+        }
         Space entity = SpaceMapper.toEntity(dto);
         entity.setCreatedDate(LocalDateTime.now());
-        entity.setLastUpdate(LocalDateTime.now());
         Space saved = repository.save(entity);
         return SpaceMapper.toDto(saved);
     }

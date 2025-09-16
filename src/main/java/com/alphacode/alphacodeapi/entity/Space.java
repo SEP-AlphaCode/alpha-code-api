@@ -33,7 +33,7 @@ public class Space {
     @Column(name = "description", nullable = false, length = 255)
     private String description;
 
-    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid", insertable = false, updatable = false)
+    @Column(name = "organization_id", nullable = false, columnDefinition = "uuid")
     private UUID organizationId;
 
     @Column(name = "created_date", nullable = false)
@@ -47,7 +47,7 @@ public class Space {
 
     // ---- Quan hệ ----
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false,  insertable = false, updatable = false)
     private Organization organization;
 
     @OneToMany(mappedBy = "space", fetch = FetchType.LAZY)

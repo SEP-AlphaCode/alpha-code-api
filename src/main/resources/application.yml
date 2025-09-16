@@ -37,4 +37,9 @@ spring:
 server:
   forward-headers-strategy: native
 
+mqtt:
+  broker: ${MQTT_BROKER}
+  clientId: ${MQTT_CLIENT_ID}
+
+
 

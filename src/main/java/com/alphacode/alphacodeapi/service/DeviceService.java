@@ -19,4 +19,6 @@ public interface DeviceService {
     String delete(UUID id);
 
     DeviceDto changeDeviceStatus(UUID id, Integer status);
+
+    DeviceDto updateDeviceState(UUID id, Boolean powerState);
 }

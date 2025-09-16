@@ -3,6 +3,8 @@ package com.alphacode.alphacodeapi.dto;
 import com.alphacode.alphacodeapi.enums.DeviceEnum;
 import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -30,9 +32,21 @@ public class DeviceDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String spaceName;
 
+    @NotBlank(message = "Device name is required", groups = {OnCreate.class})
+    private String deviceName;
+
     @NotBlank(message = "Device type is required", groups = {OnCreate.class})
     @Size(max = 50, message = "Device type must not exceed 50 characters")
     private String type;
+
+    @NotBlank(message = "Topic Sub is required", groups = {OnCreate.class})
+    @Size(max = 50, message = "Topic Sub must not exceed 50 characters")
+    private String topicSub;
+
+    @NotBlank(message = "Topic Pub is required", groups = {OnCreate.class})
+    @Size(max = 50, message = "Topic Pub must not exceed 50 characters")
+    private String topicPub;
+
 
     @NotBlank(message = "IP Config is required", groups = {OnCreate.class})
     @Pattern(
@@ -41,6 +55,8 @@ public class DeviceDto implements Serializable {
     )
     private String ipConfig;
 
+    private JsonNode metadata;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
 
@@ -48,6 +64,11 @@ public class DeviceDto implements Serializable {
     private LocalDateTime lastUpdate;
 
     private Integer status;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime lastSeen;
+
+    private Boolean powerState;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {

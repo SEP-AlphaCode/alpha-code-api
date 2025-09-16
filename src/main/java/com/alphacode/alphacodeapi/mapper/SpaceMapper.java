@@ -15,7 +15,9 @@ public class SpaceMapper {
         dto.setStatus(entity.getStatus());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setLastUpdate(entity.getLastUpdate());
-        dto.setOrganizationName(entity.getOrganization() != null ? entity.getOrganization().getName() : null);
+        if (entity.getOrganization() != null) {
+            dto.setOrganizationName(entity.getOrganization().getName());
+        }
 
         return dto;
     }
