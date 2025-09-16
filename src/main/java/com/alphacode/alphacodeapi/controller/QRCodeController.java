@@ -86,6 +86,13 @@ public class QRCodeController {
         return qrCodeService.delete(id);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
+    @Operation(summary = "Disable QRCode by id")
+    public String disable(@PathVariable UUID id) {
+        return qrCodeService.disable(id);
+    }
+
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Change QRCode status")
