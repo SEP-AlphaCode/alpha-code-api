@@ -208,6 +208,24 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    @Transactional
+    @CacheEvict(value = {"qr_codes_list", "qr_codes"}, key = "#id", allEntries = true)
+    public String disable(UUID id) {
+        try {
+            var existed = repository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
+//        repository.deleteById(id);
+            existed.setStatus(2);
+            existed.setLastEdited(LocalDateTime.now());
+            repository.save(existed);
+            return "Disable QRCode with ID: " + id;
+        } catch (Exception e) {
+            throw new RuntimeException("Error disable QRCode", e);
+        }
+
+    }
+
+    @Override
     @Cacheable(value = "qr_codes", key = "#code")
     public QRCodeDto getByCode(String code) {
         return repository.findQRCodeByQrCode(code)

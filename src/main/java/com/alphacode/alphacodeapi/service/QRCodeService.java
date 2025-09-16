@@ -17,7 +17,7 @@ public interface QRCodeService {
     QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto);
 
     String delete(UUID id);
-
+    String disable(UUID id);
     QRCodeDto getByCode(String code);
 
     QRCodeDto changeStatus(UUID id, Integer status);

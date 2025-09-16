@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum QRCodeEnum {
     DELETED(0, "DELETED"),
-    ACTIVE(1, "ACTIVE");
+    ACTIVE(1, "ACTIVE"),
+    DISABLED(2, "DISABLED");
 
     private final int code;
     private final String description;
