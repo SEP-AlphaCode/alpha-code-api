@@ -12,7 +12,7 @@ public class MusicMapper {
         MusicDto dto = new MusicDto();
         dto.setId(music.getId());
         dto.setName(music.getName());
-        dto.setUrl(music.getUrl());
+        dto.setMusicUrl(music.getUrl());
         dto.setCreatedDate(music.getCreatedDate());
         dto.setLastUpdate(music.getLastUpdate());
         dto.setDuration(music.getDuration());
@@ -22,7 +22,7 @@ public class MusicMapper {
             dto.setClassName(music.getClassEntity().getName());
         }
 
-        dto.setImage(music.getImage());
+        dto.setImageUrl(music.getImage());
         return dto;
     }
 
@@ -32,14 +32,14 @@ public class MusicMapper {
         Music music = new Music();
         music.setId(dto.getId());
         music.setName(dto.getName());
-        music.setUrl(dto.getUrl());
+        music.setUrl(dto.getMusicUrl());
         music.setCreatedDate(dto.getCreatedDate());
         music.setLastUpdate(dto.getLastUpdate());
         music.setDuration(dto.getDuration());
         music.setStatus(dto.getStatus());
         music.setClassId(dto.getClassId());
 
-        music.setImage(dto.getImage());
+        music.setImage(dto.getImageUrl());
         return music;
     }
 }

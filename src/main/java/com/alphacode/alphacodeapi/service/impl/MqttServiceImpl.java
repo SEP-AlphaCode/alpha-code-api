@@ -20,10 +20,10 @@ public class MqttServiceImpl implements MqttService {
 
     private IMqttClient client;
 
-    @Value("${mqtt.broker:tcp://localhost:1883}")
+    @Value("${mqtt.broker}")
     private String brokerUrl;
 
-    @Value("${mqtt.clientId:spring-device-service}")
+    @Value("${mqtt.clientId}")
     private String clientId;
 
     @PostConstruct
