@@ -57,7 +57,7 @@ public class MusicController {
 
             @RequestPart("musicFile") MultipartFile musicFile,
 
-            @RequestPart("imageFile") MultipartFile imageFile
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
     ) {
         MusicDto musicDto = new MusicDto();
         musicDto.setName(name);
@@ -66,6 +66,14 @@ public class MusicController {
         musicDto.setClassId(classId);
 
         return service.create(musicDto, musicFile, imageFile);
+    }
+
+    @PostMapping("/no-file")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
+    @Operation(summary = "Create new music using links")
+    public MusicDto create(@RequestBody MusicDto musicDto) {
+        service.create(musicDto);
+        return musicDto;
     }
 
     @PatchMapping("/{id}")

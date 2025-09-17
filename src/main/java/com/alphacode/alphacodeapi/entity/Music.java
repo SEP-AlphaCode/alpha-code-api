@@ -45,7 +45,7 @@ public class Music {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @Column(name = "image", nullable = false, length = 255)
+    @Column(name = "image", length = 255)
     private String image;
 
     @Column(name = "class_id",  nullable = false, columnDefinition = "uuid")

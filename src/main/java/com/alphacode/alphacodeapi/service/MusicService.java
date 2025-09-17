@@ -13,6 +13,8 @@ public interface MusicService {
 
     MusicDto create(MusicDto dto, MultipartFile urlFile, MultipartFile imageFile);
 
+    MusicDto create(MusicDto dto);
+
     MusicDto update(UUID id, MusicDto dto);
 
     MusicDto patchUpdate(UUID id, MusicDto dto);

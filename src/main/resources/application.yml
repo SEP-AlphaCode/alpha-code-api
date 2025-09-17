@@ -38,8 +38,8 @@ server:
   forward-headers-strategy: native
 
 mqtt:
-  broker: ${MQTT_BROKER}
-  clientId: ${MQTT_CLIENT_ID}
+  broker: ${MQTT_BROKER:tcp://localhost:1883}
+  clientId: ${MQTT_CLIENT_ID:spring-device-service}
 
 
 
