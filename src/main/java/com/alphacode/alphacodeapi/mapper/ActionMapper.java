@@ -15,6 +15,7 @@ public class ActionMapper {
                 .name(action.getName())
                 .description(action.getDescription())
                 .duration(action.getDuration())
+                .icon(action.getIcon())
                 .status(action.getStatus())
                 .createdDate(action.getCreatedDate())
                 .lastUpdate(action.getLastUpdate())
@@ -31,6 +32,7 @@ public class ActionMapper {
                 .code(dto.getCode())
                 .name(dto.getName())
                 .description(dto.getDescription())
+                .icon(dto.getIcon())
                 .duration(dto.getDuration())
                 .status(dto.getStatus())
                 .createdDate(dto.getCreatedDate())
@@ -46,6 +48,7 @@ public class ActionMapper {
         entity.setCode(dto.getCode());
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
+        entity.setIcon(dto.getIcon());
         entity.setDuration(dto.getDuration());
         entity.setStatus(dto.getStatus());
         entity.setCanInterrupt(dto.getCanInterrupt());

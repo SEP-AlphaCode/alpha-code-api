@@ -40,6 +40,9 @@ public class Action {
 
     @Column(name = "status", nullable = false)
     private Integer status;
+    
+    @Column(name = "icon", length = 100)
+    private String icon;
 
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
