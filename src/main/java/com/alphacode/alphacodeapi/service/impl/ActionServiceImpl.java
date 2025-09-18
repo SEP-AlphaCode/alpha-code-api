@@ -88,6 +88,11 @@ public class ActionServiceImpl implements ActionService {
         if (actionDto.getDescription() != null) {
             existingAction.setDescription(actionDto.getDescription());
         }
+
+        if (actionDto.getIcon() != null) {
+            existingAction.setIcon(actionDto.getIcon());
+        }
+
         if (actionDto.getStatus() != null) {
             existingAction.setStatus(actionDto.getStatus());
         }

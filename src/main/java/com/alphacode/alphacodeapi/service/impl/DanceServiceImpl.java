@@ -69,6 +69,7 @@ public class DanceServiceImpl implements DanceService {
 
         existing.setName(dto.getName());
         existing.setDescription(dto.getDescription());
+        existing.setIcon(dto.getIcon());
         existing.setStatus(dto.getStatus());
         existing.setDuration(dto.getDuration());
         existing.setLastUpdate(LocalDateTime.now());
@@ -87,6 +88,7 @@ public class DanceServiceImpl implements DanceService {
 
         if (dto.getName() != null) existing.setName(dto.getName());
         if (dto.getDescription() != null) existing.setDescription(dto.getDescription());
+        if (dto.getIcon() != null) existing.setIcon(dto.getIcon());
         if (dto.getStatus() != null) existing.setStatus(dto.getStatus());
         if (dto.getDuration() != null) existing.setDuration(dto.getDuration());
 
