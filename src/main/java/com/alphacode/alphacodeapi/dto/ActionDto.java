@@ -25,9 +25,6 @@ public class ActionDto implements Serializable {
     private UUID id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -45,6 +42,9 @@ public class ActionDto implements Serializable {
     @NotNull(message = "Duration is required", groups = {OnCreate.class})
     @Positive(message = "Duration must be positive")
     private Integer duration;
+
+    @NotNull(message = "Icon is required", groups = {OnCreate.class})
+    private String icon;
 
     @NotNull(message = "Status is required", groups = {OnCreate.class})
     private Integer status;

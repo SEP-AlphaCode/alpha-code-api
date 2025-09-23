@@ -37,6 +37,9 @@ public class DanceDto implements Serializable {
 
     private Integer status;
 
+    @NotNull(message = "Icon is required", groups = {OnCreate.class})
+    private String icon;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
 

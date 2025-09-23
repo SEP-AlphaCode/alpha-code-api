@@ -39,7 +39,7 @@ public class JwtUtil {
                 .claims(Map.of(
                         "id", account.getId(),
                         "fullName", account.getFullName(),
-                        "username", account.getUsername(),
+                        "userName", account.getUsername(),
                         "email", account.getEmail(),
                         "roleId", account.getRoleId(),
                         "roleName", account.getRole().getName()
@@ -58,7 +58,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .claims(Map.of(
                         "id", account.getId(),
-                        "username", account.getUsername(),
+                        "userName", account.getUsername(),
                         "email", account.getEmail()
                 ))
                 .issuedAt(new Date())
