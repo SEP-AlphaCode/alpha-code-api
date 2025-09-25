@@ -1,11 +1,13 @@
 package com.alphacode.alphacodeapi.controller;
 
+import com.alphacode.alphacodeapi.dto.ActivityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.alphacode.alphacodeapi.validation.OnUpdate;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,7 +49,7 @@ public class QRCodeController {
 
     @PostMapping(value = "/by-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Get QR code by image")
-    public QRCodeDto getByImage(@RequestPart("image") MultipartFile image) {
+    public ActivityDto getByImage(@RequestPart("image") MultipartFile image) {
         return qrCodeService.getByQrImage(image);
     }
 

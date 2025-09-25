@@ -1,7 +1,9 @@
 package com.alphacode.alphacodeapi.service;
 
+import com.alphacode.alphacodeapi.dto.ActivityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
@@ -11,7 +13,7 @@ public interface QRCodeService {
 
     QRCodeDto getById(UUID id);
 
-    QRCodeDto getByQrImage(MultipartFile file);
+    ActivityDto getByQrImage(MultipartFile file);
 
     QRCodeDto create(QRCodeDto qrCodeDto);
 

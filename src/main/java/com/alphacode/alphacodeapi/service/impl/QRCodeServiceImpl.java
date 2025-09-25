@@ -1,13 +1,16 @@
 package com.alphacode.alphacodeapi.service.impl;
 
+import com.alphacode.alphacodeapi.dto.ActivityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.entity.QRCode;
 import com.alphacode.alphacodeapi.exception.ResourceNotFoundException;
 import com.alphacode.alphacodeapi.mapper.QRCodeMapper;
 import com.alphacode.alphacodeapi.repository.QRCodeRepository;
+import com.alphacode.alphacodeapi.service.ActivityService;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.alphacode.alphacodeapi.service.S3Service;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
@@ -40,6 +43,7 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     private final QRCodeRepository repository;
     private final S3Service s3Service;
+    private final ActivityService activityService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -65,7 +69,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
-    public QRCodeDto getByQrImage(MultipartFile file) {
+    public ActivityDto getByQrImage(MultipartFile file) {
         try {
             if (file == null || file.isEmpty()) {
                 throw new IllegalArgumentException("File ảnh không được null hoặc rỗng");
@@ -89,7 +93,15 @@ public class QRCodeServiceImpl implements QRCodeService {
             }
 
             // Dùng lại logic getByCode
-            return getByCode(decodedText);
+            QRCodeDto qrCodeDto = getByCode(decodedText);
+
+            if (qrCodeDto == null) throw new ResourceNotFoundException("QR code không tồn tại");
+
+            ActivityDto activityDto = activityService.getById(qrCodeDto.getActivityId());
+
+            if (activityDto == null) throw new ResourceNotFoundException("Activity không tồn tại");
+
+            return activityDto;
 
         } catch (NotFoundException e) {
             throw new ResourceNotFoundException("Không tìm thấy QR code trong ảnh");
