@@ -3,13 +3,18 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
 import com.alphacode.alphacodeapi.service.QRCodeService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -40,10 +45,16 @@ public class QRCodeController {
         return qrCodeService.getByCode(code);
     }
 
+    @PostMapping(value = "/by-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Get QR code by image")
+    public QRCodeDto getByImage(@RequestPart("image") MultipartFile image) {
+        return qrCodeService.getByQrImage(image);
+    }
+
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new QR code")
-    public QRCodeDto create(@Valid @RequestBody QRCodeDto requestDto) {
+    public QRCodeDto create(@Validated(OnCreate.class) @RequestBody QRCodeDto requestDto) {
 //        QRCodeDto qrCodeDto = new QRCodeDto();
 //        qrCodeDto.setName(requestDto.getName());
 //        qrCodeDto.setQrCode(requestDto.getQrCode());
@@ -58,21 +69,21 @@ public class QRCodeController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update QRCode")
-    public QRCodeDto update(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException {
+    public QRCodeDto update(@PathVariable UUID id, @Validated(OnCreate.class) @RequestBody QRCodeDto qrCodeDto) throws JsonProcessingException {
         return qrCodeService.update(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update QRCode")
-    public QRCodeDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody QRCodeDto qrCodeDto) {
+    public QRCodeDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody QRCodeDto qrCodeDto) {
         return qrCodeService.patchUpdate(id, qrCodeDto);
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update QRCode status")
-    public QRCodeDto updateStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
+    public QRCodeDto updateStatus(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestParam Integer status) {
         return qrCodeService.changeStatus(id, status);
     }
 
@@ -81,6 +92,13 @@ public class QRCodeController {
     @Operation(summary = "Delete QRCode by id")
     public String delete(@PathVariable UUID id) {
         return qrCodeService.delete(id);
+    }
+
+    @PutMapping("/{id}/disable")
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
+    @Operation(summary = "Disable QRCode by id")
+    public String disable(@PathVariable UUID id) {
+        return qrCodeService.disable(id);
     }
 
     @PutMapping("/{id}/status")

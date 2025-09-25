@@ -27,15 +27,15 @@ public class ExpressionServiceImpl implements ExpressionService {
     private final ExpressionRepository repository;
 
     @Override
-    @Cacheable(value = "expressions_list", key = "{#page, #size, #status}")
-    public PagedResult<ExpressionDto> getAll(int page, int size, Integer status) {
+    @Cacheable(value = "expressions_list", key = "{#page, #size, #search}")
+    public PagedResult<ExpressionDto> getAll(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Expression> pageResult;
 
-        if (status != null) {
-            pageResult = repository.findAllByStatus(status, pageable);
+        if (search != null && !search.trim().isEmpty()) {
+            pageResult = repository.findAllByNameOrCodeContaining(search.trim(), pageable);
         } else {
-            pageResult = repository.findAll(pageable);
+            pageResult = repository.findAllActiveExpressions(pageable);
         }
 
         return new PagedResult<>(pageResult.map(ExpressionMapper::toDto));
@@ -99,9 +99,10 @@ public class ExpressionServiceImpl implements ExpressionService {
     @Transactional
     @CacheEvict(value = {"expressions", "expressions_list"}, key = "#id", allEntries = true)
     public String delete(UUID id) {
-        Expression entity = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Expression not found with id " + id));
-        repository.delete(entity);
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Expression not found with id " + id);
+        }
+        repository.softDeleteById(id);
         return "Deleted successfully";
     }
 

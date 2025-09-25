@@ -16,19 +16,27 @@ import java.util.UUID;
 public class MusicDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
-    private String name;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 
-    private String url;
+    private String name;
+
+    private String musicUrl;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdDate;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastUpdate;
-    private Integer duration;
+
+    private Double duration;
+
     private Integer status;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     private UUID classId;
-    private String image;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String className;
+
+    private String imageUrl;
 
     @JsonProperty(value = "statusText", access = JsonProperty.Access.READ_ONLY)
     public String getStatusText() {

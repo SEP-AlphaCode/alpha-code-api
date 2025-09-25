@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.ExpressionDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ExpressionService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,13 +24,13 @@ public class ExpressionController {
     private final ExpressionService service;
 
     @GetMapping
-    @Operation(summary = "Get all expressions with pagination and optional status filter")
+    @Operation(summary = "Get all expressions with pagination and search")
     public PagedResult<ExpressionDto> getAll(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "status", required = false) Integer status
+            @RequestParam(value = "search", required = false) String search
     ) {
-        return service.getAll(page, size, status);
+        return service.getAll(page, size, search);
     }
 
     @GetMapping("/{id}")
@@ -39,21 +42,21 @@ public class ExpressionController {
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new expression")
-    public ExpressionDto create(@Valid @RequestBody ExpressionDto dto) {
+    public ExpressionDto create(@Validated(OnCreate.class) @RequestBody ExpressionDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update expression by id")
-    public ExpressionDto update(@PathVariable UUID id, @Valid @RequestBody ExpressionDto dto) {
+    public ExpressionDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody ExpressionDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update expression by id")
-    public ExpressionDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ExpressionDto dto) {
+    public ExpressionDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody ExpressionDto dto) {
         return service.patchUpdate(id, dto);
     }
 

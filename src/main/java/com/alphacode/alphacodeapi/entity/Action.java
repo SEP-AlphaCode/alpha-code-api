@@ -40,6 +40,9 @@ public class Action {
 
     @Column(name = "status", nullable = false)
     private Integer status;
+    
+    @Column(name = "icon", length = 100)
+    private String icon;
 
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
@@ -49,10 +52,6 @@ public class Action {
 
     @Column(name = "can_interrupt", nullable = false)
     private Boolean canInterrupt;
-
-    // Quan hệ ngược với ActivityStep
-    @OneToMany(mappedBy = "action", fetch = FetchType.LAZY)
-    private List<ActivityStep> activitySteps;
 
     // Quan hệ ngược với OsmoCard
     @OneToMany(mappedBy = "action", fetch = FetchType.LAZY)

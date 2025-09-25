@@ -28,7 +28,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "actions_list", key = "{#page, #size, #status}")
+    @Cacheable(value = "actions_list", key = "{#page, #size, #search}")
     public PagedResult<ActionDto> getAllActions(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Action> pageResult;
@@ -36,7 +36,7 @@ public class ActionServiceImpl implements ActionService {
         if (search != null) {
             pageResult = actionRepository.findAllByNameOrDescriptionContaining(search, pageable);
         } else {
-            pageResult = actionRepository.findAll(pageable);
+            pageResult = actionRepository.findAllActiveActions(pageable);
         }
 
         return new PagedResult<>(pageResult.map(ActionMapper::toDto));
@@ -88,6 +88,11 @@ public class ActionServiceImpl implements ActionService {
         if (actionDto.getDescription() != null) {
             existingAction.setDescription(actionDto.getDescription());
         }
+
+        if (actionDto.getIcon() != null) {
+            existingAction.setIcon(actionDto.getIcon());
+        }
+
         if (actionDto.getStatus() != null) {
             existingAction.setStatus(actionDto.getStatus());
         }
@@ -124,6 +129,6 @@ public class ActionServiceImpl implements ActionService {
         if (!actionRepository.existsById(id)) {
             throw new ResourceNotFoundException("Action not found with id: " + id);
         }
-        actionRepository.deleteById(id);
+        actionRepository.softDeleteById(id);
     }
 }

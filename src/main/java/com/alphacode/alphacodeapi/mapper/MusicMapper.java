@@ -12,20 +12,17 @@ public class MusicMapper {
         MusicDto dto = new MusicDto();
         dto.setId(music.getId());
         dto.setName(music.getName());
-        dto.setUrl(music.getUrl());
+        dto.setMusicUrl(music.getUrl());
         dto.setCreatedDate(music.getCreatedDate());
         dto.setLastUpdate(music.getLastUpdate());
         dto.setDuration(music.getDuration());
         dto.setStatus(music.getStatus());
-
-        // map classId từ classEntity
+        dto.setClassId(music.getClassId());
         if (music.getClassEntity() != null) {
-            dto.setClassId(music.getClassEntity().getId());
-            // Nếu muốn map thêm tên class
-            // dto.setClassName(music.getClassEntity().getName());
+            dto.setClassName(music.getClassEntity().getName());
         }
 
-        dto.setImage(music.getImage());
+        dto.setImageUrl(music.getImage());
         return dto;
     }
 
@@ -35,20 +32,14 @@ public class MusicMapper {
         Music music = new Music();
         music.setId(dto.getId());
         music.setName(dto.getName());
-        music.setUrl(dto.getUrl());
+        music.setUrl(dto.getMusicUrl());
         music.setCreatedDate(dto.getCreatedDate());
         music.setLastUpdate(dto.getLastUpdate());
         music.setDuration(dto.getDuration());
         music.setStatus(dto.getStatus());
+        music.setClassId(dto.getClassId());
 
-        // map classEntity từ classId
-        if (dto.getClassId() != null) {
-            ClassEntity classEntity = new ClassEntity();
-            classEntity.setId(dto.getClassId());
-            music.setClassEntity(classEntity);
-        }
-
-        music.setImage(dto.getImage());
+        music.setImage(dto.getImageUrl());
         return music;
     }
 }

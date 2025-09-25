@@ -60,7 +60,6 @@ public class MusicServiceImpl implements MusicService {
     public MusicDto create(MusicDto dto, MultipartFile urlFile, MultipartFile imageFile) {
         Music music = MusicMapper.toEntity(dto);
         music.setCreatedDate(LocalDateTime.now());
-        music.setLastUpdate(LocalDateTime.now());
 
         try {
             // Xử lý upload file nhạc
@@ -86,6 +85,16 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
+    public MusicDto create(MusicDto dto) {
+        Music music = MusicMapper.toEntity(dto);
+        music.setCreatedDate(LocalDateTime.now());
+
+        Music saved = repository.save(music);
+        return  MusicMapper.toDto(saved);
+
+    }
+
+    @Override
     @Transactional
     @CacheEvict(value = {"musics_list"}, allEntries = true)
     @CachePut(value = "musics", key = "#id")
@@ -94,10 +103,10 @@ public class MusicServiceImpl implements MusicService {
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
 
         existing.setName(dto.getName());
-        existing.setUrl(dto.getUrl());
+        existing.setUrl(dto.getMusicUrl());
         existing.setDuration(dto.getDuration());
         existing.setStatus(dto.getStatus());
-        existing.setImage(dto.getImage());
+        existing.setImage(dto.getImageUrl());
         existing.setLastUpdate(LocalDateTime.now());
 
         if (dto.getClassId() != null) {
@@ -119,10 +128,10 @@ public class MusicServiceImpl implements MusicService {
                 .orElseThrow(() -> new ResourceNotFoundException(MUSIC_NOT_FOUND));
 
         if (dto.getName() != null) existing.setName(dto.getName());
-        if (dto.getUrl() != null) existing.setUrl(dto.getUrl());
+        if (dto.getMusicUrl() != null) existing.setUrl(dto.getMusicUrl());
         if (dto.getDuration() != null) existing.setDuration(dto.getDuration());
         if (dto.getStatus() != null) existing.setStatus(dto.getStatus());
-        if (dto.getImage() != null) existing.setImage(dto.getImage());
+        if (dto.getImageUrl() != null) existing.setImage(dto.getImageUrl());
 
         if (dto.getClassId() != null) {
             ClassEntity classEntity = new ClassEntity();

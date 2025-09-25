@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.DanceDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.DanceService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -39,21 +42,21 @@ public class DanceController {
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new dance")
-    public DanceDto create(@Valid @RequestBody DanceDto dto) {
+    public DanceDto create(@Validated(OnCreate.class) @RequestBody DanceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Update dance by id")
-    public DanceDto update(@PathVariable UUID id, @Valid @RequestBody DanceDto dto) {
+    public DanceDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody DanceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update dance by id")
-    public DanceDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody DanceDto dto) {
+    public DanceDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody DanceDto dto) {
         return service.patchUpdate(id, dto);
     }
 

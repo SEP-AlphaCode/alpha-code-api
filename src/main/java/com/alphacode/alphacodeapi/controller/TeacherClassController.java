@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.TeacherClassDto;
 import com.alphacode.alphacodeapi.service.TeacherClassService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -37,21 +40,21 @@ public class TeacherClassController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new teacher-class assignment")
-    public TeacherClassDto create(@Valid @RequestBody TeacherClassDto dto) {
+    public TeacherClassDto create(@Validated(OnCreate.class) @RequestBody TeacherClassDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update teacher-class assignment by id")
-    public TeacherClassDto update(@PathVariable UUID id, @Valid @RequestBody TeacherClassDto dto) {
+    public TeacherClassDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody TeacherClassDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update teacher-class assignment by id")
-    public TeacherClassDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody TeacherClassDto dto) {
+    public TeacherClassDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody TeacherClassDto dto) {
         return service.patchUpdate(id, dto);
     }
 

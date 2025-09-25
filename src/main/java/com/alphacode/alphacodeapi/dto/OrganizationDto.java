@@ -1,6 +1,7 @@
 package com.alphacode.alphacodeapi.dto;
 
 import com.alphacode.alphacodeapi.enums.OrganizationEnum;
+import com.alphacode.alphacodeapi.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,11 +22,11 @@ public class OrganizationDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
-    @NotBlank(message = "Organization name is required")
+    @NotBlank(message = "Organization name is required", groups = {OnCreate.class})
     @Size(max = 150, message = "Organization name must not exceed 150 characters")
     private String name;
 
-    @NotBlank(message = "Location is required")
+    @NotBlank(message = "Location is required", groups = {OnCreate.class})
     @Size(max = 255, message = "Location must not exceed 255 characters")
     private String location;
 
@@ -37,7 +38,7 @@ public class OrganizationDto implements Serializable {
 
     private Integer status;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Email is required", groups = {OnCreate.class})
     @Email(message = "Email must be valid")
     private String email;
 

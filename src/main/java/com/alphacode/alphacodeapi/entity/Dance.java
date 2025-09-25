@@ -38,6 +38,9 @@ public class Dance {
     @Column(name = "status", nullable = false)
     private Integer status;
 
+    @Column(name = "icon", length = 100)
+    private String icon;
+
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
@@ -47,9 +50,6 @@ public class Dance {
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
-    // ---- Quan hệ ----
-    @OneToMany(mappedBy = "dance", fetch = FetchType.LAZY)
-    private List<ActivityStep> activitySteps;
 
     @OneToMany(mappedBy = "dance", fetch = FetchType.LAZY)
     private List<OsmoCard> osmoCards;

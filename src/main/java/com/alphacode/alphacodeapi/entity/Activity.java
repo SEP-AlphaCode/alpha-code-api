@@ -71,9 +71,6 @@ public class Activity {
     private Music music;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
-    private List<ActivityStep> steps;
-
-    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     private List<QRCode> qrCodes;
 
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
@@ -82,6 +79,4 @@ public class Activity {
     @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
     private List<RobotPermission> robotPermissions;
 
-    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
-    private List<TelemetryEvent> telemetryEvents;
 }

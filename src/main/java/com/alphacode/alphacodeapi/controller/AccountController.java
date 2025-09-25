@@ -5,6 +5,7 @@ import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.ResetPassworDto;
 import com.alphacode.alphacodeapi.dto.ResetPasswordRequestDto;
 import com.alphacode.alphacodeapi.service.AccountService;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
@@ -51,7 +52,7 @@ public class AccountController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create new account")
-    @PreAuthorize("hasAuthority('ROLE_Admin')")
+//    @PreAuthorize("hasAuthority('ROLE_Admin')")
     public AccountDto create(
             @NotBlank(message = "Username is required")
             @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
@@ -200,7 +201,7 @@ public class AccountController {
     @PatchMapping("/{id}")
     @Operation(summary = "Patch update account by id")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
-    public AccountDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody AccountDto dto) {
+    public AccountDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody AccountDto dto) {
         return service.patchUpdate(id, dto);
     }
 
@@ -222,7 +223,7 @@ public class AccountController {
     @PatchMapping("/{id}/change-status")
     @Operation(summary = "Change account status")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
-    public AccountDto changeStatus(@PathVariable UUID id, @Valid @RequestParam Integer status) {
+    public AccountDto changeStatus(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestParam Integer status) {
         return service.changeStatus(id, status);
     }
 }

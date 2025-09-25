@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.RoleDto;
 import com.alphacode.alphacodeapi.service.RoleService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -39,20 +42,20 @@ public class RoleController {
     @PostMapping()
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Create new role")
-    public RoleDto create(@Valid @RequestBody RoleDto roleDto) {
+    public RoleDto create(@Validated(OnCreate.class) @RequestBody RoleDto roleDto) {
         return service.create(roleDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
-    public RoleDto update(@PathVariable UUID id, @Valid @RequestBody RoleDto dto) {
+    public RoleDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody RoleDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_Admin')")
     @Operation(summary = "Patch update role")
-    public RoleDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody RoleDto dto) {
+    public RoleDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody RoleDto dto) {
         return service.patchUpdate(id, dto);
     }
 

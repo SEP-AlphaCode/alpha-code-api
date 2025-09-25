@@ -15,11 +15,17 @@ public class DeviceMapper {
         if (device.getSpace() != null) {
             deviceDto.setSpaceName(device.getSpace().getName());
         }
+        deviceDto.setDeviceName(device.getDeviceName());
+        deviceDto.setTopicSub(device.getTopicSub());
+        deviceDto.setTopicPub(device.getTopicPub());
+        deviceDto.setMetadata(device.getMetadata());
         deviceDto.setType(device.getType());
         deviceDto.setIpConfig(device.getIpConfig());
         deviceDto.setCreatedDate(device.getCreatedDate());
         deviceDto.setLastUpdate(device.getLastUpdate());
         deviceDto.setStatus(device.getStatus());
+        deviceDto.setLastSeen(device.getLastSeen());
+        deviceDto.setPowerState(device.getPowerState());
         return deviceDto;
     }
 
@@ -31,11 +37,17 @@ public class DeviceMapper {
         Device device = new Device();
         device.setId(deviceDto.getId());
         device.setSpaceId(deviceDto.getSpaceId());
+        device.setDeviceName(deviceDto.getDeviceName());
         device.setType(deviceDto.getType());
+        device.setTopicSub(deviceDto.getTopicSub());
+        device.setTopicPub(deviceDto.getTopicPub());
+        device.setMetadata(deviceDto.getMetadata());
         device.setIpConfig(deviceDto.getIpConfig());
         device.setCreatedDate(deviceDto.getCreatedDate());
         device.setLastUpdate(deviceDto.getLastUpdate());
         device.setStatus(deviceDto.getStatus());
+        device.setLastSeen(deviceDto.getLastSeen());
+        device.setPowerState(deviceDto.getPowerState());
         return device;
     }
 }

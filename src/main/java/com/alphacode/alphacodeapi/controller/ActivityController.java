@@ -3,12 +3,15 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.ActivityDto;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.service.ActivityService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -39,7 +42,7 @@ public class ActivityController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new activity")
-    public ActivityDto create(@Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
+    public ActivityDto create(@Validated(OnCreate.class) @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.create(activityDto);
     }
 
@@ -52,14 +55,14 @@ public class ActivityController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update activity by id")
-    public ActivityDto update(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
+    public ActivityDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.update(id, activityDto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update activity by id")
-    public ActivityDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody ActivityDto activityDto) throws JsonProcessingException {
+    public ActivityDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody ActivityDto activityDto) throws JsonProcessingException {
         return activityService.patchUpdate(id, activityDto);
     }
 

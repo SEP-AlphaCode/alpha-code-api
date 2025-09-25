@@ -3,11 +3,14 @@ package com.alphacode.alphacodeapi.controller;
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.SpaceDto;
 import com.alphacode.alphacodeapi.service.SpaceService;
+import com.alphacode.alphacodeapi.validation.OnCreate;
+import com.alphacode.alphacodeapi.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -39,21 +42,21 @@ public class SpaceController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Create new space")
-    public SpaceDto create(@Valid @RequestBody SpaceDto dto) {
+    public SpaceDto create(@Validated(OnCreate.class) @RequestBody SpaceDto dto) {
         return service.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Update space by id")
-    public SpaceDto update(@PathVariable UUID id, @Valid @RequestBody SpaceDto dto) {
+    public SpaceDto update(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody SpaceDto dto) {
         return service.update(id, dto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_Admin', 'ROLE_Teacher')")
     @Operation(summary = "Patch update space by id")
-    public SpaceDto patchUpdate(@PathVariable UUID id, @Valid @RequestBody SpaceDto dto) {
+    public SpaceDto patchUpdate(@PathVariable UUID id, @Validated(OnUpdate.class) @RequestBody SpaceDto dto) {
         return service.patchUpdate(id, dto);
     }
 

@@ -2,6 +2,7 @@ package com.alphacode.alphacodeapi.service;
 
 import com.alphacode.alphacodeapi.dto.PagedResult;
 import com.alphacode.alphacodeapi.dto.QRCodeDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -10,6 +11,8 @@ public interface QRCodeService {
 
     QRCodeDto getById(UUID id);
 
+    QRCodeDto getByQrImage(MultipartFile file);
+
     QRCodeDto create(QRCodeDto qrCodeDto);
 
     QRCodeDto update(UUID id, QRCodeDto qrCodeDto);
@@ -17,7 +20,7 @@ public interface QRCodeService {
     QRCodeDto patchUpdate(UUID id, QRCodeDto qrCodeDto);
 
     String delete(UUID id);
-
+    String disable(UUID id);
     QRCodeDto getByCode(String code);
 
     QRCodeDto changeStatus(UUID id, Integer status);
