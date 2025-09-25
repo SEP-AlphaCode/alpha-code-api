@@ -9,10 +9,11 @@ import com.alphacode.alphacodeapi.repository.QRCodeRepository;
 import com.alphacode.alphacodeapi.service.QRCodeService;
 import com.alphacode.alphacodeapi.service.S3Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
+import com.google.zxing.*;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,7 +24,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -58,6 +63,44 @@ public class QRCodeServiceImpl implements QRCodeService {
                 .orElseThrow(() -> new ResourceNotFoundException("QRCode not found"));
         return QRCodeMapper.toDto(qrCode);
     }
+
+    @Override
+    public QRCodeDto getByQrImage(MultipartFile file) {
+        try {
+            if (file == null || file.isEmpty()) {
+                throw new IllegalArgumentException("File ảnh không được null hoặc rỗng");
+            }
+
+            // Đọc ảnh từ MultipartFile
+            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            if (bufferedImage == null) {
+                throw new IllegalArgumentException("File ảnh không hợp lệ hoặc không thể đọc");
+            }
+
+            // Decode QR code bằng ZXing
+            LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+            Result result = new MultiFormatReader().decode(bitmap);
+
+            String decodedText = result.getText();
+            if (decodedText == null || decodedText.isBlank()) {
+                throw new IllegalArgumentException("Không tìm thấy nội dung QR code trong ảnh");
+            }
+
+            // Dùng lại logic getByCode
+            return getByCode(decodedText);
+
+        } catch (NotFoundException e) {
+            throw new ResourceNotFoundException("Không tìm thấy QR code trong ảnh");
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi khi đọc file ảnh QR code", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi decode QR code", e);
+        }
+    }
+
+
 
     @Override
     @Transactional
