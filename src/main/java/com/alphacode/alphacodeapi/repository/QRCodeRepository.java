@@ -15,6 +15,6 @@ public interface QRCodeRepository extends JpaRepository<QRCode, UUID> {
     @Query("SELECT a FROM QRCode a WHERE a.status != 0 ORDER BY a.createdDate DESC")
     Page<QRCode> findAllByStatus(Integer status, Pageable pageable);
 
-    @Query("SELECT a FROM QRCode a WHERE a.status != 0 ORDER BY a.createdDate DESC")
+    @Query("SELECT a FROM QRCode a WHERE a.status != 0 AND a.qrCode = :qrCode ORDER BY a.createdDate DESC")
     Optional<QRCode> findQRCodeByQrCode(String qrCode);
 }
